@@ -65,8 +65,12 @@ Utility functions, directives, and pipes.
 npx degit your-username/grg-kit/ui/utils ./src/app/utils
 
 # Pull a specific utility
-npx degit your-username/grg-kit/ui/utils/validators ./src/app/utils/validators
+npx degit your-username/grg-kit/ui/utils/theme-switcher ./src/app/utils/theme-switcher
 ```
+
+| Utility | Description |
+|---------|-------------|
+| `theme-switcher` | Dark/light theme toggle with service and component |
 
 ## Theme Requirements
 

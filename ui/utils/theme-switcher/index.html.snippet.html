@@ -1,0 +1,21 @@
+<!-- 
+  Add this script inside the <head> tag of your index.html
+  This prevents flash of unstyled content (FOUC) on page load
+-->
+<script>
+  if (
+    localStorage.theme === 'dark' ||
+    (!('theme' in localStorage) &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches)
+  ) {
+    if (document && document.documentElement) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    }
+  } else {
+    if (document && document.documentElement) {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }
+</script>
