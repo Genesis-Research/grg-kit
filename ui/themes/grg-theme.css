@@ -2,7 +2,10 @@
 @import "tailwindcss";
 @import "@spartan-ng/brain/hlm-tailwind-preset.css";
 
-:root {
+/* Theme: grg */
+
+:root,
+[data-theme="grg"] {
   --background: oklch(0.9940 0 0);
   --foreground: oklch(0 0 0);
   --card: oklch(0.9940 0 0);
@@ -57,7 +60,9 @@
   --spacing: 0.27rem;
 }
 
-.dark {
+.dark,
+[data-theme="grg"].dark,
+[data-theme="grg-dark"] {
   --background: oklch(0.2223 0.0060 271.1393);
   --foreground: oklch(0.9551 0 0);
   --card: oklch(0.2568 0.0076 274.6528);

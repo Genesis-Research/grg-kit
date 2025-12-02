@@ -1,11 +1,5 @@
-import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import {
-  inject,
-  Injectable,
-  OnDestroy,
-  PLATFORM_ID,
-  RendererFactory2,
-} from '@angular/core';
+import { inject, Injectable, OnDestroy } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { ReplaySubject, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -15,14 +9,8 @@ export type Theme = 'light' | 'dark';
   providedIn: 'root',
 })
 export class ThemeService implements OnDestroy {
-  // Platform check for SSR compatibility
-  private _platformId = inject(PLATFORM_ID);
-  // Renderer for DOM manipulation
-  private _renderer = inject(RendererFactory2).createRenderer(null, null);
-  // Document injection token
   private _document = inject(DOCUMENT);
 
-  // Theme state management
   private _theme$ = new ReplaySubject<Theme>(1);
   public theme$ = this._theme$.asObservable();
   private _destroyed$ = new Subject<void>();
@@ -32,62 +20,37 @@ export class ThemeService implements OnDestroy {
     this.toggleClassOnThemeChanges();
   }
 
-  /**
-   * Sync theme from localStorage (set by index.html script)
-   */
   private syncThemeFromLocalStorage(): void {
-    if (isPlatformBrowser(this._platformId)) {
-      this._theme$.next(
-        localStorage.getItem('theme') === 'dark' ? 'dark' : 'light'
-      );
-    }
+    this._theme$.next(
+      localStorage.getItem('theme') === 'dark' ? 'dark' : 'light'
+    );
   }
 
-  /**
-   * Subscribe to theme changes and update DOM
-   */
   private toggleClassOnThemeChanges(): void {
     this.theme$.pipe(takeUntil(this._destroyed$)).subscribe((theme: Theme) => {
+      const html = this._document.documentElement;
       if (theme === 'dark') {
-        this._renderer.addClass(this._document.documentElement, 'dark');
+        html.classList.add('dark');
       } else {
-        if (this._document.documentElement.className.includes('dark')) {
-          this._renderer.removeClass(this._document.documentElement, 'dark');
-        }
+        html.classList.remove('dark');
       }
     });
   }
 
-  /**
-   * Toggle between light and dark themes
-   */
   public toggleDarkMode(): void {
-    if (isPlatformBrowser(this._platformId)) {
-      const newTheme: Theme =
-        localStorage.getItem('theme') === 'dark' ? 'light' : 'dark';
-      localStorage.setItem('theme', newTheme);
-      this._theme$.next(newTheme);
-    }
+    const newTheme: Theme =
+      localStorage.getItem('theme') === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('theme', newTheme);
+    this._theme$.next(newTheme);
   }
 
-  /**
-   * Set a specific theme
-   */
   public setTheme(theme: Theme): void {
-    if (isPlatformBrowser(this._platformId)) {
-      localStorage.setItem('theme', theme);
-      this._theme$.next(theme);
-    }
+    localStorage.setItem('theme', theme);
+    this._theme$.next(theme);
   }
 
-  /**
-   * Get current theme synchronously
-   */
   public getCurrentTheme(): Theme {
-    if (isPlatformBrowser(this._platformId)) {
-      return localStorage.getItem('theme') === 'dark' ? 'dark' : 'light';
-    }
-    return 'light';
+    return localStorage.getItem('theme') === 'dark' ? 'dark' : 'light';
   }
 
   public ngOnDestroy(): void {

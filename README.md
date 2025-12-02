@@ -17,10 +17,10 @@ Pre-built theme files with Tailwind CSS v4, spartan-ng integration, and light/da
 
 ```bash
 # Pull all themes
-npx degit your-username/grg-kit/ui/themes ./src/styles/themes
+npx degit your-username/grg-kit/ui/themes ./src/styles/themes --mode=git
 
 # Pull a specific theme
-npx degit your-username/grg-kit/ui/themes/grg-theme.css ./src/styles/theme.css
+npx degit your-username/grg-kit/ui/themes/grg-theme.css ./src/styles/theme.css --mode=git
 ```
 
 | Theme | Description |
@@ -38,10 +38,10 @@ Reusable Angular component snippets.
 
 ```bash
 # Pull all components
-npx degit your-username/grg-kit/ui/components ./src/app/components
+npx degit your-username/grg-kit/ui/components ./src/app/components --mode=git
 
 # Pull a specific component
-npx degit your-username/grg-kit/ui/components/button ./src/app/components/button
+npx degit your-username/grg-kit/ui/components/button ./src/app/components/button --mode=git
 ```
 
 ### Layouts
@@ -50,10 +50,10 @@ Page layout templates and patterns.
 
 ```bash
 # Pull all layouts
-npx degit your-username/grg-kit/ui/layouts ./src/app/layouts
+npx degit your-username/grg-kit/ui/layouts ./src/app/layouts --mode=git
 
 # Pull a specific layout
-npx degit your-username/grg-kit/ui/layouts/dashboard ./src/app/layouts/dashboard
+npx degit your-username/grg-kit/ui/layouts/dashboard ./src/app/layouts/dashboard --mode=git
 ```
 
 ### Utils
@@ -62,10 +62,10 @@ Utility functions, directives, and pipes.
 
 ```bash
 # Pull all utilities
-npx degit your-username/grg-kit/ui/utils ./src/app/utils
+npx degit your-username/grg-kit/ui/utils ./src/app/utils --mode=git
 
 # Pull a specific utility
-npx degit your-username/grg-kit/ui/utils/theme-switcher ./src/app/utils/theme-switcher
+npx degit your-username/grg-kit/ui/utils/theme-switcher ./src/app/utils/theme-switcher --mode=git
 ```
 
 | Utility | Description |

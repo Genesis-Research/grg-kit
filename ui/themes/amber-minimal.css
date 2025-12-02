@@ -1,4 +1,7 @@
-:root {
+/* Theme: amber-minimal */
+
+:root,
+[data-theme="amber-minimal"] {
   --background: oklch(1.0000 0 0);
   --foreground: oklch(0.2686 0 0);
   --card: oklch(1.0000 0 0);
@@ -53,7 +56,9 @@
   --spacing: 0.25rem;
 }
 
-.dark {
+.dark,
+[data-theme="amber-minimal"].dark,
+[data-theme="amber-minimal-dark"] {
   --background: oklch(0.2046 0 0);
   --foreground: oklch(0.9219 0 0);
   --card: oklch(0.2686 0 0);
