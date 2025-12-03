@@ -1,16 +1,5 @@
-
+@import "@angular/cdk/overlay-prebuilt.css";
+@import "tailwindcss";
 @import "@spartan-ng/brain/hlm-tailwind-preset.css";
 
-@import "@angular/cdk/overlay-prebuilt.css";
-
-@import "./themes/claude.css";
-
-
-@layer base {
-    * {
-    @apply border-border outline-ring/50;
-    }
-    body {
-    @apply bg-background text-foreground;
-    }
-}
+@import './themes/claude.css';

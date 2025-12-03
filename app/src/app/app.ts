@@ -1,44 +1,58 @@
 import { Component, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { ThemeService } from './services/theme.service';
+import { HlmButtonImports } from '@spartan-ng/helm/button';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, HlmButtonImports],
   template: `
-    <div class="min-h-screen bg-background text-foreground p-8">
-      <header class="flex justify-between items-center mb-8">
-        <h1 class="text-2xl font-bold">GRG Kit Demo</h1>
-        <button
-          (click)="themeService.toggleDarkMode()"
-          class="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
-        >
-          Toggle Theme
-        </button>
+    <div class="min-h-screen bg-background text-foreground">
+      <header class="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex h-14 items-center justify-between">
+            <div class="flex items-center gap-6">
+              <h1 class="text-lg font-semibold">GRG Kit</h1>
+              <nav class="flex items-center gap-1">
+                <a
+                  routerLink="/"
+                  routerLinkActive="bg-accent text-accent-foreground"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  class="px-3 py-1.5 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground"
+                >
+                  Components
+                </a>
+                <a
+                  routerLink="/colors"
+                  routerLinkActive="bg-accent text-accent-foreground"
+                  class="px-3 py-1.5 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground"
+                >
+                  Colors
+                </a>
+                <a
+                  routerLink="/typography"
+                  routerLinkActive="bg-accent text-accent-foreground"
+                  class="px-3 py-1.5 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground"
+                >
+                  Typography
+                </a>
+                <a
+                  routerLink="/data-table"
+                  routerLinkActive="bg-accent text-accent-foreground"
+                  class="px-3 py-1.5 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground"
+                >
+                  Data Table
+                </a>
+              </nav>
+            </div>
+            <button hlmBtn variant="outline" size="sm" (click)="themeService.toggleDarkMode()">
+              Toggle Theme
+            </button>
+          </div>
+        </div>
       </header>
 
-      <main class="space-y-8">
-        <section class="p-6 rounded-lg bg-card text-card-foreground border border-border">
-          <h2 class="text-xl font-semibold mb-4">Color Palette</h2>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="p-4 rounded bg-primary text-primary-foreground">Primary</div>
-            <div class="p-4 rounded bg-secondary text-secondary-foreground">Secondary</div>
-            <div class="p-4 rounded bg-accent text-accent-foreground">Accent</div>
-            <div class="p-4 rounded bg-muted text-muted-foreground">Muted</div>
-            <div class="p-4 rounded bg-destructive text-destructive-foreground">Destructive</div>
-            <div class="p-4 rounded bg-card text-card-foreground border border-border">Card</div>
-            <div class="p-4 rounded bg-popover text-popover-foreground border border-border">Popover</div>
-            <div class="p-4 rounded bg-sidebar text-sidebar-foreground border border-border">Sidebar</div>
-          </div>
-        </section>
-
-        <section class="p-6 rounded-lg bg-card text-card-foreground border border-border">
-          <h2 class="text-xl font-semibold mb-4">Typography</h2>
-          <p class="font-sans mb-2">Sans: The quick brown fox jumps over the lazy dog</p>
-          <p class="font-serif mb-2">Serif: The quick brown fox jumps over the lazy dog</p>
-          <p class="font-mono">Mono: The quick brown fox jumps over the lazy dog</p>
-        </section>
-
+      <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <router-outlet />
       </main>
     </div>
