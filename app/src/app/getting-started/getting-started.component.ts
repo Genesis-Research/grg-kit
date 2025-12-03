@@ -136,20 +136,32 @@ npx ng g @spartan-ng/cli:ui dialog</code></pre>
         </div>
         <div hlmCardContent class="space-y-4">
           <div class="space-y-2">
-            <p class="text-sm font-medium">Create a themes directory:</p>
+            <p class="text-sm font-medium">Option 1: Using GRG CLI (Recommended):</p>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code># Install CLI globally
+npm install -g grg-kit-cli
+
+# Initialize with default theme
+grg init
+
+# Or choose a specific theme
+grg init --theme claude</code></pre>
+          </div>
+
+          <div class="space-y-2">
+            <p class="text-sm font-medium">Option 2: Using degit directly:</p>
             <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>mkdir -p src/themes</code></pre>
           </div>
           
           <div class="space-y-2">
             <p class="text-sm font-medium">Pull a theme using degit:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code># Claude theme (warm tones)
-npx degit Genesis-Research/grg-kit/templates/ui/themes/claude.css ./src/themes/claude.css --mode=git
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code># GRG default theme (purple/orange accents)
+npx degit gh:Genesis-Research/grg-kit/templates/ui/themes/grg-theme.css src/themes/grg-theme.css
 
 # Or choose another theme:
-# npx degit Genesis-Research/grg-kit/templates/ui/themes/grg-theme.css ./src/themes/grg-theme.css --mode=git
-# npx degit Genesis-Research/grg-kit/templates/ui/themes/clean-slate.css ./src/themes/clean-slate.css --mode=git
-# npx degit Genesis-Research/grg-kit/templates/ui/themes/modern-minimal.css ./src/themes/modern-minimal.css --mode=git
-# npx degit Genesis-Research/grg-kit/templates/ui/themes/amber-minimal.css ./src/themes/amber-minimal.css --mode=git</code></pre>
+# npx degit gh:Genesis-Research/grg-kit/templates/ui/themes/claude.css src/themes/claude.css
+# npx degit gh:Genesis-Research/grg-kit/templates/ui/themes/clean-slate.css src/themes/clean-slate.css
+# npx degit gh:Genesis-Research/grg-kit/templates/ui/themes/modern-minimal.css src/themes/modern-minimal.css
+# npx degit gh:Genesis-Research/grg-kit/templates/ui/themes/amber-minimal.css src/themes/amber-minimal.css</code></pre>
           </div>
 
           <div class="space-y-2">
@@ -160,7 +172,7 @@ npx degit Genesis-Research/grg-kit/templates/ui/themes/claude.css ./src/themes/c
 @import "tailwindcss";
 @import "@spartan-ng/brain/hlm-tailwind-preset.css";
 
-@import './themes/claude.css';</code></pre>
+@import './themes/grg-theme.css';</code></pre>
             </div>
           </div>
 
@@ -195,15 +207,15 @@ npx degit Genesis-Research/grg-kit/templates/ui/themes/claude.css ./src/themes/c
         <div hlmCardContent class="space-y-4">
           <div class="space-y-2">
             <p class="text-sm font-medium">Pull all Spartan-NG examples:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>npx degit Genesis-Research/grg-kit/templates/spartan-examples ./src/app/spartan-examples --mode=git</code></pre>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>npx degit gh:Genesis-Research/grg-kit/templates/spartan-examples src/app/spartan-examples</code></pre>
           </div>
           <div class="space-y-2">
             <p class="text-sm font-medium">Or pull specific component examples:</p>
             <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code># Pull button examples
-npx degit Genesis-Research/grg-kit/templates/spartan-examples/components/(button) ./src/app/examples/button --mode=git
+npx degit gh:Genesis-Research/grg-kit/templates/spartan-examples/components/(button) src/app/examples/button
 
 # Pull dialog examples
-npx degit Genesis-Research/grg-kit/templates/spartan-examples/components/(dialog) ./src/app/examples/dialog --mode=git</code></pre>
+npx degit gh:Genesis-Research/grg-kit/templates/spartan-examples/components/(dialog) src/app/examples/dialog</code></pre>
           </div>
           <div class="mt-4 p-4 bg-accent/50 rounded-md">
             <p class="text-sm font-medium mb-2">📚 What's Included</p>
@@ -235,11 +247,11 @@ npx degit Genesis-Research/grg-kit/templates/spartan-examples/components/(dialog
         <div hlmCardContent class="space-y-4">
           <div class="space-y-2">
             <p class="text-sm font-medium">Pull a component:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>npx degit Genesis-Research/grg-kit/templates/ui/components/stepper ./src/app/components/stepper --mode=git</code></pre>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>npx degit gh:Genesis-Research/grg-kit/templates/ui/components/stepper src/app/components/stepper</code></pre>
           </div>
           <div class="space-y-2">
             <p class="text-sm font-medium">Pull a layout:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>npx degit Genesis-Research/grg-kit/templates/ui/layouts/dashboard ./src/app/layouts/dashboard --mode=git</code></pre>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>npx degit gh:Genesis-Research/grg-kit/templates/ui/layouts/dashboard src/app/layouts/dashboard</code></pre>
           </div>
           <div class="mt-4 p-4 bg-accent/50 rounded-md">
             <p class="text-sm font-medium mb-2">💡 Coming Soon</p>

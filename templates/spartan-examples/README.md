@@ -28,17 +28,17 @@ Each component directory follows this pattern:
 ### Pull All Examples
 
 ```bash
-npx degit Genesis-Research/grg-kit/templates/spartan-examples ./src/app/spartan-examples --mode=git
+npx degit gh:Genesis-Research/grg-kit/templates/spartan-examples src/app/spartan-examples
 ```
 
 ### Pull Specific Component Examples
 
 ```bash
 # Example: Pull button examples
-npx degit Genesis-Research/grg-kit/templates/spartan-examples/components/(button) ./src/app/examples/button --mode=git
+npx degit gh:Genesis-Research/grg-kit/templates/spartan-examples/components/(button) src/app/examples/button
 
 # Example: Pull dialog examples
-npx degit Genesis-Research/grg-kit/templates/spartan-examples/components/(dialog) ./src/app/examples/dialog --mode=git
+npx degit gh:Genesis-Research/grg-kit/templates/spartan-examples/components/(dialog) src/app/examples/dialog
 ```
 
 ## Available Components

@@ -74,7 +74,7 @@ Pre-built theme files with Tailwind CSS v4, spartan-ng integration, and light/da
 
 ```bash
 # Pull a specific theme
-npx degit Genesis-Research/grg-kit/templates/ui/themes/claude.css ./src/themes/claude.css --mode=git
+npx degit gh:Genesis-Research/grg-kit/templates/ui/themes/grg-theme.css src/themes/grg-theme.css
 ```
 
 | Theme | Description |
@@ -92,11 +92,11 @@ Comprehensive examples of all Spartan-NG components with usage patterns, variant
 
 ```bash
 # Pull all Spartan-NG examples
-npx degit Genesis-Research/grg-kit/templates/spartan-examples ./src/app/spartan-examples --mode=git
+npx degit gh:Genesis-Research/grg-kit/templates/spartan-examples src/app/spartan-examples
 
 # Pull specific component examples
-npx degit Genesis-Research/grg-kit/templates/spartan-examples/components/(button) ./src/app/examples/button --mode=git
-npx degit Genesis-Research/grg-kit/templates/spartan-examples/components/(dialog) ./src/app/examples/dialog --mode=git
+npx degit gh:Genesis-Research/grg-kit/templates/spartan-examples/components/(button) src/app/examples/button
+npx degit gh:Genesis-Research/grg-kit/templates/spartan-examples/components/(dialog) src/app/examples/dialog
 ```
 
 **Includes 50+ component examples** covering accordion, alert, button, card, dialog, form-field, table, and many more.
@@ -107,7 +107,7 @@ Reusable Angular component snippets.
 
 ```bash
 # Pull a specific component
-npx degit Genesis-Research/grg-kit/templates/ui/components/stepper ./src/app/components/stepper --mode=git
+npx degit gh:Genesis-Research/grg-kit/templates/ui/components/stepper src/app/components/stepper
 ```
 
 ### Layouts
