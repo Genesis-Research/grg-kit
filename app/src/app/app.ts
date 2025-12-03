@@ -20,6 +20,13 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
                   [routerLinkActiveOptions]="{ exact: true }"
                   class="px-3 py-1.5 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground"
                 >
+                  Getting Started
+                </a>
+                <a
+                  routerLink="/components"
+                  routerLinkActive="bg-accent text-accent-foreground"
+                  class="px-3 py-1.5 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground"
+                >
                   Spartan Components
                 </a>
                 <a

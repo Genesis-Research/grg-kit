@@ -6,9 +6,11 @@ import { DataTableComponent } from './data-table/data-table.component';
 import { LayoutsComponent } from './layouts/layouts.component';
 import { ComponentsComponent } from './components/components.component';
 import { GrgComponentsComponent } from './grg-components/grg-components.component';
+import { GettingStartedComponent } from './getting-started/getting-started.component';
 
 export const routes: Routes = [
-  { path: '', component: ComponentsComponent },
+  { path: '', component: GettingStartedComponent },
+  { path: 'components', component: ComponentsComponent },
   { path: 'demos', component: DemosComponent },
   { path: 'colors', component: ColorsComponent },
   { path: 'typography', component: TypographyComponent },

@@ -2,6 +2,63 @@
 
 A shared resource library for Angular UI applications. Pull specific resources into your projects using [degit](https://github.com/Rich-Harris/degit).
 
+## Prerequisites & Setup
+
+Before using grg-kit resources, set up your Angular project with the required dependencies.
+
+### 1. Install Angular CLI
+
+```bash
+# Install Angular CLI globally
+npm install -g @angular/cli@latest
+
+# Create a new Angular project with CSS as default stylesheet
+ng new my-app --style=css --routing
+
+# Navigate to your project
+cd my-app
+```
+
+### 2. Install Tailwind CSS
+
+```bash
+# Install Tailwind CSS and PostCSS plugin
+npm install tailwindcss @tailwindcss/postcss postcss --force
+```
+
+Create a `.postcssrc.json` file in the root of your project:
+
+```json
+{
+  "plugins": {
+    "@tailwindcss/postcss": {}
+  }
+}
+```
+
+Add to your `src/styles.css`:
+
+```css
+@import "tailwindcss";
+```
+
+### 3. Install Spartan-NG
+
+```bash
+# Install Spartan-NG CLI
+npm install -D @spartan-ng/cli
+
+# Initialize Spartan-NG (this will set up the required dependencies)
+npx ng g @spartan-ng/cli:init
+
+# Install specific Spartan components as needed, for example:
+npx ng g @spartan-ng/cli:ui button
+npx ng g @spartan-ng/cli:ui card
+npx ng g @spartan-ng/cli:ui dialog
+```
+
+For more Spartan-NG components, visit [spartan-ng.dev](https://www.spartan.ng/).
+
 ## Installation
 
 ```bash
@@ -16,11 +73,8 @@ npm install -g degit
 Pre-built theme files with Tailwind CSS v4, spartan-ng integration, and light/dark mode support.
 
 ```bash
-# Pull all themes
-npx degit your-username/grg-kit/ui/themes ./src/styles/themes --mode=git
-
 # Pull a specific theme
-npx degit your-username/grg-kit/ui/themes/grg-theme.css ./src/styles/theme.css --mode=git
+npx degit Genesis-Research/grg-kit/templates/ui/themes/claude.css ./src/themes/claude.css --mode=git
 ```
 
 | Theme | Description |
@@ -32,16 +86,28 @@ npx degit your-username/grg-kit/ui/themes/grg-theme.css ./src/styles/theme.css -
 | `amber-minimal.css` | Warm amber accents |
 | `mocks.css` | Theme for mockups and prototypes |
 
+### Spartan-NG Examples
+
+Comprehensive examples of all Spartan-NG components with usage patterns, variants, and best practices. Perfect for developers and LLMs to understand component implementation.
+
+```bash
+# Pull all Spartan-NG examples
+npx degit Genesis-Research/grg-kit/templates/spartan-examples ./src/app/spartan-examples --mode=git
+
+# Pull specific component examples
+npx degit Genesis-Research/grg-kit/templates/spartan-examples/components/(button) ./src/app/examples/button --mode=git
+npx degit Genesis-Research/grg-kit/templates/spartan-examples/components/(dialog) ./src/app/examples/dialog --mode=git
+```
+
+**Includes 50+ component examples** covering accordion, alert, button, card, dialog, form-field, table, and many more.
+
 ### Components
 
 Reusable Angular component snippets.
 
 ```bash
-# Pull all components
-npx degit your-username/grg-kit/ui/components ./src/app/components --mode=git
-
 # Pull a specific component
-npx degit your-username/grg-kit/ui/components/button ./src/app/components/button --mode=git
+npx degit Genesis-Research/grg-kit/templates/ui/components/stepper ./src/app/components/stepper --mode=git
 ```
 
 ### Layouts
