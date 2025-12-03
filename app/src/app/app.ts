@@ -43,6 +43,13 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
                 >
                   Data Table
                 </a>
+                <a
+                  routerLink="/layouts"
+                  routerLinkActive="bg-accent text-accent-foreground"
+                  class="px-3 py-1.5 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground"
+                >
+                  Layouts
+                </a>
               </nav>
             </div>
             <button hlmBtn variant="outline" size="sm" (click)="themeService.toggleDarkMode()">
