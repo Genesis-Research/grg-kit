@@ -44,3 +44,5 @@ Thumbs.db
 
 # Auto-generated files
 /src/app/layouts/generated-sources.ts
+.vercel
+.env*.local

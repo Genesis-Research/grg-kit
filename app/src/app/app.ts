@@ -20,7 +20,28 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
                   [routerLinkActiveOptions]="{ exact: true }"
                   class="px-3 py-1.5 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground"
                 >
-                  Components
+                  Spartan Components
+                </a>
+                <a
+                  routerLink="/layouts"
+                  routerLinkActive="bg-accent text-accent-foreground"
+                  class="px-3 py-1.5 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground"
+                >
+                  Layouts
+                </a>
+                <a
+                  routerLink="/blocks"
+                  routerLinkActive="bg-accent text-accent-foreground"
+                  class="px-3 py-1.5 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground"
+                >
+                  GRG Components
+                </a>
+                <a
+                  routerLink="/demos"
+                  routerLinkActive="bg-accent text-accent-foreground"
+                  class="px-3 py-1.5 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground"
+                >
+                  Component Demos
                 </a>
                 <a
                   routerLink="/colors"
@@ -42,13 +63,6 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
                   class="px-3 py-1.5 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground"
                 >
                   Data Table
-                </a>
-                <a
-                  routerLink="/layouts"
-                  routerLinkActive="bg-accent text-accent-foreground"
-                  class="px-3 py-1.5 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground"
-                >
-                  Layouts
                 </a>
               </nav>
             </div>
