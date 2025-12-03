@@ -8,25 +8,144 @@ CLI tool for pulling GRG Kit resources into your Angular project with simple, me
 npm install -g grg-kit-cli
 ```
 
+### Optional: MCP Server Integration (Recommended for AI Assistants)
+
+To enable AI assistants (Windsurf, Cursor, Claude Desktop) to automatically discover and use GRG Kit resources:
+
+#### 1. Install the MCP Server
+
+```bash
+npm install -g @grg-kit/mcp-server
+```
+
+#### 2. Configure Your AI Assistant
+
+**Windsurf:**
+
+Add to `~/.codeium/windsurf/mcp_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "grg-kit": {
+      "command": "grg-mcp-server"
+    }
+  }
+}
+```
+
+**Cursor:**
+
+Add to `~/.cursor/mcp_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "grg-kit": {
+      "command": "grg-mcp-server"
+    }
+  }
+}
+```
+
+**Claude Desktop:**
+
+Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS):
+
+```json
+{
+  "mcpServers": {
+    "grg-kit": {
+      "command": "grg-mcp-server"
+    }
+  }
+}
+```
+
+#### 3. Generate AI Rules
+
+```bash
+cd your-angular-project
+
+# For Windsurf (default)
+grg llm-prompts
+
+# For Cursor
+grg llm-prompts --output .cursor/rules
+
+# For other IDEs
+grg llm-prompts --output .ai-rules
+```
+
+This creates rule files with:
+- `design-system.md` - GRG Kit design patterns and component usage
+- `grg-kit-mcp.md` - MCP integration workflow and best practices
+
+#### 4. Restart Your IDE
+
+Restart your IDE to load the MCP server and rules.
+
+**What this enables:**
+- ✅ AI automatically searches GRG Kit before writing custom code
+- ✅ AI knows about 60+ available resources (themes, components, layouts, examples)
+- ✅ AI follows GRG Kit design system patterns
+- ✅ AI can install resources directly via MCP tools
+
+**How it works:**
+```
+User: "I need a button component"
+         ↓
+AI reads .windsurf/rules/grg-kit-mcp.md
+         ↓
+AI calls MCP tool: search_ui_resources({ query: "button" })
+         ↓
+MCP Server → grg metadata → Returns: examples:button
+         ↓
+AI calls MCP tool: install_resource({ resource: "examples:button" })
+         ↓
+MCP Server → grg add examples:button → Downloads resource
+         ↓
+AI: "I've installed button examples. Here's how to use them..."
+```
+
 ## Quick Start
 
 ```bash
-# Initialize GRG Kit with a theme
-grg init
+# Interactive mode (easiest way to get started)
+grg
+# or
+grg interactive
+grg i
 
-# Or choose a specific theme
-grg init --theme claude
-
-# List available resources
-grg list
-
-# Add resources
-grg add theme:claude
-grg add component:stepper
-grg add examples:all
+# Or use direct commands
+grg init                    # Initialize with theme
+grg add theme:claude        # Add specific resources
+grg list                    # Browse available resources
+grg llm-prompts             # Setup AI assistant rules (recommended!)
 ```
 
 ## Commands
+
+### `grg` or `grg interactive` or `grg i`
+
+Interactive mode - browse and add resources with a guided interface.
+
+```bash
+grg
+grg interactive
+grg i
+```
+
+**What it does:**
+- Presents a simple menu to choose actions
+- Browse resources with descriptions
+- Select multiple examples at once
+- Minimal surface area, focused experience
+
+**Perfect for:**
+- First-time users
+- Exploring available resources
+- Quick resource selection
 
 ### `grg init`
 
@@ -119,6 +238,41 @@ This command outputs structured JSON/YAML metadata that can be consumed by:
 - LLMs for automated resource discovery
 - CI/CD pipelines
 - Documentation generators
+
+### `grg llm-prompts`
+
+Generate LLM-specific prompts and rules for AI assistants (Windsurf, Cursor, etc.).
+
+```bash
+grg llm-prompts [options]
+
+Options:
+  -o, --output <path>  Output directory for rules (default: ".windsurf/rules")
+
+Examples:
+  grg llm-prompts
+  grg llm-prompts --output .cursor/rules
+  grg llm-prompts -o .ai-rules
+```
+
+**What it does:**
+- Creates output directory if it doesn't exist
+- Generates `design-system.md` with GRG Kit design patterns and component usage
+- Generates `grg-kit-mcp.md` with MCP server integration rules
+- Configures AI assistants to use GRG Kit resources first
+
+**Benefits:**
+- 🤖 AI assistants will check GRG Kit resources before writing custom code
+- 🎯 Ensures consistent usage of Spartan-NG and GRG Kit components
+- 📚 Provides AI with comprehensive design system knowledge
+- 🔌 Integrates with MCP server for automatic resource discovery
+- ⚡ Speeds up development by leveraging pre-built components
+
+**Perfect for:**
+- Setting up AI-assisted development workflows
+- Ensuring team consistency when using AI tools
+- Maximizing the value of GRG Kit resources
+- Reducing custom code in favor of tested components
 
 ## MCP Server Integration
 
@@ -225,6 +379,104 @@ grg add examples:all
 - ✅ MCP server integration
 - ✅ Structured metadata for LLMs
 
+## Troubleshooting MCP Integration
+
+### Verify MCP Server is Running
+
+```bash
+# Check if grg-mcp-server is installed
+which grg-mcp-server
+
+# Test the CLI is working
+grg metadata
+```
+
+### Verify AI Assistant Configuration
+
+**Windsurf:**
+- Check `~/.codeium/windsurf/mcp_config.json` exists
+- Restart Windsurf completely
+- Check Windsurf logs for MCP connection
+
+**Cursor:**
+- Check `~/.cursor/mcp_config.json` exists
+- Restart Cursor completely
+- Look for MCP status in Cursor settings
+
+### Test MCP Tools
+
+Ask your AI assistant:
+```
+"Search for GRG Kit button components"
+```
+
+The AI should use the `search_ui_resources` MCP tool. If it doesn't:
+1. Verify MCP server is configured correctly
+2. Ensure rules are generated (`grg llm-prompts`)
+3. Restart your IDE
+4. Check IDE logs for MCP errors
+
+### Common Issues
+
+**"grg-mcp-server: command not found"**
+- Run: `npm install -g @grg-kit/mcp-server`
+- Verify npm global bin is in PATH: `npm bin -g`
+
+**"AI doesn't use GRG Kit resources"**
+- Generate rules: `grg llm-prompts`
+- Verify rules exist in `.windsurf/rules/` or `.cursor/rules/`
+- Restart IDE to load rules
+
+**"MCP server not connecting"**
+- Check MCP config file syntax (valid JSON)
+- Ensure `grg-kit-cli` is installed: `grg --version`
+- Try removing and re-adding MCP config
+
+## Quick Reference
+
+### Setup with MCP (Recommended)
+```bash
+# 1. Install CLI and MCP server
+npm install -g grg-kit-cli @grg-kit/mcp-server
+
+# 2. Configure Windsurf (add to ~/.codeium/windsurf/mcp_config.json)
+{
+  "mcpServers": {
+    "grg-kit": { "command": "grg-mcp-server" }
+  }
+}
+
+# 3. Generate AI rules in your project
+cd your-project
+grg llm-prompts
+
+# 4. Restart Windsurf
+```
+
+### Common Commands
+```bash
+grg                          # Interactive mode
+grg init                     # Initialize with theme
+grg add theme:claude         # Add theme
+grg add component:stepper    # Add component
+grg add layout:dashboard     # Add layout
+grg add examples:button      # Add example
+grg add examples:all         # Add all examples
+grg list                     # List all resources
+grg list themes              # List themes only
+grg llm-prompts              # Generate AI rules
+grg metadata                 # Output metadata (for MCP)
+```
+
+### MCP Tools (for AI Assistants)
+```typescript
+search_ui_resources({ query: "form" })           // Search resources
+suggest_resources({ requirement: "login page" }) // Get suggestions
+get_resource_details({ resource: "theme:claude" }) // Get details
+install_resource({ resource: "theme:claude" })   // Install resource
+list_available_resources({ category: "all" })    // List all
+```
+
 ## Development
 
 ```bash
@@ -238,6 +490,7 @@ npm link
 grg --help
 grg list
 grg metadata
+grg llm-prompts
 ```
 
 ## License

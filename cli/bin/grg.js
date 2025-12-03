@@ -5,13 +5,22 @@ const { add } = require('../commands/add');
 const { list } = require('../commands/list');
 const { init } = require('../commands/init');
 const { metadata } = require('../commands/metadata');
+const { interactive } = require('../commands/interactive');
+const { llmPrompts } = require('../commands/llm-prompts');
 
 const program = new Command();
 
 program
   .name('grg')
   .description('GRG Kit CLI - Pull themes, components, and examples into your Angular project')
-  .version('0.1.0');
+  .version('0.1.2');
+
+// Interactive command (default if no args)
+program
+  .command('interactive', { isDefault: false })
+  .alias('i')
+  .description('Interactive mode - browse and add resources with a guided interface')
+  .action(interactive);
 
 // Init command
 program
@@ -40,4 +49,16 @@ program
   .option('-f, --format <type>', 'Output format (json, yaml)', 'json')
   .action(metadata);
 
-program.parse();
+// LLM Prompts command
+program
+  .command('llm-prompts')
+  .description('Generate LLM-specific prompts and rules for AI assistants (Windsurf, Cursor, etc.)')
+  .option('-o, --output <path>', 'Output directory for rules', '.windsurf/rules')
+  .action(llmPrompts);
+
+// If no command provided, run interactive mode
+if (process.argv.length === 2) {
+  interactive();
+} else {
+  program.parse();
+}

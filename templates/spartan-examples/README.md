@@ -25,20 +25,36 @@ Each component directory follows this pattern:
 
 ## Installation
 
+### Prerequisites
+
+```bash
+# Install GRG CLI globally
+npm install -g grg-kit-cli
+```
+
 ### Pull All Examples
 
 ```bash
-npx degit gh:Genesis-Research/grg-kit/templates/spartan-examples src/app/spartan-examples
+grg add examples:all
 ```
 
 ### Pull Specific Component Examples
 
 ```bash
 # Example: Pull button examples
-npx degit gh:Genesis-Research/grg-kit/templates/spartan-examples/components/(button) src/app/examples/button
+grg add examples:button
 
 # Example: Pull dialog examples
-npx degit gh:Genesis-Research/grg-kit/templates/spartan-examples/components/(dialog) src/app/examples/dialog
+grg add examples:dialog
+
+# Example: Pull form-field examples
+grg add examples:form-field
+```
+
+### List Available Examples
+
+```bash
+grg list examples
 ```
 
 ## Available Components

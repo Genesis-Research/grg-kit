@@ -1,12 +1,14 @@
 {
   "name": "grg-kit-cli",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "CLI tool for pulling GRG Kit resources into your Angular project",
   "main": "index.js",
   "bin": {
     "grg": "./bin/grg.js"
   },
   "scripts": {
+    "generate": "node scripts/generate-resources.js",
+    "prepublishOnly": "npm run generate",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -25,9 +27,10 @@
     "directory": "cli"
   },
   "dependencies": {
+    "chalk": "^4.1.2",
     "commander": "^11.1.0",
     "degit": "^2.8.4",
-    "chalk": "^4.1.2",
+    "inquirer": "^8.2.7",
     "ora": "^5.4.1"
   },
   "engines": {

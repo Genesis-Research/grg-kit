@@ -1,14 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmAlertImports } from '@spartan-ng/helm/alert';
+import { HlmTabsImports } from '@spartan-ng/helm/tabs';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideTerminal, lucidePackage, lucideDownload } from '@ng-icons/lucide';
+import { lucideTerminal, lucidePackage, lucideDownload, lucideBrain, lucideZap } from '@ng-icons/lucide';
 import { HlmIcon } from '@spartan-ng/helm/icon';
 
 @Component({
   selector: 'app-getting-started',
-  imports: [HlmCardImports, HlmAlertImports, NgIcon, HlmIcon],
-  providers: [provideIcons({ lucideTerminal, lucidePackage, lucideDownload })],
+  imports: [HlmCardImports, HlmAlertImports, HlmTabsImports, NgIcon, HlmIcon],
+  providers: [provideIcons({ lucideTerminal, lucidePackage, lucideDownload, lucideBrain, lucideZap })],
   template: `
     <div class="max-w-4xl mx-auto space-y-8">
       <div class="space-y-2">
@@ -17,6 +18,22 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
           Set up your Angular project with GRG Kit components and resources
         </p>
       </div>
+
+      <!-- Tabs for CLI vs MCP -->
+      <hlm-tabs tab="cli">
+        <hlm-tabs-list class="grid w-full grid-cols-2" aria-label="Usage options">
+          <button hlmTabsTrigger="cli">
+            <ng-icon hlm name="lucideTerminal" class="mr-2" size="sm" />
+            CLI Usage
+          </button>
+          <button hlmTabsTrigger="mcp">
+            <ng-icon hlm name="lucideBrain" class="mr-2" size="sm" />
+            MCP Server (AI Assistants)
+          </button>
+        </hlm-tabs-list>
+
+        <!-- CLI Usage Tab -->
+        <div hlmTabsContent="cli">
 
       <!-- Prerequisites Alert -->
       <div hlmAlert>
@@ -136,44 +153,33 @@ npx ng g @spartan-ng/cli:ui dialog</code></pre>
         </div>
         <div hlmCardContent class="space-y-4">
           <div class="space-y-2">
-            <p class="text-sm font-medium">Option 1: Using GRG CLI (Recommended):</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code># Install CLI globally
-npm install -g grg-kit-cli
+            <p class="text-sm font-medium">Install GRG CLI:</p>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>npm install -g grg-kit-cli</code></pre>
+          </div>
 
-# Initialize with default theme
+          <div class="space-y-2">
+            <p class="text-sm font-medium">Option 1: Interactive Mode (Recommended):</p>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code># Launch interactive menu
+grg
+</code></pre>
+          </div>
+
+          <div class="space-y-2">
+            <p class="text-sm font-medium">Option 2: Direct Commands:</p>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code># Initialize with default theme
 grg init
 
 # Or choose a specific theme
 grg init --theme claude</code></pre>
           </div>
 
-          <div class="space-y-2">
-            <p class="text-sm font-medium">Option 2: Using degit directly:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>mkdir -p src/themes</code></pre>
-          </div>
-          
-          <div class="space-y-2">
-            <p class="text-sm font-medium">Pull a theme using degit:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code># GRG default theme (purple/orange accents)
-npx degit gh:Genesis-Research/grg-kit/templates/ui/themes/grg-theme.css src/themes/grg-theme.css
-
-# Or choose another theme:
-# npx degit gh:Genesis-Research/grg-kit/templates/ui/themes/claude.css src/themes/claude.css
-# npx degit gh:Genesis-Research/grg-kit/templates/ui/themes/clean-slate.css src/themes/clean-slate.css
-# npx degit gh:Genesis-Research/grg-kit/templates/ui/themes/modern-minimal.css src/themes/modern-minimal.css
-# npx degit gh:Genesis-Research/grg-kit/templates/ui/themes/amber-minimal.css src/themes/amber-minimal.css</code></pre>
-          </div>
-
-          <div class="space-y-2">
-            <p class="text-sm font-medium">Update your <code class="text-sm bg-muted px-1 py-0.5 rounded">src/styles.css</code>:</p>
-            <div class="bg-muted p-4 rounded-md space-y-2">
-              <p class="text-xs text-muted-foreground">Remove the default Spartan styles.css and import the GRG Kit theme:</p>
-              <pre class="overflow-x-auto"><code>@import "@angular/cdk/overlay-prebuilt.css";
-@import "tailwindcss";
-@import "@spartan-ng/brain/hlm-tailwind-preset.css";
-
-@import './themes/grg-theme.css';</code></pre>
-            </div>
+          <div class="mt-4 p-4 bg-muted/50 rounded-md">
+            <p class="text-sm font-medium mb-2">💡 What <code class="text-xs bg-muted px-1 py-0.5 rounded">grg init</code> does:</p>
+            <ul class="text-sm text-muted-foreground space-y-1">
+              <li>• Creates <code class="text-xs bg-muted px-1 py-0.5 rounded">src/themes</code> directory</li>
+              <li>• Downloads the selected theme</li>
+              <li>• Updates <code class="text-xs bg-muted px-1 py-0.5 rounded">src/styles.css</code> with theme import</li>
+            </ul>
           </div>
 
           <div class="mt-4 p-4 bg-accent/50 rounded-md">
@@ -207,15 +213,22 @@ npx degit gh:Genesis-Research/grg-kit/templates/ui/themes/grg-theme.css src/them
         <div hlmCardContent class="space-y-4">
           <div class="space-y-2">
             <p class="text-sm font-medium">Pull all Spartan-NG examples:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>npx degit gh:Genesis-Research/grg-kit/templates/spartan-examples src/app/spartan-examples</code></pre>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg add examples:all</code></pre>
           </div>
           <div class="space-y-2">
             <p class="text-sm font-medium">Or pull specific component examples:</p>
             <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code># Pull button examples
-npx degit gh:Genesis-Research/grg-kit/templates/spartan-examples/components/(button) src/app/examples/button
+grg add examples:button
 
 # Pull dialog examples
-npx degit gh:Genesis-Research/grg-kit/templates/spartan-examples/components/(dialog) src/app/examples/dialog</code></pre>
+grg add examples:dialog
+
+# Pull form-field examples
+grg add examples:form-field</code></pre>
+          </div>
+          <div class="space-y-2">
+            <p class="text-sm font-medium">List all available examples:</p>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg list examples</code></pre>
           </div>
           <div class="mt-4 p-4 bg-accent/50 rounded-md">
             <p class="text-sm font-medium mb-2">📚 What's Included</p>
@@ -247,18 +260,30 @@ npx degit gh:Genesis-Research/grg-kit/templates/spartan-examples/components/(dia
         <div hlmCardContent class="space-y-4">
           <div class="space-y-2">
             <p class="text-sm font-medium">Pull a component:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>npx degit gh:Genesis-Research/grg-kit/templates/ui/components/stepper src/app/components/stepper</code></pre>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg add component:stepper</code></pre>
           </div>
           <div class="space-y-2">
             <p class="text-sm font-medium">Pull a layout:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>npx degit gh:Genesis-Research/grg-kit/templates/ui/layouts/dashboard src/app/layouts/dashboard</code></pre>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg add layout:dashboard</code></pre>
+          </div>
+          <div class="space-y-2">
+            <p class="text-sm font-medium">List all available resources:</p>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code># List all categories
+grg list
+
+# List specific category
+grg list components
+grg list layouts
+grg list themes</code></pre>
           </div>
           <div class="mt-4 p-4 bg-accent/50 rounded-md">
-            <p class="text-sm font-medium mb-2">💡 Coming Soon</p>
-            <p class="text-sm text-muted-foreground">
-              Detailed instructions for downloading individual components and layouts using degit will be added soon.
-              Browse the available resources in the navigation menu above.
-            </p>
+            <p class="text-sm font-medium mb-2">💡 Quick Commands</p>
+            <ul class="text-sm text-muted-foreground space-y-1">
+              <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg add theme:claude</code> - Add a theme</li>
+              <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg add component:stepper</code> - Add a component</li>
+              <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg add layout:dashboard</code> - Add a layout</li>
+              <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg list</code> - See all available resources</li>
+            </ul>
           </div>
         </div>
       </section>
@@ -294,6 +319,233 @@ npx degit gh:Genesis-Research/grg-kit/templates/spartan-examples/components/(dia
           </ul>
         </div>
       </section>
+        </div>
+
+        <!-- MCP Server Tab -->
+        <div hlmTabsContent="mcp">
+          <div class="space-y-8 mt-8">
+            <!-- MCP Overview Alert -->
+            <div hlmAlert>
+              <ng-icon hlm hlmAlertIcon name="lucideBrain" />
+              <h4 hlmAlertTitle>AI-Powered Development</h4>
+              <p hlmAlertDescription>
+                Enable AI assistants (Windsurf, Cursor, Claude Desktop) to automatically discover and use GRG Kit resources.
+                The MCP server allows AI to search, suggest, and install components without manual intervention.
+              </p>
+            </div>
+
+            <!-- Step 1: Install MCP Server -->
+            <section hlmCard>
+              <div hlmCardHeader>
+                <div class="flex items-center gap-2">
+                  <ng-icon hlm name="lucidePackage" size="lg" />
+                  <h3 hlmCardTitle>1. Install MCP Server</h3>
+                </div>
+                <p hlmCardDescription>
+                  Install both the CLI and MCP server globally
+                </p>
+              </div>
+              <div hlmCardContent class="space-y-4">
+                <div class="space-y-2">
+                  <p class="text-sm font-medium">Install globally:</p>
+                  <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>npm install -g grg-kit-cli @grg-kit/mcp-server</code></pre>
+                </div>
+                <div class="mt-4 p-4 bg-muted/50 rounded-md">
+                  <p class="text-sm font-medium mb-2">💡 What gets installed:</p>
+                  <ul class="text-sm text-muted-foreground space-y-1">
+                    <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg</code> - CLI for manual resource management</li>
+                    <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg-mcp-server</code> - MCP server for AI integration</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
+            <!-- Step 2: Configure AI Assistant -->
+            <section hlmCard>
+              <div hlmCardHeader>
+                <div class="flex items-center gap-2">
+                  <ng-icon hlm name="lucideBrain" size="lg" />
+                  <h3 hlmCardTitle>2. Configure Your AI Assistant</h3>
+                </div>
+                <p hlmCardDescription>
+                  Add MCP server configuration to your AI assistant
+                </p>
+              </div>
+              <div hlmCardContent class="space-y-4">
+                <div class="space-y-2">
+                  <p class="text-sm font-medium">For Windsurf:</p>
+                  <p class="text-sm text-muted-foreground mb-2">Add to <code class="text-xs bg-muted px-1 py-0.5 rounded">~/.codeium/windsurf/mcp_config.json</code>:</p>
+                  <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>{{ '{' }}
+  "mcpServers": {{ '{' }}
+    "grg-kit": {{ '{' }}
+      "command": "grg-mcp-server"
+    {{ '}' }}
+  {{ '}' }}
+{{ '}' }}</code></pre>
+                </div>
+
+                <div class="space-y-2">
+                  <p class="text-sm font-medium">For Cursor:</p>
+                  <p class="text-sm text-muted-foreground mb-2">Add to <code class="text-xs bg-muted px-1 py-0.5 rounded">~/.cursor/mcp_config.json</code>:</p>
+                  <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>{{ '{' }}
+  "mcpServers": {{ '{' }}
+    "grg-kit": {{ '{' }}
+      "command": "grg-mcp-server"
+    {{ '}' }}
+  {{ '}' }}
+{{ '}' }}</code></pre>
+                </div>
+
+                <div class="space-y-2">
+                  <p class="text-sm font-medium">For Claude Desktop (macOS):</p>
+                  <p class="text-sm text-muted-foreground mb-2">Add to <code class="text-xs bg-muted px-1 py-0.5 rounded">~/Library/Application Support/Claude/claude_desktop_config.json</code>:</p>
+                  <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>{{ '{' }}
+  "mcpServers": {{ '{' }}
+    "grg-kit": {{ '{' }}
+      "command": "grg-mcp-server"
+    {{ '}' }}
+  {{ '}' }}
+{{ '}' }}</code></pre>
+                </div>
+              </div>
+            </section>
+
+            <!-- Step 3: Generate AI Rules -->
+            <section hlmCard>
+              <div hlmCardHeader>
+                <div class="flex items-center gap-2">
+                  <ng-icon hlm name="lucideZap" size="lg" />
+                  <h3 hlmCardTitle>3. Generate AI Rules</h3>
+                </div>
+                <p hlmCardDescription>
+                  Create rule files that teach AI about GRG Kit patterns
+                </p>
+              </div>
+              <div hlmCardContent class="space-y-4">
+                <div class="space-y-2">
+                  <p class="text-sm font-medium">Navigate to your project and run:</p>
+                  <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>cd your-angular-project
+
+# For Windsurf (default)
+grg llm-prompts
+
+# For Cursor
+grg llm-prompts --output .cursor/rules
+
+# For other IDEs
+grg llm-prompts --output .ai-rules</code></pre>
+                </div>
+
+                <div class="mt-4 p-4 bg-muted/50 rounded-md">
+                  <p class="text-sm font-medium mb-2">📝 Generated Files:</p>
+                  <ul class="text-sm text-muted-foreground space-y-1">
+                    <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">design-system.md</code> - GRG Kit design patterns and component usage</li>
+                    <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg-kit-mcp.md</code> - MCP integration workflow and best practices</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
+            <!-- Step 4: Restart IDE -->
+            <section hlmCard>
+              <div hlmCardHeader>
+                <div class="flex items-center gap-2">
+                  <ng-icon hlm name="lucideTerminal" size="lg" />
+                  <h3 hlmCardTitle>4. Restart Your IDE</h3>
+                </div>
+                <p hlmCardDescription>
+                  Reload to activate MCP server and rules
+                </p>
+              </div>
+              <div hlmCardContent class="space-y-4">
+                <p class="text-sm text-muted-foreground">
+                  Completely restart your IDE (Windsurf, Cursor, or Claude Desktop) to load the MCP server and generated rules.
+                </p>
+                <div class="mt-4 p-4 bg-accent/50 rounded-md">
+                  <p class="text-sm font-medium mb-2">✅ What This Enables:</p>
+                  <ul class="text-sm text-muted-foreground space-y-1">
+                    <li>• AI automatically searches GRG Kit before writing custom code</li>
+                    <li>• AI knows about 60+ available resources (themes, components, layouts, examples)</li>
+                    <li>• AI follows GRG Kit design system patterns</li>
+                    <li>• AI can install resources directly via MCP tools</li>
+                    <li>• Faster development with pre-built, tested components</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
+            <!-- How It Works -->
+            <section hlmCard>
+              <div hlmCardHeader>
+                <h3 hlmCardTitle>How It Works</h3>
+                <p hlmCardDescription>
+                  Understanding the AI-powered workflow
+                </p>
+              </div>
+              <div hlmCardContent>
+                <div class="space-y-4">
+                  <div class="p-4 bg-muted/50 rounded-md">
+                    <pre class="text-sm text-muted-foreground whitespace-pre-wrap">User: "I need a button component"
+         ↓
+AI reads .windsurf/rules/grg-kit-mcp.md
+         ↓
+AI calls MCP tool: search_ui_resources({{ '{' }} query: "button" {{ '}' }})
+         ↓
+MCP Server → grg metadata → Returns: examples:button
+         ↓
+AI calls MCP tool: install_resource({{ '{' }} resource: "examples:button" {{ '}' }})
+         ↓
+MCP Server → grg add examples:button → Downloads resource
+         ↓
+AI: "I've installed button examples. Here's how to use them..."</pre>
+                  </div>
+
+                  <div class="mt-4 p-4 bg-accent/50 rounded-md">
+                    <p class="text-sm font-medium mb-2">🔧 Available MCP Tools:</p>
+                    <ul class="text-sm text-muted-foreground space-y-1">
+                      <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">search_ui_resources</code> - Search for components, themes, layouts</li>
+                      <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">suggest_resources</code> - Get AI-powered suggestions</li>
+                      <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">get_resource_details</code> - View detailed resource info</li>
+                      <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">install_resource</code> - Install resources automatically</li>
+                      <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">list_available_resources</code> - Browse catalog</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Testing MCP Integration -->
+            <section hlmCard>
+              <div hlmCardHeader>
+                <h3 hlmCardTitle>Test Your Setup</h3>
+                <p hlmCardDescription>
+                  Verify MCP integration is working
+                </p>
+              </div>
+              <div hlmCardContent class="space-y-4">
+                <div class="space-y-2">
+                  <p class="text-sm font-medium">Ask your AI assistant:</p>
+                  <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>"Search for GRG Kit button components"</code></pre>
+                  <p class="text-sm text-muted-foreground mt-2">
+                    The AI should use the <code class="text-xs bg-muted px-1 py-0.5 rounded">search_ui_resources</code> MCP tool automatically.
+                  </p>
+                </div>
+
+                <div class="mt-4 p-4 bg-muted/50 rounded-md">
+                  <p class="text-sm font-medium mb-2">🔍 Troubleshooting:</p>
+                  <ul class="text-sm text-muted-foreground space-y-1">
+                    <li>• Verify <code class="text-xs bg-muted px-1 py-0.5 rounded">grg-mcp-server</code> is installed: <code class="text-xs bg-muted px-1 py-0.5 rounded">which grg-mcp-server</code></li>
+                    <li>• Check MCP config file exists and has valid JSON</li>
+                    <li>• Ensure rules are generated in correct directory</li>
+                    <li>• Restart IDE completely (not just reload window)</li>
+                    <li>• Check IDE logs for MCP connection errors</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </hlm-tabs>
     </div>
   `,
   styles: [],

@@ -97,6 +97,35 @@ async function metadata(options) {
         effects: [
           'Outputs structured metadata in specified format'
         ]
+      },
+      {
+        name: 'llm-prompts',
+        description: 'Generate LLM-specific prompts and rules for AI assistants (Windsurf, Cursor, etc.)',
+        usage: 'grg llm-prompts [options]',
+        options: [
+          {
+            flag: '-o, --output <path>',
+            description: 'Output directory for rules',
+            default: '.windsurf/rules'
+          }
+        ],
+        examples: [
+          'grg llm-prompts',
+          'grg llm-prompts --output .cursor/rules',
+          'grg llm-prompts -o .ai-rules'
+        ],
+        effects: [
+          'Creates output directory if it doesn\'t exist',
+          'Generates design-system.md with GRG Kit design patterns',
+          'Generates grg-kit-mcp.md with MCP server integration rules',
+          'Configures AI assistants to use GRG Kit resources first'
+        ],
+        benefits: [
+          'AI assistants will check GRG Kit resources before writing custom code',
+          'Ensures consistent usage of Spartan-NG and GRG Kit components',
+          'Provides AI with comprehensive design system knowledge',
+          'Integrates with MCP server for automatic resource discovery'
+        ]
       }
     ],
     resources: RESOURCES

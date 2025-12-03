@@ -62,8 +62,23 @@ For more Spartan-NG components, visit [spartan-ng.dev](https://www.spartan.ng/).
 ## Installation
 
 ```bash
-# Install degit globally (optional)
-npm install -g degit
+# Install GRG CLI globally
+npm install -g grg-kit-cli
+```
+
+## Quick Start
+
+```bash
+# Initialize with a theme
+grg init
+
+# Add resources
+grg add examples:all
+grg add component:stepper
+grg add layout:dashboard
+
+# List available resources
+grg list
 ```
 
 ## Available Resources
@@ -73,8 +88,12 @@ npm install -g degit
 Pre-built theme files with Tailwind CSS v4, spartan-ng integration, and light/dark mode support.
 
 ```bash
-# Pull a specific theme
-npx degit gh:Genesis-Research/grg-kit/templates/ui/themes/grg-theme.css src/themes/grg-theme.css
+# Initialize with default theme
+grg init
+
+# Or choose a specific theme
+grg init --theme claude
+grg add theme:modern-minimal
 ```
 
 | Theme | Description |
@@ -92,11 +111,15 @@ Comprehensive examples of all Spartan-NG components with usage patterns, variant
 
 ```bash
 # Pull all Spartan-NG examples
-npx degit gh:Genesis-Research/grg-kit/templates/spartan-examples src/app/spartan-examples
+grg add examples:all
 
 # Pull specific component examples
-npx degit gh:Genesis-Research/grg-kit/templates/spartan-examples/components/(button) src/app/examples/button
-npx degit gh:Genesis-Research/grg-kit/templates/spartan-examples/components/(dialog) src/app/examples/dialog
+grg add examples:button
+grg add examples:dialog
+grg add examples:form-field
+
+# List all available examples
+grg list examples
 ```
 
 **Includes 50+ component examples** covering accordion, alert, button, card, dialog, form-field, table, and many more.
@@ -107,7 +130,10 @@ Reusable Angular component snippets.
 
 ```bash
 # Pull a specific component
-npx degit gh:Genesis-Research/grg-kit/templates/ui/components/stepper src/app/components/stepper
+grg add component:stepper
+
+# List all components
+grg list components
 ```
 
 ### Layouts
@@ -115,11 +141,12 @@ npx degit gh:Genesis-Research/grg-kit/templates/ui/components/stepper src/app/co
 Page layout templates and patterns.
 
 ```bash
-# Pull all layouts
-npx degit your-username/grg-kit/ui/layouts ./src/app/layouts --mode=git
-
 # Pull a specific layout
-npx degit your-username/grg-kit/ui/layouts/dashboard ./src/app/layouts/dashboard --mode=git
+grg add layout:dashboard
+grg add layout:auth
+
+# List all layouts
+grg list layouts
 ```
 
 ### Utils
