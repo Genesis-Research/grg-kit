@@ -89,10 +89,100 @@ import { TogglePreview } from '../../../libs/spartan-examples/components/(toggle
 import { ToggleGroupPreview } from '../../../libs/spartan-examples/components/(toggle-group)/toggle-group.preview';
 import { TooltipPreview } from '../../../libs/spartan-examples/components/(tooltip)/tooltip.preview';
 
+// Import variant example components
+// Button variants
+import { ButtonSecondary } from '../../../libs/spartan-examples/components/(button)/button--secondary.example';
+import { ButtonDestructive } from '../../../libs/spartan-examples/components/(button)/button--destructive.example';
+import { ButtonOutline } from '../../../libs/spartan-examples/components/(button)/button--outline.example';
+import { ButtonGhost } from '../../../libs/spartan-examples/components/(button)/button--ghost.example';
+import { ButtonLink } from '../../../libs/spartan-examples/components/(button)/button--link.example';
+import { ButtonIcon } from '../../../libs/spartan-examples/components/(button)/button--icon.example';
+import { ButtonWithIcon } from '../../../libs/spartan-examples/components/(button)/button--with-icon.example';
+import { ButtonSpinner } from '../../../libs/spartan-examples/components/(button)/button--spinner.example';
+import { ButtonAnchor } from '../../../libs/spartan-examples/components/(button)/button--anchor.example';
+
+// Accordion variants
+import { AccordionMultipleOpened } from '../../../libs/spartan-examples/components/(accordion)/accordion--multiple-opened.example';
+
+// Alert variants
+import { AlertDestructive } from '../../../libs/spartan-examples/components/(alert)/alert--destructive.example';
+
+// Badge variants
+import { BadgeLink } from '../../../libs/spartan-examples/components/(badge)/badge--link.example';
+
+// Carousel variants
+import { CarouselOrientation } from '../../../libs/spartan-examples/components/(carousel)/carousel--orientation.example';
+import { CarouselSizes } from '../../../libs/spartan-examples/components/(carousel)/carousel--sizes.example';
+import { CarouselSpacing } from '../../../libs/spartan-examples/components/(carousel)/carousel--spacing.example';
+import { CarouselSlideCount } from '../../../libs/spartan-examples/components/(carousel)/carousel--slide-count.example';
+import { CarouselPlugins } from '../../../libs/spartan-examples/components/(carousel)/carousel--plugins.example';
+
+// Icon variants
+import { IconSizePreview } from '../../../libs/spartan-examples/components/(icon)/icon--size.example';
+import { IconMultipleSetsPreview } from '../../../libs/spartan-examples/components/(icon)/icon--multiple.example';
+import { IconResponsivePreview } from '../../../libs/spartan-examples/components/(icon)/icon--responsive.example';
+
+// Tooltip variants
+import { TooltipSimple } from '../../../libs/spartan-examples/components/(tooltip)/tooltip--simple.example';
+
+// Command variants
+import { CommandDialog } from '../../../libs/spartan-examples/components/(command)/command--dialog.example';
+
+// Navigation Menu variants
+import { NavigationMenuVertical } from '../../../libs/spartan-examples/components/(navigation-menu)/navigation-menu--vertical.example';
+import { NavigationMenuNested } from '../../../libs/spartan-examples/components/(navigation-menu)/navigation-menu--nested.example';
+import { NavigationMenuControlled } from '../../../libs/spartan-examples/components/(navigation-menu)/navigation-menu--controlled.example';
+
+// Pagination variants
+import { PaginationIconOnly } from '../../../libs/spartan-examples/components/(pagination)/pagination--icon-only.example';
+import { PaginationAdvanced } from '../../../libs/spartan-examples/components/(pagination)/pagination--advanced.example';
+import { PaginationQueryParams } from '../../../libs/spartan-examples/components/(pagination)/pagination--query-params.example';
+import { PaginationAdvancedQuery } from '../../../libs/spartan-examples/components/(pagination)/pagination--advanced-query.example';
+
+// Autocomplete variants
+// import { AutocompleteAsync } from '../../../libs/spartan-examples/components/(autocomplete)/autocomplete--async.example'; // excluded - resource API issue
+import { AutocompleteConfig } from '../../../libs/spartan-examples/components/(autocomplete)/autocomplete--config.example';
+import { AutocompleteCountries } from '../../../libs/spartan-examples/components/(autocomplete)/autocomplete--countries.example';
+import { AutocompleteForm } from '../../../libs/spartan-examples/components/(autocomplete)/autocomplete--form.example';
+import { AutocompleteTransformOptionValue } from '../../../libs/spartan-examples/components/(autocomplete)/autocomplete--transform-option-value.example';
+
+// Calendar variants
+import { CalendarMultipleExample } from '../../../libs/spartan-examples/components/(calendar)/calendar--multiple.example';
+import { CalendarRangeExample } from '../../../libs/spartan-examples/components/(calendar)/calendar--range.example';
+import { CalendarYearAndMonthExample } from '../../../libs/spartan-examples/components/(calendar)/calendar--year-and-month.example';
+
+// Date Picker variants
+import { DatePickerRangeExample } from '../../../libs/spartan-examples/components/(date-picker)/date-picker--range.example';
+import { DatePickerMultipleExample } from '../../../libs/spartan-examples/components/(date-picker)/date-picker--multi.example';
+import { DatePickerFormatExample } from '../../../libs/spartan-examples/components/(date-picker)/date-picker--format.example';
+import { DatePickerConfigExample } from '../../../libs/spartan-examples/components/(date-picker)/date-picker--config.example';
+import { DateAndTimePickerExample } from '../../../libs/spartan-examples/components/(date-picker)/date-picker--date-time.example';
+import { DatePickerFormExample } from '../../../libs/spartan-examples/components/(date-picker)/date-picker--form.example';
+import { DatePickerFormRangeExample } from '../../../libs/spartan-examples/components/(date-picker)/date-picker--form-range.example';
+import { DatePickerFormMultipleExample } from '../../../libs/spartan-examples/components/(date-picker)/date-picker--form-multi.example';
+
+// Input OTP variants
+import { InputOtpFormExample } from '../../../libs/spartan-examples/components/(input-otp)/input-otp--form.example';
+
+// Radio Group variants
+import { RadioGroupCard } from '../../../libs/spartan-examples/components/(radio-group)/radio-group--card.example';
+import { RadioGroupFormPreview } from '../../../libs/spartan-examples/components/(radio-group)/radio-group--form.example';
+
+// Breadcrumb variants - excluded due to missing @spartan-ng/helm/menu dependency
+// import { BreadcrumbDropdown } from '../../../libs/spartan-examples/components/(breadcrumb)/breadcrumb--dropdown.example';
+// import { BreadcrumbCustomSeparator } from '../../../libs/spartan-examples/components/(breadcrumb)/breadcrumb--custom-separator.example';
+// import { BreadcrumbCollapsed } from '../../../libs/spartan-examples/components/(breadcrumb)/breadcrumb--collapsed.example';
+
+interface VariantItem {
+  id: string;
+  title: string;
+}
+
 interface ComponentItem {
   id: string;
   title: string;
   preview: Type<unknown>;
+  variants?: VariantItem[];
 }
 
 interface ComponentCategory {
@@ -194,7 +284,7 @@ interface ComponentCategory {
         <div class="flex items-center justify-between px-6 py-3 border-b bg-muted/30">
           <div>
             <h2 class="text-lg font-semibold">{{ currentComponentTitle() }}</h2>
-            <p class="text-sm text-muted-foreground">{{ currentComponentId() }}</p>
+            <p class="text-sm text-muted-foreground">{{ activeComponent() }}</p>
           </div>
           <div class="flex items-center gap-2">
             <div class="flex rounded-lg border p-1">
@@ -220,6 +310,34 @@ interface ComponentCategory {
           </div>
         </div>
 
+        <!-- Variants Tabs (if component has variants) -->
+        @if (currentComponentVariants().length > 0) {
+          <div class="border-b px-6">
+            <div class="flex gap-1 -mb-px overflow-x-auto">
+              <button
+                class="px-4 py-2 text-sm font-medium border-b-2 transition-colors whitespace-nowrap"
+                [class]="!activeVariant()
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-muted-foreground hover:text-foreground'"
+                (click)="selectVariant(null)"
+              >
+                Default
+              </button>
+              @for (variant of currentComponentVariants(); track variant.id) {
+                <button
+                  class="px-4 py-2 text-sm font-medium border-b-2 transition-colors whitespace-nowrap"
+                  [class]="activeVariant() === variant.id
+                    ? 'border-primary text-primary'
+                    : 'border-transparent text-muted-foreground hover:text-foreground'"
+                  (click)="selectVariant(variant.id)"
+                >
+                  {{ variant.title }}
+                </button>
+              }
+            </div>
+          </div>
+        }
+
         <!-- Preview or Code -->
         <div class="flex-1 overflow-auto" [class]="showCode() ? '' : 'bg-muted/20 p-6'">
           @if (showCode()) {
@@ -236,10 +354,12 @@ interface ComponentCategory {
 })
 export class ComponentsComponent {
   activeComponent = signal('button');
+  activeVariant = signal<string | null>(null);
   showCode = signal(false);
 
-  // Map component IDs to their preview components
+  // Map component IDs to their preview components (including variants)
   previewComponents: Record<string, Type<unknown>> = {
+    // Main components
     'accordion': AccordionPreview,
     'alert': AlertPreview,
     'alert-dialog': AlertDialogPreview,
@@ -247,9 +367,7 @@ export class ComponentsComponent {
     'autocomplete': AutocompletePreview,
     'avatar': AvatarPreview,
     'badge': BadgePreview,
-    // 'breadcrumb': BreadcrumbPreview, // excluded
     'button': ButtonPreview,
-    // 'button-group': ButtonGroupPreview, // excluded
     'calendar': CalendarPreview,
     'card': CardPreview,
     'carousel': CarouselPreview,
@@ -257,34 +375,25 @@ export class ComponentsComponent {
     'collapsible': CollapsiblePreview,
     'combobox': ComboboxPreview,
     'command': CommandPreview,
-    // 'context-menu': ContextMenuPreview, // excluded
-    // 'data-table': DataTablePreview, // excluded
     'date-picker': DatePickerPreview,
-    // 'dialog': DialogPreview, // excluded
-    // 'dropdown-menu': DropdownPreview, // excluded
     'empty': EmptyPreview,
     'field': FieldPreview,
     'form-field': FormFieldPreview,
     'hover-card': HoverCardPreview,
     'icon': IconPreview,
     'input': InputPreview,
-    // 'input-group': InputGroupPreview, // excluded
     'input-otp': InputOtpPreview,
-    // 'item': ItemPreview, // excluded
     'kbd': KbdPreview,
     'label': LabelPreview,
-    // 'menubar': MenubarPreview, // excluded - missing dependencies
     'navigation-menu': NavigationMenuPreview,
     'pagination': PaginationPreview,
     'popover': PopoverPreview,
     'progress': ProgressPreview,
     'radio-group': RadioGroupPreview,
     'resizable': ResizablePreviewComponent,
-    // 'scroll-area': ScrollAreaPreview, // excluded - missing ngx-scrollbar
     'select': SelectPreview,
     'separator': SeparatorPreview,
     'sheet': SheetPreview,
-    // 'sidebar': SidebarPreviewComponent, // excluded
     'skeleton': SkeletonPreview,
     'slider': SliderPreview,
     'sonner': SonnerPreview,
@@ -296,6 +405,84 @@ export class ComponentsComponent {
     'toggle': TogglePreview,
     'toggle-group': ToggleGroupPreview,
     'tooltip': TooltipPreview,
+
+    // Button variants
+    'button--secondary': ButtonSecondary,
+    'button--destructive': ButtonDestructive,
+    'button--outline': ButtonOutline,
+    'button--ghost': ButtonGhost,
+    'button--link': ButtonLink,
+    'button--icon': ButtonIcon,
+    'button--with-icon': ButtonWithIcon,
+    'button--spinner': ButtonSpinner,
+    'button--anchor': ButtonAnchor,
+
+    // Accordion variants
+    'accordion--multiple-opened': AccordionMultipleOpened,
+
+    // Alert variants
+    'alert--destructive': AlertDestructive,
+
+    // Badge variants
+    'badge--link': BadgeLink,
+
+    // Carousel variants
+    'carousel--orientation': CarouselOrientation,
+    'carousel--sizes': CarouselSizes,
+    'carousel--spacing': CarouselSpacing,
+    'carousel--slide-count': CarouselSlideCount,
+    'carousel--plugins': CarouselPlugins,
+
+    // Icon variants
+    'icon--size': IconSizePreview,
+    'icon--multiple': IconMultipleSetsPreview,
+    'icon--responsive': IconResponsivePreview,
+
+    // Tooltip variants
+    'tooltip--simple': TooltipSimple,
+
+    // Command variants
+    'command--dialog': CommandDialog,
+
+    // Navigation Menu variants
+    'navigation-menu--vertical': NavigationMenuVertical,
+    'navigation-menu--nested': NavigationMenuNested,
+    'navigation-menu--controlled': NavigationMenuControlled,
+
+    // Pagination variants
+    'pagination--icon-only': PaginationIconOnly,
+    'pagination--advanced': PaginationAdvanced,
+    'pagination--query-params': PaginationQueryParams,
+    'pagination--advanced-query': PaginationAdvancedQuery,
+
+    // Autocomplete variants
+    // 'autocomplete--async': AutocompleteAsync, // excluded - resource API issue
+    'autocomplete--config': AutocompleteConfig,
+    'autocomplete--countries': AutocompleteCountries,
+    'autocomplete--form': AutocompleteForm,
+    'autocomplete--transform-option-value': AutocompleteTransformOptionValue,
+
+    // Calendar variants
+    'calendar--multiple': CalendarMultipleExample,
+    'calendar--range': CalendarRangeExample,
+    'calendar--year-and-month': CalendarYearAndMonthExample,
+
+    // Date Picker variants
+    'date-picker--range': DatePickerRangeExample,
+    'date-picker--multi': DatePickerMultipleExample,
+    'date-picker--format': DatePickerFormatExample,
+    'date-picker--config': DatePickerConfigExample,
+    'date-picker--date-time': DateAndTimePickerExample,
+    'date-picker--form': DatePickerFormExample,
+    'date-picker--form-range': DatePickerFormRangeExample,
+    'date-picker--form-multi': DatePickerFormMultipleExample,
+
+    // Input OTP variants
+    'input-otp--form': InputOtpFormExample,
+
+    // Radio Group variants
+    'radio-group--card': RadioGroupCard,
+    'radio-group--form': RadioGroupFormPreview,
   };
 
   categories: ComponentCategory[] = [
@@ -305,14 +492,27 @@ export class ComponentsComponent {
       icon: 'lucideType',
       expanded: true,
       items: [
-        { id: 'button', title: 'Button', preview: ButtonPreview },
-        // { id: 'button-group', title: 'Button Group', preview: ButtonGroupPreview }, // excluded
+        { id: 'button', title: 'Button', preview: ButtonPreview, variants: [
+          { id: 'button--secondary', title: 'Secondary' },
+          { id: 'button--destructive', title: 'Destructive' },
+          { id: 'button--outline', title: 'Outline' },
+          { id: 'button--ghost', title: 'Ghost' },
+          { id: 'button--link', title: 'Link' },
+          { id: 'button--icon', title: 'Icon' },
+          { id: 'button--with-icon', title: 'With Icon' },
+          { id: 'button--spinner', title: 'Spinner' },
+          { id: 'button--anchor', title: 'As Anchor' },
+        ]},
         { id: 'checkbox', title: 'Checkbox', preview: CheckboxPreview },
         { id: 'input', title: 'Input', preview: InputPreview },
-        // { id: 'input-group', title: 'Input Group', preview: InputGroupPreview }, // excluded
-        { id: 'input-otp', title: 'Input OTP', preview: InputOtpPreview },
+        { id: 'input-otp', title: 'Input OTP', preview: InputOtpPreview, variants: [
+          { id: 'input-otp--form', title: 'With Form' },
+        ]},
         { id: 'label', title: 'Label', preview: LabelPreview },
-        { id: 'radio-group', title: 'Radio Group', preview: RadioGroupPreview },
+        { id: 'radio-group', title: 'Radio Group', preview: RadioGroupPreview, variants: [
+          { id: 'radio-group--card', title: 'Card Style' },
+          { id: 'radio-group--form', title: 'With Form' },
+        ]},
         { id: 'select', title: 'Select', preview: SelectPreview },
         { id: 'slider', title: 'Slider', preview: SliderPreview },
         { id: 'switch', title: 'Switch', preview: SwitchPreview },
@@ -327,17 +527,29 @@ export class ComponentsComponent {
       icon: 'lucideLayoutGrid',
       expanded: false,
       items: [
-        { id: 'accordion', title: 'Accordion', preview: AccordionPreview },
+        { id: 'accordion', title: 'Accordion', preview: AccordionPreview, variants: [
+          { id: 'accordion--multiple-opened', title: 'Multiple Opened' },
+        ]},
         { id: 'avatar', title: 'Avatar', preview: AvatarPreview },
-        { id: 'badge', title: 'Badge', preview: BadgePreview },
+        { id: 'badge', title: 'Badge', preview: BadgePreview, variants: [
+          { id: 'badge--link', title: 'As Link' },
+        ]},
         { id: 'card', title: 'Card', preview: CardPreview },
-        { id: 'carousel', title: 'Carousel', preview: CarouselPreview },
+        { id: 'carousel', title: 'Carousel', preview: CarouselPreview, variants: [
+          { id: 'carousel--orientation', title: 'Orientation' },
+          { id: 'carousel--sizes', title: 'Sizes' },
+          { id: 'carousel--spacing', title: 'Spacing' },
+          { id: 'carousel--slide-count', title: 'Slide Count' },
+          { id: 'carousel--plugins', title: 'Plugins' },
+        ]},
         { id: 'collapsible', title: 'Collapsible', preview: CollapsiblePreview },
-        // { id: 'data-table', title: 'Data Table', preview: DataTablePreview }, // excluded
         { id: 'empty', title: 'Empty', preview: EmptyPreview },
-        { id: 'icon', title: 'Icon', preview: IconPreview },
+        { id: 'icon', title: 'Icon', preview: IconPreview, variants: [
+          { id: 'icon--size', title: 'Sizes' },
+          { id: 'icon--multiple', title: 'Multiple' },
+          { id: 'icon--responsive', title: 'Responsive' },
+        ]},
         { id: 'progress', title: 'Progress', preview: ProgressPreview },
-        // { id: 'scroll-area', title: 'Scroll Area', preview: ScrollAreaPreview }, // excluded
         { id: 'separator', title: 'Separator', preview: SeparatorPreview },
         { id: 'skeleton', title: 'Skeleton', preview: SkeletonPreview },
         { id: 'spinner', title: 'Spinner', preview: SpinnerPreview },
@@ -351,10 +563,14 @@ export class ComponentsComponent {
       icon: 'lucideMessageSquare',
       expanded: false,
       items: [
-        { id: 'alert', title: 'Alert', preview: AlertPreview },
+        { id: 'alert', title: 'Alert', preview: AlertPreview, variants: [
+          { id: 'alert--destructive', title: 'Destructive' },
+        ]},
         { id: 'alert-dialog', title: 'Alert Dialog', preview: AlertDialogPreview },
         { id: 'sonner', title: 'Sonner (Toast)', preview: SonnerPreview },
-        { id: 'tooltip', title: 'Tooltip', preview: TooltipPreview },
+        { id: 'tooltip', title: 'Tooltip', preview: TooltipPreview, variants: [
+          { id: 'tooltip--simple', title: 'Simple' },
+        ]},
       ],
     },
     {
@@ -363,12 +579,9 @@ export class ComponentsComponent {
       icon: 'lucideBox',
       expanded: false,
       items: [
-        // { id: 'dialog', title: 'Dialog', preview: DialogPreview }, // excluded
-        // { id: 'dropdown-menu', title: 'Dropdown Menu', preview: DropdownPreview }, // excluded
         { id: 'hover-card', title: 'Hover Card', preview: HoverCardPreview },
         { id: 'popover', title: 'Popover', preview: PopoverPreview },
         { id: 'sheet', title: 'Sheet', preview: SheetPreview },
-        // { id: 'context-menu', title: 'Context Menu', preview: ContextMenuPreview }, // excluded
       ],
     },
     {
@@ -377,12 +590,20 @@ export class ComponentsComponent {
       icon: 'lucideNavigation',
       expanded: false,
       items: [
-        // { id: 'breadcrumb', title: 'Breadcrumb', preview: BreadcrumbPreview }, // excluded
-        { id: 'command', title: 'Command', preview: CommandPreview },
-        // { id: 'menubar', title: 'Menubar', preview: MenubarPreview }, // excluded
-        { id: 'navigation-menu', title: 'Navigation Menu', preview: NavigationMenuPreview },
-        { id: 'pagination', title: 'Pagination', preview: PaginationPreview },
-        // { id: 'sidebar', title: 'Sidebar', preview: SidebarPreviewComponent }, // excluded
+        { id: 'command', title: 'Command', preview: CommandPreview, variants: [
+          { id: 'command--dialog', title: 'Dialog' },
+        ]},
+        { id: 'navigation-menu', title: 'Navigation Menu', preview: NavigationMenuPreview, variants: [
+          { id: 'navigation-menu--vertical', title: 'Vertical' },
+          { id: 'navigation-menu--nested', title: 'Nested' },
+          { id: 'navigation-menu--controlled', title: 'Controlled' },
+        ]},
+        { id: 'pagination', title: 'Pagination', preview: PaginationPreview, variants: [
+          { id: 'pagination--icon-only', title: 'Icon Only' },
+          { id: 'pagination--advanced', title: 'Advanced' },
+          { id: 'pagination--query-params', title: 'Query Params' },
+          { id: 'pagination--advanced-query', title: 'Advanced Query' },
+        ]},
       ],
     },
     {
@@ -391,10 +612,29 @@ export class ComponentsComponent {
       icon: 'lucideCalendar',
       expanded: false,
       items: [
-        { id: 'autocomplete', title: 'Autocomplete', preview: AutocompletePreview },
-        { id: 'calendar', title: 'Calendar', preview: CalendarPreview },
+        { id: 'autocomplete', title: 'Autocomplete', preview: AutocompletePreview, variants: [
+          // { id: 'autocomplete--async', title: 'Async' }, // excluded - resource API issue
+          { id: 'autocomplete--config', title: 'Config' },
+          { id: 'autocomplete--countries', title: 'Countries' },
+          { id: 'autocomplete--form', title: 'With Form' },
+          { id: 'autocomplete--transform-option-value', title: 'Transform Value' },
+        ]},
+        { id: 'calendar', title: 'Calendar', preview: CalendarPreview, variants: [
+          { id: 'calendar--multiple', title: 'Multiple' },
+          { id: 'calendar--range', title: 'Range' },
+          { id: 'calendar--year-and-month', title: 'Year & Month' },
+        ]},
         { id: 'combobox', title: 'Combobox', preview: ComboboxPreview },
-        { id: 'date-picker', title: 'Date Picker', preview: DatePickerPreview },
+        { id: 'date-picker', title: 'Date Picker', preview: DatePickerPreview, variants: [
+          { id: 'date-picker--range', title: 'Range' },
+          { id: 'date-picker--multi', title: 'Multiple' },
+          { id: 'date-picker--format', title: 'Format' },
+          { id: 'date-picker--config', title: 'Config' },
+          { id: 'date-picker--date-time', title: 'Date Time' },
+          { id: 'date-picker--form', title: 'With Form' },
+          { id: 'date-picker--form-range', title: 'Form Range' },
+          { id: 'date-picker--form-multi', title: 'Form Multi' },
+        ]},
       ],
     },
     {
@@ -423,7 +663,6 @@ export class ComponentsComponent {
       icon: 'lucideMoreHorizontal',
       expanded: false,
       items: [
-        // { id: 'item', title: 'Item', preview: ItemPreview }, // excluded
         { id: 'kbd', title: 'Kbd', preview: KbdPreview },
       ],
     },
@@ -437,13 +676,25 @@ export class ComponentsComponent {
     return '';
   });
 
-  currentComponentId = computed(() => this.activeComponent());
+  currentComponentVariants = computed(() => {
+    for (const category of this.categories) {
+      const item = category.items.find(i => i.id === this.activeComponent());
+      if (item?.variants) return item.variants;
+    }
+    return [];
+  });
 
   currentSourceCode = computed(() => {
-    return componentSourceMap[this.activeComponent()] || '// Source code not available';
+    const id = this.activeVariant() || this.activeComponent();
+    return componentSourceMap[id] || '// Source code not available';
   });
 
   currentPreviewComponent = computed(() => {
+    // Use variant preview if available, otherwise fall back to main component
+    const variantId = this.activeVariant();
+    if (variantId && this.previewComponents[variantId]) {
+      return this.previewComponents[variantId];
+    }
     return this.previewComponents[this.activeComponent()] || ButtonPreview;
   });
 
@@ -456,5 +707,10 @@ export class ComponentsComponent {
 
   selectComponent(componentId: string) {
     this.activeComponent.set(componentId);
+    this.activeVariant.set(null);
+  }
+
+  selectVariant(variantId: string | null) {
+    this.activeVariant.set(variantId);
   }
 }

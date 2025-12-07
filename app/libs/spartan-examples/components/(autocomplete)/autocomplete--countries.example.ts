@@ -1,6 +1,6 @@
 import { Component, computed, signal } from '@angular/core';
 import { HlmAutocompleteImports } from '@spartan-ng/helm/autocomplete';
-import { provideHlmAutocompleteConfig } from 'libs/helm/autocomplete/src/lib/hlm-autocomplete.token';
+import { provideHlmAutocompleteConfig } from '@spartan-ng/helm/autocomplete';
 
 type Country = {
 	name: string;

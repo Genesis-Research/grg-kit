@@ -13,35 +13,35 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmBadgeImports } from '@spartan-ng/helm/badge';
 import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
-import { AuthLoginLayoutComponent } from './auth/auth-login-layout.component';
-import { layoutSourceMap } from './generated-sources';
-import { AuthRegisterLayoutComponent } from './auth/auth-register-layout.component';
-import { AuthForgotPasswordLayoutComponent } from './auth/auth-forgot-password-layout.component';
-import { ShellSidebarLayoutComponent } from './shell/shell-sidebar-layout.component';
-import { ShellTopnavLayoutComponent } from './shell/shell-topnav-layout.component';
-import { ShellCollapsibleLayoutComponent } from './shell/shell-collapsible-layout.component';
-import { SettingsProfileLayoutComponent } from './settings/settings-profile-layout.component';
-import { SettingsNotificationsLayoutComponent } from './settings/settings-notifications-layout.component';
-import { SettingsSecurityLayoutComponent } from './settings/settings-security-layout.component';
-import { SettingsDangerLayoutComponent } from './settings/settings-danger-layout.component';
+import { AuthLoginBlockComponent } from './auth/auth-login-block.component';
+import { blockSourceMap } from './generated-sources';
+import { AuthRegisterBlockComponent } from './auth/auth-register-block.component';
+import { AuthForgotPasswordBlockComponent } from './auth/auth-forgot-password-block.component';
+import { ShellSidebarBlockComponent } from './shell/shell-sidebar-block.component';
+import { ShellTopnavBlockComponent } from './shell/shell-topnav-block.component';
+import { ShellCollapsibleBlockComponent } from './shell/shell-collapsible-block.component';
+import { SettingsProfileBlockComponent } from './settings/settings-profile-block.component';
+import { SettingsNotificationsBlockComponent } from './settings/settings-notifications-block.component';
+import { SettingsSecurityBlockComponent } from './settings/settings-security-block.component';
+import { SettingsDangerBlockComponent } from './settings/settings-danger-block.component';
 import { CodeBlockComponent } from './shared/code-block.component';
 
-interface LayoutItem {
+interface BlockItem {
   id: string;
   title: string;
   file: string;
 }
 
-interface LayoutCategory {
+interface BlockCategory {
   id: string;
   title: string;
   icon: string;
   expanded: boolean;
-  items: LayoutItem[];
+  items: BlockItem[];
 }
 
 @Component({
-  selector: 'app-layouts',
+  selector: 'app-blocks',
   standalone: true,
   imports: [
     NgIcon,
@@ -49,16 +49,16 @@ interface LayoutCategory {
     HlmButtonImports,
     HlmBadgeImports,
     HlmSidebarImports,
-    AuthLoginLayoutComponent,
-    AuthRegisterLayoutComponent,
-    AuthForgotPasswordLayoutComponent,
-    ShellSidebarLayoutComponent,
-    ShellTopnavLayoutComponent,
-    ShellCollapsibleLayoutComponent,
-    SettingsProfileLayoutComponent,
-    SettingsNotificationsLayoutComponent,
-    SettingsSecurityLayoutComponent,
-    SettingsDangerLayoutComponent,
+    AuthLoginBlockComponent,
+    AuthRegisterBlockComponent,
+    AuthForgotPasswordBlockComponent,
+    ShellSidebarBlockComponent,
+    ShellTopnavBlockComponent,
+    ShellCollapsibleBlockComponent,
+    SettingsProfileBlockComponent,
+    SettingsNotificationsBlockComponent,
+    SettingsSecurityBlockComponent,
+    SettingsDangerBlockComponent,
     CodeBlockComponent,
   ],
   viewProviders: [
@@ -77,7 +77,7 @@ interface LayoutCategory {
       <!-- Sidebar -->
       <hlm-sidebar collapsible="none" class="border-r">
         <div hlmSidebarHeader class="p-4">
-          <h2 class="text-lg font-semibold">Layouts</h2>
+          <h2 class="text-lg font-semibold">Blocks</h2>
           <p class="text-sm text-muted-foreground">Full-page templates</p>
         </div>
         <div hlmSidebarContent>
@@ -110,10 +110,10 @@ interface LayoutCategory {
                           <li>
                             <button
                               class="w-full text-left px-2 py-1.5 text-sm rounded-md transition-colors"
-                              [class]="activeLayout() === item.id
+                              [class]="activeBlock() === item.id
                                 ? 'bg-accent text-accent-foreground font-medium'
                                 : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'"
-                              (click)="selectLayout(item.id)"
+                              (click)="selectBlock(item.id)"
                             >
                               {{ item.title }}
                             </button>
@@ -134,8 +134,8 @@ interface LayoutCategory {
         <!-- Header Bar -->
         <div class="flex items-center justify-between px-6 py-3 border-b bg-muted/30">
           <div>
-            <h2 class="text-lg font-semibold">{{ currentLayoutTitle() }}</h2>
-            <p class="text-sm text-muted-foreground">{{ currentLayoutFile() }}</p>
+            <h2 class="text-lg font-semibold">{{ currentBlockTitle() }}</h2>
+            <p class="text-sm text-muted-foreground">{{ currentBlockFile() }}</p>
           </div>
           <div class="flex items-center gap-2">
             <div class="flex rounded-lg border p-1">
@@ -166,36 +166,36 @@ interface LayoutCategory {
           @if (showCode()) {
             <app-code-block [code]="currentSourceCode()" class="block h-full" />
           } @else {
-          @switch (activeLayout()) {
+          @switch (activeBlock()) {
             @case ('auth-login') {
-              <app-auth-login-layout class="block h-full" />
+              <app-auth-login-block class="block h-full" />
             }
             @case ('auth-register') {
-              <app-auth-register-layout class="block h-full" />
+              <app-auth-register-block class="block h-full" />
             }
             @case ('auth-forgot-password') {
-              <app-auth-forgot-password-layout class="block h-full" />
+              <app-auth-forgot-password-block class="block h-full" />
             }
             @case ('shell-sidebar') {
-              <app-shell-sidebar-layout class="block h-full" />
+              <app-shell-sidebar-block class="block h-full" />
             }
             @case ('shell-topnav') {
-              <app-shell-topnav-layout class="block h-full" />
+              <app-shell-topnav-block class="block h-full" />
             }
             @case ('shell-collapsible') {
-              <app-shell-collapsible-layout class="block h-full" />
+              <app-shell-collapsible-block class="block h-full" />
             }
             @case ('settings-profile') {
-              <app-settings-profile-layout class="block h-full" />
+              <app-settings-profile-block class="block h-full" />
             }
             @case ('settings-notifications') {
-              <app-settings-notifications-layout class="block h-full" />
+              <app-settings-notifications-block class="block h-full" />
             }
             @case ('settings-security') {
-              <app-settings-security-layout class="block h-full" />
+              <app-settings-security-block class="block h-full" />
             }
             @case ('settings-danger') {
-              <app-settings-danger-layout class="block h-full" />
+              <app-settings-danger-block class="block h-full" />
             }
           }
           }
@@ -204,14 +204,14 @@ interface LayoutCategory {
     </div>
   `,
 })
-export class LayoutsComponent {
-  activeLayout = signal('auth-login');
+export class BlocksComponent {
+  activeBlock = signal('auth-login');
   showCode = signal(false);
 
   // Source code map from generated file
-  sourceCodeMap = layoutSourceMap;
+  sourceCodeMap = blockSourceMap;
 
-  categories: LayoutCategory[] = [
+  categories: BlockCategory[] = [
     {
       id: 'auth',
       title: 'Authentication',
@@ -248,24 +248,24 @@ export class LayoutsComponent {
     },
   ];
 
-  currentLayoutTitle = computed(() => {
+  currentBlockTitle = computed(() => {
     for (const category of this.categories) {
-      const item = category.items.find(i => i.id === this.activeLayout());
+      const item = category.items.find(i => i.id === this.activeBlock());
       if (item) return item.title;
     }
     return '';
   });
 
-  currentLayoutFile = computed(() => {
+  currentBlockFile = computed(() => {
     for (const category of this.categories) {
-      const item = category.items.find(i => i.id === this.activeLayout());
+      const item = category.items.find(i => i.id === this.activeBlock());
       if (item) return item.file;
     }
     return '';
   });
 
   currentSourceCode = computed(() => {
-    return this.sourceCodeMap[this.activeLayout()] || '// Source code not available';
+    return this.sourceCodeMap[this.activeBlock()] || '// Source code not available';
   });
 
   toggleCategory(categoryId: string) {
@@ -275,7 +275,7 @@ export class LayoutsComponent {
     }
   }
 
-  selectLayout(layoutId: string) {
-    this.activeLayout.set(layoutId);
+  selectBlock(blockId: string) {
+    this.activeBlock.set(blockId);
   }
 }

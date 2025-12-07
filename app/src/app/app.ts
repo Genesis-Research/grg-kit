@@ -30,25 +30,18 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
                   Spartan Components
                 </a>
                 <a
-                  routerLink="/layouts"
-                  routerLinkActive="bg-accent text-accent-foreground"
-                  class="px-3 py-1.5 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground"
-                >
-                  Layouts
-                </a>
-                <a
                   routerLink="/blocks"
                   routerLinkActive="bg-accent text-accent-foreground"
                   class="px-3 py-1.5 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground"
                 >
-                  GRG Components
+                  Blocks
                 </a>
                 <a
-                  routerLink="/demos"
+                  routerLink="/grg-components"
                   routerLinkActive="bg-accent text-accent-foreground"
                   class="px-3 py-1.5 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground"
                 >
-                  Component Demos
+                  GRG Components
                 </a>
                 <a
                   routerLink="/colors"

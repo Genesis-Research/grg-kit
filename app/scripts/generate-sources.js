@@ -19,28 +19,28 @@ const path = require('path');
 // ============================================================================
 
 const CONFIG = {
-  layouts: {
-    sourceDir: path.join(__dirname, '../src/app/layouts'),
-    outputFile: path.join(__dirname, '../src/app/layouts/generated-sources.ts'),
-    templatesDir: path.join(__dirname, '../../templates/ui/layouts'),
-    mapName: 'layoutSourceMap',
+  blocks: {
+    sourceDir: path.join(__dirname, '../src/app/blocks'),
+    outputFile: path.join(__dirname, '../src/app/blocks/generated-sources.ts'),
+    templatesDir: path.join(__dirname, '../../templates/ui/blocks'),
+    mapName: 'blockSourceMap',
     sources: [
-      // Auth layouts
-      { id: 'auth-login', name: 'authLoginSource', filePath: 'auth/auth-login-layout.component.ts', templateFile: 'auth/login.component.ts' },
-      { id: 'auth-register', name: 'authRegisterSource', filePath: 'auth/auth-register-layout.component.ts', templateFile: 'auth/register.component.ts' },
-      { id: 'auth-forgot-password', name: 'authForgotPasswordSource', filePath: 'auth/auth-forgot-password-layout.component.ts', templateFile: 'auth/forgot-password.component.ts' },
-      // Shell layouts
-      { id: 'shell-sidebar', name: 'shellSidebarSource', filePath: 'shell/shell-sidebar-layout.component.ts', templateFile: 'shell/sidebar-shell.component.ts' },
-      { id: 'shell-topnav', name: 'shellTopnavSource', filePath: 'shell/shell-topnav-layout.component.ts', templateFile: 'shell/topnav-shell.component.ts' },
-      { id: 'shell-collapsible', name: 'shellCollapsibleSource', filePath: 'shell/shell-collapsible-layout.component.ts', templateFile: 'shell/collapsible-shell.component.ts' },
-      // Settings layouts
-      { id: 'settings-profile', name: 'settingsProfileSource', filePath: 'settings/settings-profile-layout.component.ts', templateFile: 'settings/profile-settings.component.ts' },
-      { id: 'settings-notifications', name: 'settingsNotificationsSource', filePath: 'settings/settings-notifications-layout.component.ts', templateFile: 'settings/notification-settings.component.ts' },
-      { id: 'settings-security', name: 'settingsSecuritySource', filePath: 'settings/settings-security-layout.component.ts', templateFile: 'settings/security-settings.component.ts' },
-      { id: 'settings-danger', name: 'settingsDangerSource', filePath: 'settings/settings-danger-layout.component.ts', templateFile: 'settings/danger-zone.component.ts' },
+      // Auth blocks
+      { id: 'auth-login', name: 'authLoginSource', filePath: 'auth/auth-login-block.component.ts', templateFile: 'auth/login.component.ts' },
+      { id: 'auth-register', name: 'authRegisterSource', filePath: 'auth/auth-register-block.component.ts', templateFile: 'auth/register.component.ts' },
+      { id: 'auth-forgot-password', name: 'authForgotPasswordSource', filePath: 'auth/auth-forgot-password-block.component.ts', templateFile: 'auth/forgot-password.component.ts' },
+      // Shell blocks
+      { id: 'shell-sidebar', name: 'shellSidebarSource', filePath: 'shell/shell-sidebar-block.component.ts', templateFile: 'shell/sidebar-shell.component.ts' },
+      { id: 'shell-topnav', name: 'shellTopnavSource', filePath: 'shell/shell-topnav-block.component.ts', templateFile: 'shell/topnav-shell.component.ts' },
+      { id: 'shell-collapsible', name: 'shellCollapsibleSource', filePath: 'shell/shell-collapsible-block.component.ts', templateFile: 'shell/collapsible-shell.component.ts' },
+      // Settings blocks
+      { id: 'settings-profile', name: 'settingsProfileSource', filePath: 'settings/settings-profile-block.component.ts', templateFile: 'settings/profile-settings.component.ts' },
+      { id: 'settings-notifications', name: 'settingsNotificationsSource', filePath: 'settings/settings-notifications-block.component.ts', templateFile: 'settings/notification-settings.component.ts' },
+      { id: 'settings-security', name: 'settingsSecuritySource', filePath: 'settings/settings-security-block.component.ts', templateFile: 'settings/security-settings.component.ts' },
+      { id: 'settings-danger', name: 'settingsDangerSource', filePath: 'settings/settings-danger-block.component.ts', templateFile: 'settings/danger-zone.component.ts' },
     ],
-    transformForTemplate: transformLayoutForTemplate,
-    generateReadme: generateLayoutsReadme,
+    transformForTemplate: transformBlockForTemplate,
+    generateReadme: generateBlocksReadme,
   },
   components: {
     sourceDir: path.join(__dirname, '../libs/spartan-examples/components'),
@@ -52,7 +52,7 @@ const CONFIG = {
     transformForTemplate: transformComponentForTemplate,
     generateReadme: generateComponentsReadme,
   },
-  blocks: {
+  grgComponents: {
     sourceDir: path.join(__dirname, '../libs/grg-ui'),
     outputFile: path.join(__dirname, '../src/app/grg-components/generated-sources.ts'),
     templatesDir: path.join(__dirname, '../../templates/ui/components'),
@@ -60,8 +60,8 @@ const CONFIG = {
     sources: [], // Will be auto-discovered
     autoDiscover: true,
     autoDiscoverFn: discoverBlocks,
-    transformForTemplate: transformBlockForTemplate,
-    generateReadme: generateBlocksReadme,
+    transformForTemplate: transformGrgComponentForTemplate,
+    generateReadme: generateGrgComponentsReadme,
   },
 };
 
@@ -116,10 +116,10 @@ function toCamelCase(str) {
 }
 
 // ============================================================================
-// Layout-specific Functions
+// Block-specific Functions (page blocks like auth, shell, settings)
 // ============================================================================
 
-function transformLayoutForTemplate(content, source) {
+function transformBlockForTemplate(content, source) {
   let transformed = content;
   
   // Extract the base name from the id (e.g., 'auth-login' -> 'login')
@@ -135,7 +135,7 @@ function transformLayoutForTemplate(content, source) {
   
   // Replace class name
   transformed = transformed.replace(
-    /export class \w+LayoutComponent/,
+    /export class \w+BlockComponent/,
     `export class ${className}`
   );
   
@@ -156,14 +156,14 @@ function transformLayoutForTemplate(content, source) {
   return header + transformed;
 }
 
-function generateLayoutsReadme(templatesDir) {
-  const readme = `# Layout Templates
+function generateBlocksReadme(templatesDir) {
+  const readme = `# Block Templates
 
 > **AUTO-GENERATED** - Do not edit directly.  
-> Source of truth: \`app/src/app/layouts/\`  
-> Run \`pnpm generate:layouts\` to regenerate.
+> Source of truth: \`app/src/app/blocks/\`  
+> Run \`pnpm generate:blocks\` to regenerate.
 
-## Available Layouts
+## Available Blocks
 
 ### Authentication
 | File | Description |
@@ -511,8 +511,8 @@ function parseImport(importStatement, imports) {
   }
 }
 
-function transformBlockForTemplate(content, source) {
-  // For blocks, we merge all lib files into a single template file
+function transformGrgComponentForTemplate(content, source) {
+  // For grg components, we merge all lib files into a single template file
   const { imports, code } = mergeBlockFiles(source.fileContents);
   
   // Extract exports array from index.ts
@@ -548,7 +548,7 @@ function transformBlockForTemplate(content, source) {
   return header + imports + '\n\n' + code + (exportsArray ? '\n\n' + exportsArray : '');
 }
 
-function generateBlocksReadme(templatesDir, sources) {
+function generateGrgComponentsReadme(templatesDir, sources) {
   let tableRows = '';
   for (const source of sources) {
     const fileCount = source.fileContents ? source.fileContents.length : 0;
@@ -559,7 +559,7 @@ function generateBlocksReadme(templatesDir, sources) {
 
 > **AUTO-GENERATED** - Do not edit directly.  
 > Source of truth: \`app/libs/grg-ui/\`  
-> Run \`pnpm generate:blocks\` to regenerate.
+> Run \`pnpm generate:grgComponents\` to regenerate.
 
 ## Available Components
 
@@ -708,7 +708,7 @@ ${mapEntries.join('\n')}
 
 function main() {
   const args = process.argv.slice(2);
-  const types = args.length > 0 ? args : ['layouts', 'components', 'blocks'];
+  const types = args.length > 0 ? args : ['blocks', 'components', 'grgComponents'];
 
   console.log('🚀 Source Code Generator');
   console.log('========================');

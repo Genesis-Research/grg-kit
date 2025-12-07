@@ -9,7 +9,7 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
 import { HlmSeparatorImports } from '@spartan-ng/helm/separator';
 
 @Component({
-  selector: 'app-settings-profile-layout',
+  selector: 'app-settings-profile-block',
   standalone: true,
   imports: [NgIcon, HlmIcon, HlmButtonImports, HlmInputImports, HlmLabelImports, HlmCardImports, HlmSeparatorImports],
   viewProviders: [provideIcons({ lucideUser })],
@@ -65,4 +65,4 @@ import { HlmSeparatorImports } from '@spartan-ng/helm/separator';
     </div>
   `,
 })
-export class SettingsProfileLayoutComponent {}
+export class SettingsProfileBlockComponent {}

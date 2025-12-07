@@ -80,7 +80,7 @@ async function init(projectName, options) {
   spinner.start('Creating Spartan-NG configuration...');
   try {
     const componentsConfig = {
-      componentsPath: 'libs/ui',
+      componentsPath: 'libs/spartan-ui',
       importAlias: '@spartan-ng/helm'
     };
     await fs.writeFile('components.json', JSON.stringify(componentsConfig, null, 2) + '\n');
@@ -106,7 +106,7 @@ async function init(projectName, options) {
     tsconfig.compilerOptions = tsconfig.compilerOptions || {};
     tsconfig.compilerOptions.baseUrl = '.';
     tsconfig.compilerOptions.paths = {
-      '@spartan-ng/helm/*': ['./libs/ui/*/src/index.ts']
+      '@spartan-ng/helm/*': ['./libs/spartan-ui/*/src/index.ts']
     };
     
     await fs.writeFile(tsconfigPath, JSON.stringify(tsconfig, null, 2) + '\n');

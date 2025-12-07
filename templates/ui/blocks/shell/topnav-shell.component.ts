@@ -1,3 +1,14 @@
+/**
+ * Shell Topnav Component
+ * 
+ * A standalone Angular component ready to use in your project.
+ * Copy this file to your project and customize as needed.
+ * 
+ * Dependencies:
+ * - @spartan-ng/helm (UI components)
+ * - @ng-icons/lucide (icons)
+ * - @angular/forms (if using forms)
+ */
 import { Component } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideBell, lucideSearch, lucideChevronDown, lucideLogOut, lucideUser, lucideSettings } from '@ng-icons/lucide';
@@ -7,7 +18,7 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
 import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 
 @Component({
-  selector: 'app-shell-topnav-layout',
+  selector: 'app-topnav',
   standalone: true,
   imports: [NgIcon, HlmIcon, HlmButtonImports, HlmInputImports, HlmDropdownMenuImports],
   viewProviders: [provideIcons({ lucideBell, lucideSearch, lucideChevronDown, lucideLogOut, lucideUser, lucideSettings })],
@@ -67,7 +78,7 @@ import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
     </div>
   `,
 })
-export class ShellTopnavLayoutComponent {
+export class TopnavComponent {
   navItems = [
     { label: 'Dashboard', active: true },
     { label: 'Projects', active: false },

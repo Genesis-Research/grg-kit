@@ -6,7 +6,7 @@ import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmIcon } from '@spartan-ng/helm/icon';
 
 @Component({
-  selector: 'app-settings-danger-layout',
+  selector: 'app-settings-danger-block',
   standalone: true,
   imports: [NgIcon, HlmIcon, HlmButtonImports, HlmCardImports],
   viewProviders: [provideIcons({ lucideTrash2 })],
@@ -44,4 +44,4 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
     </div>
   `,
 })
-export class SettingsDangerLayoutComponent {}
+export class SettingsDangerBlockComponent {}

@@ -2,7 +2,7 @@
 
 > **AUTO-GENERATED** - Do not edit directly.  
 > Source of truth: `app/libs/grg-ui/`  
-> Run `pnpm generate:blocks` to regenerate.
+> Run `pnpm generate:grgComponents` to regenerate.
 
 ## Available Components
 

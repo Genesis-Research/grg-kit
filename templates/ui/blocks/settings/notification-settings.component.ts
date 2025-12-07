@@ -1,3 +1,14 @@
+/**
+ * Settings Notifications Component
+ * 
+ * A standalone Angular component ready to use in your project.
+ * Copy this file to your project and customize as needed.
+ * 
+ * Dependencies:
+ * - @spartan-ng/helm (UI components)
+ * - @ng-icons/lucide (icons)
+ * - @angular/forms (if using forms)
+ */
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgIcon, provideIcons } from '@ng-icons/core';
@@ -10,7 +21,7 @@ import { HlmSwitchImports } from '@spartan-ng/helm/switch';
 import { HlmSeparatorImports } from '@spartan-ng/helm/separator';
 
 @Component({
-  selector: 'app-settings-notifications-layout',
+  selector: 'app-notifications',
   standalone: true,
   imports: [FormsModule, NgIcon, HlmIcon, HlmButtonImports, HlmCardImports, HlmLabelImports, HlmSwitchImports, HlmSeparatorImports],
   viewProviders: [provideIcons({ lucideBell })],
@@ -52,7 +63,7 @@ import { HlmSeparatorImports } from '@spartan-ng/helm/separator';
     </div>
   `,
 })
-export class SettingsNotificationsLayoutComponent {
+export class NotificationsComponent {
   notificationGroups = [
     {
       title: 'Email Notifications',

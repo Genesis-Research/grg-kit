@@ -11,7 +11,7 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
 import { HlmInputGroupImports } from '@spartan-ng/helm/input-group';
 
 @Component({
-  selector: 'app-auth-register-layout',
+  selector: 'app-auth-register-block',
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -114,7 +114,7 @@ import { HlmInputGroupImports } from '@spartan-ng/helm/input-group';
     </div>
   `,
 })
-export class AuthRegisterLayoutComponent {
+export class AuthRegisterBlockComponent {
   showPassword = signal(false);
   strengthColors = ['bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-green-500'];
   registerForm = new FormGroup({

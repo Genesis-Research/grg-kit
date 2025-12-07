@@ -11,7 +11,7 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
 import { HlmInputGroupImports } from '@spartan-ng/helm/input-group';
 
 @Component({
-  selector: 'app-auth-login-layout',
+  selector: 'app-auth-login-block',
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -112,7 +112,7 @@ import { HlmInputGroupImports } from '@spartan-ng/helm/input-group';
     </div>
   `,
 })
-export class AuthLoginLayoutComponent {
+export class AuthLoginBlockComponent {
   showPassword = signal(false);
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),

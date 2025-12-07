@@ -5,7 +5,7 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmIcon } from '@spartan-ng/helm/icon';
 
 @Component({
-  selector: 'app-shell-collapsible-layout',
+  selector: 'app-shell-collapsible-block',
   standalone: true,
   imports: [NgIcon, HlmIcon, HlmButtonImports],
   viewProviders: [provideIcons({ lucideHome, lucideUsers, lucideSettings, lucideFileText, lucideBarChart3, lucideBell, lucideMenu })],
@@ -56,7 +56,7 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
     </div>
   `,
 })
-export class ShellCollapsibleLayoutComponent {
+export class ShellCollapsibleBlockComponent {
   collapsed = signal(false);
   navItems = [
     { icon: 'lucideHome', label: 'Dashboard', active: true },

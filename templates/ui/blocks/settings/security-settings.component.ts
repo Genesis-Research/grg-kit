@@ -1,3 +1,14 @@
+/**
+ * Settings Security Component
+ * 
+ * A standalone Angular component ready to use in your project.
+ * Copy this file to your project and customize as needed.
+ * 
+ * Dependencies:
+ * - @spartan-ng/helm (UI components)
+ * - @ng-icons/lucide (icons)
+ * - @angular/forms (if using forms)
+ */
 import { Component } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideShield } from '@ng-icons/lucide';
@@ -11,7 +22,7 @@ import { HlmSwitchImports } from '@spartan-ng/helm/switch';
 import { HlmSeparatorImports } from '@spartan-ng/helm/separator';
 
 @Component({
-  selector: 'app-settings-security-layout',
+  selector: 'app-security',
   standalone: true,
   imports: [NgIcon, HlmIcon, HlmButtonImports, HlmInputImports, HlmLabelImports, HlmCardImports, HlmBadgeImports, HlmSwitchImports, HlmSeparatorImports],
   viewProviders: [provideIcons({ lucideShield })],
@@ -82,7 +93,7 @@ import { HlmSeparatorImports } from '@spartan-ng/helm/separator';
     </div>
   `,
 })
-export class SettingsSecurityLayoutComponent {
+export class SecurityComponent {
   sessions = [
     { device: 'Chrome on MacOS', location: 'San Francisco, CA', time: 'Active now', current: true },
     { device: 'Safari on iPhone', location: 'San Francisco, CA', time: '2 hours ago', current: false },

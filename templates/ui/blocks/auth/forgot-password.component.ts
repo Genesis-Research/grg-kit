@@ -1,3 +1,14 @@
+/**
+ * Auth Forgot Password Component
+ * 
+ * A standalone Angular component ready to use in your project.
+ * Copy this file to your project and customize as needed.
+ * 
+ * Dependencies:
+ * - @spartan-ng/helm (UI components)
+ * - @ng-icons/lucide (icons)
+ * - @angular/forms (if using forms)
+ */
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIcon, provideIcons } from '@ng-icons/core';
@@ -10,7 +21,7 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
 import { HlmInputGroupImports } from '@spartan-ng/helm/input-group';
 
 @Component({
-  selector: 'app-auth-forgot-password-layout',
+  selector: 'app-forgot-password',
   standalone: true,
   imports: [ReactiveFormsModule, NgIcon, HlmIcon, HlmButtonImports, HlmInputImports, HlmLabelImports, HlmCardImports, HlmInputGroupImports],
   viewProviders: [provideIcons({ lucideMail, lucideArrowLeft })],
@@ -48,6 +59,6 @@ import { HlmInputGroupImports } from '@spartan-ng/helm/input-group';
     </div>
   `,
 })
-export class AuthForgotPasswordLayoutComponent {
+export class ForgotPasswordComponent {
   form = new FormGroup({ email: new FormControl('', [Validators.required, Validators.email]) });
 }

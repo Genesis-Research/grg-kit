@@ -5,7 +5,7 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmIcon } from '@spartan-ng/helm/icon';
 
 @Component({
-  selector: 'app-shell-sidebar-layout',
+  selector: 'app-shell-sidebar-block',
   standalone: true,
   imports: [NgIcon, HlmIcon, HlmButtonImports],
   viewProviders: [provideIcons({ lucideHome, lucideUsers, lucideSettings, lucideFileText, lucideBarChart3, lucideBell, lucideUser })],
@@ -60,7 +60,7 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
     </div>
   `,
 })
-export class ShellSidebarLayoutComponent {
+export class ShellSidebarBlockComponent {
   navItems = [
     { icon: 'lucideHome', label: 'Dashboard', active: true },
     { icon: 'lucideUsers', label: 'Users', active: false },

@@ -45,7 +45,7 @@ import { toast } from 'ngx-sonner';
 })
 export class InputOtpFormExample implements OnDestroy {
 	private readonly _formBuilder = inject(FormBuilder);
-	private _intervalId?: NodeJS.Timeout;
+	private _intervalId?: ReturnType<typeof setInterval>;
 
 	public readonly countdown = signal(60);
 	public readonly isResendDisabled = computed(() => this.countdown() > 0);
