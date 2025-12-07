@@ -13,42 +13,60 @@ import { promisify } from 'util';
 
 const execAsync = promisify(exec);
 
-interface GRGMetadata {
-  version: string;
-  name: string;
-  description: string;
-  commands: any[];
-  resources: {
-    themes: any[];
+interface GRGResources {
+  themes: any[];
+  components: any[];
+  blocks: any[];
+  examples: {
+    all: any;
     components: any[];
-    layouts: any[];
-    examples: {
-      all: any;
-      components: any[];
-    };
   };
 }
 
-let cachedMetadata: GRGMetadata | null = null;
+// Inline resources - these match cli/config/resources.js
+const RESOURCES: GRGResources = {
+  themes: [
+    { name: 'amber-minimal', title: 'Amber Minimal', description: 'Warm amber accents', tags: ['minimal', 'warm', 'amber', 'orange'] },
+    { name: 'claude', title: 'Claude', description: 'Claude-inspired warm tones', tags: ['warm', 'orange', 'brown', 'claude'] },
+    { name: 'clean-slate', title: 'Clean Slate', description: 'Minimal grayscale palette', tags: ['minimal', 'grayscale', 'neutral', 'clean'] },
+    { name: 'grg-theme', title: 'GRG Theme', description: 'Default theme with purple/orange accents', tags: ['default', 'purple', 'orange', 'colorful'] },
+    { name: 'mocks', title: 'Mocks', description: 'Theme for mockups and prototypes', tags: ['mockup', 'prototype', 'design'] },
+    { name: 'modern-minimal', title: 'Modern Minimal', description: 'Contemporary minimal design', tags: ['minimal', 'modern', 'contemporary', 'clean'] },
+  ],
+  components: [
+    { name: 'file-upload', title: 'File Upload Component', description: 'File upload component', tags: ['file', 'upload', 'form'] },
+    { name: 'stepper', title: 'Stepper Component', description: 'Multi-step form component with progress indicator', tags: ['form', 'wizard', 'multi-step', 'progress'] },
+  ],
+  blocks: [
+    { name: 'auth', title: 'Auth Block', description: 'Authentication pages (login, signup, forgot password)', tags: ['auth', 'login', 'signup', 'authentication'] },
+    { name: 'settings', title: 'Settings Block', description: 'Settings page layout with sidebar navigation', tags: ['settings', 'preferences', 'account'] },
+    { name: 'shell', title: 'App Shell Block', description: 'Application shell with sidebar, header, and content area', tags: ['shell', 'layout', 'sidebar', 'header'] },
+  ],
+  examples: {
+    all: { name: 'all', title: 'All Spartan-NG Examples', description: 'Complete collection of 56+ Spartan-NG component examples', count: '56+' },
+    components: [
+      { name: 'accordion', title: 'Accordion Examples', description: 'Collapsible content sections', tags: ['accordion'] },
+      { name: 'alert', title: 'Alert Examples', description: 'Status messages and notifications', tags: ['alert'] },
+      { name: 'button', title: 'Button Examples', description: 'Interactive buttons with multiple variants', tags: ['button'] },
+      { name: 'card', title: 'Card Examples', description: 'Content containers', tags: ['card'] },
+      { name: 'dialog', title: 'Dialog Examples', description: 'Modal dialogs and popups', tags: ['dialog'] },
+      { name: 'form-field', title: 'Form Field Examples', description: 'Complete form fields with validation', tags: ['form-field'] },
+      { name: 'input', title: 'Input Examples', description: 'Form input fields', tags: ['input'] },
+      { name: 'select', title: 'Select Examples', description: 'Dropdown selection controls', tags: ['select'] },
+      { name: 'table', title: 'Table Examples', description: 'Data tables', tags: ['table'] },
+      { name: 'data-table', title: 'Data Table Examples', description: 'Advanced data tables with sorting and filtering', tags: ['data-table'] },
+    ],
+  },
+};
 
-async function getMetadata(): Promise<GRGMetadata> {
-  if (cachedMetadata) {
-    return cachedMetadata;
-  }
-
-  try {
-    const { stdout } = await execAsync('grg metadata');
-    cachedMetadata = JSON.parse(stdout);
-    return cachedMetadata!;
-  } catch (error) {
-    throw new Error('Failed to get GRG Kit metadata. Is grg-kit-cli installed?');
-  }
+function getResources(): GRGResources {
+  return RESOURCES;
 }
 
 const server = new Server(
   {
     name: 'grg-kit',
-    version: '0.1.0',
+    version: '0.2.0',
   },
   {
     capabilities: {
@@ -60,13 +78,11 @@ const server = new Server(
 
 // List available tools
 server.setRequestHandler(ListToolsRequestSchema, async () => {
-  const metadata = await getMetadata();
-  
   return {
     tools: [
       {
         name: 'search_ui_resources',
-        description: 'Search for Angular UI components, themes, layouts, or examples in GRG Kit. Use this FIRST when building UI. Returns matching resources with descriptions, tags, and usage info.',
+        description: 'Search for Angular UI components, themes, blocks, or examples in GRG Kit. Use this FIRST when building UI. Returns matching resources with descriptions, tags, and usage info.',
         inputSchema: {
           type: 'object',
           properties: {
@@ -76,7 +92,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             },
             category: {
               type: 'string',
-              enum: ['all', 'themes', 'components', 'layouts', 'examples'],
+              enum: ['all', 'themes', 'components', 'blocks', 'examples'],
               description: 'Filter by category (default: all)',
             },
           },
@@ -91,7 +107,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           properties: {
             resource: {
               type: 'string',
-              description: 'Resource identifier (e.g., "theme:claude", "component:stepper", "examples:button")',
+              description: 'Resource identifier (e.g., "block:auth", "block:shell", "theme:claude")',
             },
           },
           required: ['resource'],
@@ -99,7 +115,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: 'suggest_resources',
-        description: 'Get AI-powered suggestions for GRG Kit resources based on user requirements. Use this to recommend themes, components, or layouts.',
+        description: 'Get AI-powered suggestions for GRG Kit resources based on user requirements. Use this to recommend themes, components, or blocks.',
         inputSchema: {
           type: 'object',
           properties: {
@@ -113,13 +129,13 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: 'install_resource',
-        description: 'Install a GRG Kit resource into the project. Returns installation status and next steps.',
+        description: 'Install a GRG Kit block into the project. Returns installation status and next steps. Executes: grg add block --<name>',
         inputSchema: {
           type: 'object',
           properties: {
             resource: {
               type: 'string',
-              description: 'Resource to install (e.g., "theme:claude", "component:stepper", "examples:all")',
+              description: 'Block name to install (e.g., "auth", "shell", "settings")',
             },
             output: {
               type: 'string',
@@ -137,7 +153,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           properties: {
             category: {
               type: 'string',
-              enum: ['all', 'themes', 'components', 'layouts', 'examples'],
+              enum: ['all', 'themes', 'components', 'blocks', 'examples'],
               description: 'Category to list (default: all)',
             },
           },
@@ -149,30 +165,30 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
 
 // List available resources (for MCP resource protocol)
 server.setRequestHandler(ListResourcesRequestSchema, async () => {
-  const metadata = await getMetadata();
+  const res = getResources();
   
   const resources = [
     {
       uri: 'grg://catalog/themes',
-      name: `GRG Kit Themes (${metadata.resources.themes.length} available)`,
+      name: `GRG Kit Themes (${res.themes.length} available)`,
       description: 'Pre-built themes with Tailwind CSS v4, Spartan-NG integration, and dark mode',
       mimeType: 'application/json',
     },
     {
       uri: 'grg://catalog/components',
-      name: `GRG Kit Components (${metadata.resources.components.length} available)`,
+      name: `GRG Kit Components (${res.components.length} available)`,
       description: 'Custom Angular components with grg- prefix',
       mimeType: 'application/json',
     },
     {
-      uri: 'grg://catalog/layouts',
-      name: `GRG Kit Layouts (${metadata.resources.layouts.length} available)`,
-      description: 'Page layout templates (dashboard, auth, etc.)',
+      uri: 'grg://catalog/blocks',
+      name: `GRG Kit Blocks (${res.blocks.length} available)`,
+      description: 'Page blocks (auth, shell, settings, etc.)',
       mimeType: 'application/json',
     },
     {
       uri: 'grg://catalog/examples',
-      name: `Spartan-NG Examples (${metadata.resources.examples.components.length}+ available)`,
+      name: `Spartan-NG Examples (${res.examples.components.length}+ available)`,
       description: 'Complete examples of all Spartan-NG components',
       mimeType: 'application/json',
     },
@@ -183,23 +199,23 @@ server.setRequestHandler(ListResourcesRequestSchema, async () => {
 
 // Read resource content
 server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
-  const metadata = await getMetadata();
+  const res = getResources();
   const uri = request.params.uri;
   
   let content: any;
   
   switch (uri) {
     case 'grg://catalog/themes':
-      content = metadata.resources.themes;
+      content = res.themes;
       break;
     case 'grg://catalog/components':
-      content = metadata.resources.components;
+      content = res.components;
       break;
-    case 'grg://catalog/layouts':
-      content = metadata.resources.layouts;
+    case 'grg://catalog/blocks':
+      content = res.blocks;
       break;
     case 'grg://catalog/examples':
-      content = metadata.resources.examples;
+      content = res.examples;
       break;
     default:
       throw new Error(`Unknown resource: ${uri}`);
@@ -257,8 +273,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   }
 });
 
-async function searchResources(query: string, category: string = 'all') {
-  const metadata = await getMetadata();
+function searchResources(query: string, category: string = 'all') {
+  const res = getResources();
   const lowerQuery = query.toLowerCase();
   const results: any[] = [];
   
@@ -270,17 +286,24 @@ async function searchResources(query: string, category: string = 'all') {
   };
   
   if (category === 'all' || category === 'themes') {
-    results.push(...searchIn(metadata.resources.themes, 'theme'));
+    results.push(...searchIn(res.themes, 'theme'));
   }
   if (category === 'all' || category === 'components') {
-    results.push(...searchIn(metadata.resources.components, 'component'));
+    results.push(...searchIn(res.components, 'component'));
   }
-  if (category === 'all' || category === 'layouts') {
-    results.push(...searchIn(metadata.resources.layouts, 'layout'));
+  if (category === 'all' || category === 'blocks') {
+    results.push(...searchIn(res.blocks, 'block'));
   }
   if (category === 'all' || category === 'examples') {
-    results.push(...searchIn(metadata.resources.examples.components, 'examples'));
+    results.push(...searchIn(res.examples.components, 'examples'));
   }
+  
+  // Generate install commands based on type
+  const getInstallCommand = (type: string, name: string) => {
+    if (type === 'block') return `grg add block --${name}`;
+    if (type === 'theme') return `grg init --theme ${name}`;
+    return `Installed via grg init`;
+  };
   
   return {
     content: [
@@ -296,7 +319,7 @@ async function searchResources(query: string, category: string = 'all') {
             title: r.title,
             description: r.description,
             tags: r.tags,
-            install: `grg add ${r.type}:${r.name}`,
+            install: getInstallCommand(r.type, r.name),
           })),
         }, null, 2),
       },
@@ -304,28 +327,33 @@ async function searchResources(query: string, category: string = 'all') {
   };
 }
 
-async function getResourceDetails(resource: string) {
-  const metadata = await getMetadata();
+function getResourceDetails(resource: string) {
+  const res = getResources();
   const [category, name] = resource.split(':');
   
   let details: any;
+  let installCmd: string;
   
   switch (category) {
     case 'theme':
-      details = metadata.resources.themes.find((t) => t.name === name);
+      details = res.themes.find((t: any) => t.name === name);
+      installCmd = `grg init --theme ${name}`;
       break;
     case 'component':
-      details = metadata.resources.components.find((c) => c.name === name);
+      details = res.components.find((c: any) => c.name === name);
+      installCmd = 'Installed via grg init';
       break;
-    case 'layout':
-      details = metadata.resources.layouts.find((l) => l.name === name);
+    case 'block':
+      details = res.blocks.find((b: any) => b.name === name);
+      installCmd = `grg add block --${name}`;
       break;
     case 'examples':
       if (name === 'all') {
-        details = metadata.resources.examples.all;
+        details = res.examples.all;
       } else {
-        details = metadata.resources.examples.components.find((e) => e.name === name);
+        details = res.examples.components.find((e: any) => e.name === name);
       }
+      installCmd = 'Installed via grg init';
       break;
   }
   
@@ -340,7 +368,7 @@ async function getResourceDetails(resource: string) {
         text: JSON.stringify({
           resource,
           ...details,
-          install: `grg add ${resource}`,
+          install: installCmd!,
           cli_available: true,
         }, null, 2),
       },
@@ -348,40 +376,56 @@ async function getResourceDetails(resource: string) {
   };
 }
 
-async function suggestResources(requirement: string) {
-  const metadata = await getMetadata();
+function suggestResources(requirement: string) {
+  const res = getResources();
   const lowerReq = requirement.toLowerCase();
   const suggestions: any[] = [];
   
   // Simple keyword matching for suggestions
-  const keywords = {
-    login: ['layout:auth', 'examples:form-field', 'examples:input', 'examples:button'],
-    auth: ['layout:auth', 'examples:form-field', 'examples:input'],
-    dashboard: ['layout:dashboard', 'examples:card', 'examples:table', 'examples:navigation-menu'],
-    form: ['examples:form-field', 'examples:input', 'examples:button', 'examples:select', 'component:stepper'],
-    table: ['examples:table', 'examples:data-table', 'examples:pagination'],
-    theme: ['theme:grg-theme', 'theme:claude', 'theme:modern-minimal'],
+  const keywords: Record<string, { type: string; name: string; install: string }[]> = {
+    login: [
+      { type: 'block', name: 'auth', install: 'grg add block --auth' },
+    ],
+    auth: [
+      { type: 'block', name: 'auth', install: 'grg add block --auth' },
+    ],
+    dashboard: [
+      { type: 'block', name: 'shell', install: 'grg add block --shell' },
+    ],
+    shell: [
+      { type: 'block', name: 'shell', install: 'grg add block --shell' },
+    ],
+    settings: [
+      { type: 'block', name: 'settings', install: 'grg add block --settings' },
+    ],
+    form: [
+      { type: 'component', name: 'stepper', install: 'Installed via grg init' },
+    ],
+    theme: [
+      { type: 'theme', name: 'grg-theme', install: 'grg init --theme grg-theme' },
+      { type: 'theme', name: 'claude', install: 'grg init --theme claude' },
+      { type: 'theme', name: 'modern-minimal', install: 'grg init --theme modern-minimal' },
+    ],
   };
   
   // Find matching keywords
-  for (const [keyword, resources] of Object.entries(keywords)) {
+  for (const [keyword, items] of Object.entries(keywords)) {
     if (lowerReq.includes(keyword)) {
-      for (const res of resources) {
-        const [cat, name] = res.split(':');
-        let item: any;
+      for (const item of items) {
+        let details: any;
         
-        if (cat === 'theme') item = metadata.resources.themes.find((t) => t.name === name);
-        else if (cat === 'component') item = metadata.resources.components.find((c) => c.name === name);
-        else if (cat === 'layout') item = metadata.resources.layouts.find((l) => l.name === name);
-        else if (cat === 'examples') item = metadata.resources.examples.components.find((e) => e.name === name);
+        if (item.type === 'theme') details = res.themes.find((t: any) => t.name === item.name);
+        else if (item.type === 'component') details = res.components.find((c: any) => c.name === item.name);
+        else if (item.type === 'block') details = res.blocks.find((b: any) => b.name === item.name);
         
-        if (item && !suggestions.find((s) => s.resource === res)) {
+        if (details && !suggestions.find((s) => s.name === item.name)) {
           suggestions.push({
-            resource: res,
-            title: item.title,
-            description: item.description,
+            type: item.type,
+            name: item.name,
+            title: details.title,
+            description: details.description,
             reason: `Matches "${keyword}" in your requirement`,
-            install: `grg add ${res}`,
+            install: item.install,
           });
         }
       }
@@ -396,7 +440,7 @@ async function suggestResources(requirement: string) {
           requirement,
           suggestions_count: suggestions.length,
           suggestions,
-          note: 'Install these resources with: grg add <resource>',
+          note: 'Use grg init to set up theme and components, grg add block --<name> for blocks',
         }, null, 2),
       },
     ],
@@ -404,8 +448,9 @@ async function suggestResources(requirement: string) {
 }
 
 async function installResource(resource: string, output?: string) {
+  // For blocks, use grg add block --<name>
   const outputFlag = output ? ` -o ${output}` : '';
-  const command = `grg add ${resource}${outputFlag}`;
+  const command = `grg add block --${resource}${outputFlag}`;
   
   try {
     const { stdout, stderr } = await execAsync(command);
@@ -427,8 +472,8 @@ async function installResource(resource: string, output?: string) {
   }
 }
 
-async function listResources(category: string = 'all') {
-  const metadata = await getMetadata();
+function listResources(category: string = 'all') {
+  const res = getResources();
   
   const result: any = {
     category,
@@ -437,56 +482,50 @@ async function listResources(category: string = 'all') {
   
   if (category === 'all' || category === 'themes') {
     result.resources.themes = {
-      count: metadata.resources.themes.length,
-      items: metadata.resources.themes.map((t) => ({
+      count: res.themes.length,
+      note: 'Themes are set via: grg init --theme <name>',
+      items: res.themes.map((t: any) => ({
         name: t.name,
         title: t.title,
         description: t.description,
-        install: `grg add theme:${t.name}`,
+        install: `grg init --theme ${t.name}`,
       })),
     };
   }
   
   if (category === 'all' || category === 'components') {
     result.resources.components = {
-      count: metadata.resources.components.length,
-      items: metadata.resources.components.map((c) => ({
+      count: res.components.length,
+      note: 'Components are installed automatically via: grg init',
+      items: res.components.map((c: any) => ({
         name: c.name,
         title: c.title,
         description: c.description,
-        install: `grg add component:${c.name}`,
       })),
     };
   }
   
-  if (category === 'all' || category === 'layouts') {
-    result.resources.layouts = {
-      count: metadata.resources.layouts.length,
-      items: metadata.resources.layouts.map((l) => ({
-        name: l.name,
-        title: l.title,
-        description: l.description,
-        install: `grg add layout:${l.name}`,
+  if (category === 'all' || category === 'blocks') {
+    result.resources.blocks = {
+      count: res.blocks.length,
+      note: 'Blocks are added via: grg add block --<name>',
+      items: res.blocks.map((b: any) => ({
+        name: b.name,
+        title: b.title,
+        description: b.description,
+        install: `grg add block --${b.name}`,
       })),
     };
   }
   
   if (category === 'all' || category === 'examples') {
     result.resources.examples = {
-      count: metadata.resources.examples.components.length,
+      count: res.examples.components.length,
+      note: 'Examples are installed automatically via: grg init',
       all: {
-        title: metadata.resources.examples.all.title,
-        description: metadata.resources.examples.all.description,
-        install: 'grg add examples:all',
+        title: res.examples.all.title,
+        description: res.examples.all.description,
       },
-      popular: metadata.resources.examples.components
-        .filter((e) => ['button', 'card', 'dialog', 'form-field', 'input', 'table'].includes(e.name))
-        .map((e) => ({
-          name: e.name,
-          title: e.title,
-          description: e.description,
-          install: `grg add examples:${e.name}`,
-        })),
     };
   }
   

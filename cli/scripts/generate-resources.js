@@ -50,8 +50,8 @@ const COMPONENT_METADATA = {
   }
 };
 
-// Layout metadata
-const LAYOUT_METADATA = {
+// Block metadata (formerly layouts)
+const BLOCK_METADATA = {
   'dashboard': {
     description: 'Full dashboard layout with sidebar and header',
     tags: ['dashboard', 'admin', 'sidebar', 'navigation'],
@@ -187,25 +187,25 @@ function generateComponents() {
     });
 }
 
-function generateLayouts() {
-  const layoutsDir = path.join(TEMPLATES_DIR, 'ui/layouts');
-  const dirs = scanDirectory(layoutsDir);
+function generateBlocks() {
+  const blocksDir = path.join(TEMPLATES_DIR, 'ui/layouts');
+  const dirs = scanDirectory(blocksDir);
   
   return dirs
     .filter(dir => dir.isDirectory())
     .map(dir => {
-      const metadata = LAYOUT_METADATA[dir.name] || {
-        description: `${dir.name} layout`,
-        tags: [],
+      const metadata = BLOCK_METADATA[dir.name] || {
+        description: `${dir.name} block`,
+        tags: [dir.name],
         dependencies: []
       };
       
       return {
         name: dir.name,
-        title: dir.name.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') + ' Layout',
+        title: dir.name.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') + ' Block',
         description: metadata.description,
         path: `templates/ui/layouts/${dir.name}`,
-        defaultOutput: `src/app/layouts/${dir.name}`,
+        defaultOutput: `src/app/blocks/${dir.name}`,
         tags: metadata.tags,
         dependencies: metadata.dependencies
       };
@@ -253,12 +253,12 @@ function generateResourcesFile() {
   
   const themes = generateThemes();
   const components = generateComponents();
-  const layouts = generateLayouts();
+  const blocks = generateBlocks();
   const examples = generateExamples();
   
   console.log(`✓ Found ${themes.length} themes`);
   console.log(`✓ Found ${components.length} components`);
-  console.log(`✓ Found ${layouts.length} layouts`);
+  console.log(`✓ Found ${blocks.length} blocks`);
   console.log(`✓ Found ${examples.components.length} example components`);
   
   const output = `/**
@@ -267,7 +267,7 @@ function generateResourcesFile() {
  * Run: node scripts/generate-resources.js to update
  */
 
-const RESOURCES = ${JSON.stringify({ themes, components, layouts, examples }, null, 2)};
+const RESOURCES = ${JSON.stringify({ themes, components, blocks, examples }, null, 2)};
 
 const REPO = 'Genesis-Research/grg-kit';
 
@@ -279,7 +279,7 @@ module.exports = { RESOURCES, REPO };
   console.log('\n📦 Resource Summary:');
   console.log(`   Themes: ${themes.length}`);
   console.log(`   Components: ${components.length}`);
-  console.log(`   Layouts: ${layouts.length}`);
+  console.log(`   Blocks: ${blocks.length}`);
   console.log(`   Examples: ${examples.components.length}`);
 }
 

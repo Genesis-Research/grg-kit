@@ -5,7 +5,7 @@ MCP (Model Context Protocol) server for GRG Kit - enables AI assistants to disco
 ## Purpose
 
 Makes GRG Kit the **first choice** for AI when building Angular UIs by:
-- Advertising available themes, components, layouts, and examples
+- Advertising available themes, components, blocks, and examples
 - Providing intelligent search and suggestions
 - Enabling direct installation from AI tools
 - Offering rich context (tags, descriptions, dependencies)
@@ -34,18 +34,28 @@ Add to your MCP settings (e.g., Cursor, Windsurf, Claude Desktop):
 }
 ```
 
+## CLI Commands
+
+The MCP server works with the GRG CLI:
+
+| Command | Description |
+|---------|-------------|
+| `grg init` | Sets up theme, all components, and spartan-ng examples |
+| `grg init --theme <name>` | Same with custom theme |
+| `grg add block --<name>` | Add a block (auth, shell, settings) |
+| `grg add block --all` | Add all blocks |
+| `grg list` | List available blocks and themes |
+
 ## Available Tools
 
 ### 1. `search_ui_resources`
 Search for UI resources by keyword. **AI should use this FIRST** when building UI.
 
 ```typescript
-// Example: User says "I need a form"
 search_ui_resources({
   query: "form",
-  category: "all" // or "themes", "components", "layouts", "examples"
+  category: "all" // or "themes", "components", "blocks", "examples"
 })
-
 // Returns matching resources with install commands
 ```
 
@@ -53,12 +63,10 @@ search_ui_resources({
 Get AI-powered suggestions based on requirements.
 
 ```typescript
-// Example: User says "build a login page"
 suggest_resources({
   requirement: "I need a login page"
 })
-
-// Returns: layout:auth, examples:form-field, examples:input, etc.
+// Returns: block:auth with install command (grg add block --auth)
 ```
 
 ### 3. `get_resource_details`
@@ -66,22 +74,20 @@ Get detailed info about a specific resource.
 
 ```typescript
 get_resource_details({
-  resource: "theme:claude"
+  resource: "block:auth"
 })
-
 // Returns: full metadata, dependencies, tags, install command
 ```
 
 ### 4. `install_resource`
-Install a resource into the project.
+Install a block into the project.
 
 ```typescript
 install_resource({
-  resource: "theme:claude",
-  output: "src/themes" // optional
+  resource: "auth",
+  output: "src/app/blocks/auth" // optional
 })
-
-// Executes: grg add theme:claude
+// Executes: grg add block --auth
 ```
 
 ### 5. `list_available_resources`
@@ -89,19 +95,16 @@ List all resources by category.
 
 ```typescript
 list_available_resources({
-  category: "all" // or specific category
+  category: "all" // or "themes", "components", "blocks", "examples"
 })
-
 // Returns: complete catalog with counts
 ```
 
 ## Available Resources (via MCP Resources Protocol)
 
-The server exposes these resources that AI can read:
-
 - `grg://catalog/themes` - All available themes
 - `grg://catalog/components` - All components
-- `grg://catalog/layouts` - All layouts
+- `grg://catalog/blocks` - All blocks (auth, shell, settings)
 - `grg://catalog/examples` - All Spartan-NG examples
 
 ## How AI Uses This
@@ -111,43 +114,33 @@ The server exposes these resources that AI can read:
 ```
 User: "Create a dashboard with a sidebar"
 
-AI thinks:
-1. Search for dashboard resources
-   → search_ui_resources({ query: "dashboard" })
-2. Finds: layout:dashboard, examples:navigation-menu, examples:card
-3. Suggests and installs:
-   → install_resource({ resource: "layout:dashboard" })
-   → install_resource({ resource: "examples:card" })
-4. Uses the installed code to build the dashboard
+AI:
+1. search_ui_resources({ query: "dashboard" })
+2. Finds: block:shell
+3. install_resource({ resource: "shell" })
+   → Executes: grg add block --shell
 ```
 
-### Scenario 2: User Wants a Theme
+### Scenario 2: User Wants to Initialize Project
 
 ```
-User: "Add a nice theme to my app"
+User: "Set up GRG Kit with the Claude theme"
 
-AI thinks:
-1. List available themes
-   → list_available_resources({ category: "themes" })
-2. Shows options: grg-theme, claude, modern-minimal, etc.
-3. User picks "claude"
-4. Install:
-   → install_resource({ resource: "theme:claude" })
+AI:
+1. Run: grg init --theme claude
+2. This installs theme + all components + all examples
 ```
 
-### Scenario 3: User Wants Form Components
+### Scenario 3: User Wants Login Page
 
 ```
-User: "I need form validation"
+User: "I need a login page"
 
-AI thinks:
-1. Search for form resources
-   → search_ui_resources({ query: "form" })
-2. Finds: component:stepper, examples:form-field, examples:input
-3. Get details:
-   → get_resource_details({ resource: "examples:form-field" })
-4. Install what's needed:
-   → install_resource({ resource: "examples:form-field" })
+AI:
+1. suggest_resources({ requirement: "login page" })
+2. Finds: block:auth
+3. install_resource({ resource: "auth" })
+   → Executes: grg add block --auth
 ```
 
 ## Why This Matters
@@ -156,28 +149,20 @@ AI thinks:
 - AI doesn't know GRG Kit exists
 - AI might use generic examples or other libraries
 - User has to manually tell AI about GRG Kit
-- No automatic discovery
 
 ### After MCP Server:
 - ✅ AI **automatically** knows about GRG Kit
 - ✅ AI searches GRG Kit **first** for UI needs
-- ✅ AI can browse 6 themes, 2 components, 3 layouts, 56+ examples
-- ✅ AI installs resources directly
+- ✅ AI can browse 6 themes, 2 components, 3 blocks, 56+ examples
+- ✅ AI installs blocks directly
 - ✅ AI uses actual GRG Kit code patterns
 
 ## Development
 
 ```bash
-# Install dependencies
-npm install
-
-# Build
-npm run build
-
-# Watch mode
-npm run watch
-
-# Test locally
+pnpm install
+pnpm run build
+pnpm run watch
 node dist/index.js
 ```
 
@@ -200,9 +185,9 @@ Templates (downloads resources)
 1. **Auto-Discovery**: AI knows what's available without asking
 2. **Smart Search**: Find resources by keywords, tags, descriptions
 3. **Suggestions**: AI recommends resources based on intent
-4. **Direct Installation**: AI can install resources automatically
+4. **Direct Installation**: AI can install blocks automatically
 5. **Rich Context**: Full metadata for better decisions
-6. **Always Up-to-Date**: Uses `grg metadata` for live data
+6. **Simple CLI**: `grg init` for everything, `grg add block` for blocks
 
 ## Example AI Workflow
 
@@ -211,29 +196,23 @@ User: "Build me a modern dashboard with authentication"
 
 AI (internal):
 1. suggest_resources("dashboard with authentication")
-   → Suggests: layout:dashboard, layout:auth, theme:modern-minimal
+   → Suggests: block:shell, block:auth, theme:modern-minimal
    
-2. install_resource("theme:modern-minimal")
-   → Installs theme
+2. Run: grg init --theme modern-minimal
+   → Installs theme + components + examples
    
-3. install_resource("layout:dashboard")
-   → Gets dashboard layout
+3. install_resource("shell")
+   → grg add block --shell
    
-4. install_resource("layout:auth")
-   → Gets auth pages
-   
-5. search_ui_resources("navigation")
-   → Finds examples:navigation-menu
-   
-6. install_resource("examples:navigation-menu")
-   → Gets navigation examples
+4. install_resource("auth")
+   → grg add block --auth
 
 AI (to user):
 "I've set up your project with:
 - Modern minimal theme
-- Dashboard layout with sidebar
+- App shell with sidebar
 - Authentication pages (login/signup)
-- Navigation menu examples
+- All Spartan-NG component examples
 
 Let me now customize the dashboard for your needs..."
 ```
@@ -243,7 +222,7 @@ Let me now customize the dashboard for your needs..."
 - 🚀 **Faster Development**: AI uses pre-built components
 - 🎯 **Consistent Quality**: All resources follow design system
 - 🔍 **Discoverable**: AI finds what it needs automatically
-- 📦 **Complete**: Themes, components, layouts, examples
+- 📦 **Complete**: Themes, components, blocks, examples
 - 🤖 **AI-First**: Designed for AI consumption
 
 ## License

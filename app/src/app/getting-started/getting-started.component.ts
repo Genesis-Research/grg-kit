@@ -68,87 +68,15 @@ cd my-app</code></pre>
         </div>
       </section>
 
-      <!-- Step 2: Tailwind CSS -->
-      <section hlmCard>
-        <div hlmCardHeader>
-          <div class="flex items-center gap-2">
-            <ng-icon hlm name="lucidePackage" size="lg" />
-            <h3 hlmCardTitle>2. Install Tailwind CSS</h3>
-          </div>
-          <p hlmCardDescription>
-            Add Tailwind CSS for utility-first styling
-          </p>
-        </div>
-        <div hlmCardContent class="space-y-4">
-          <div class="space-y-2">
-            <p class="text-sm font-medium">Install Tailwind CSS and PostCSS plugin:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>npm install tailwindcss @tailwindcss/postcss postcss --force</code></pre>
-          </div>
-          <div class="space-y-2">
-            <p class="text-sm font-medium">Create <code class="text-sm bg-muted px-1 py-0.5 rounded">.postcssrc.json</code> in your project root:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>{{ '{' }}
-  "plugins": {{ '{' }}
-    "@tailwindcss/postcss": {{ '{' }}{{ '}' }}
-  {{ '}' }}
-{{ '}' }}</code></pre>
-          </div>
-          <div class="space-y-2">
-            <p class="text-sm font-medium">Add to your <code class="text-sm bg-muted px-1 py-0.5 rounded">src/styles.css</code>:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>@import "tailwindcss";</code></pre>
-          </div>
-        </div>
-      </section>
-
-      <!-- Step 3: Spartan-NG -->
-      <section hlmCard>
-        <div hlmCardHeader>
-          <div class="flex items-center gap-2">
-            <ng-icon hlm name="lucidePackage" size="lg" />
-            <h3 hlmCardTitle>3. Install Spartan-NG</h3>
-          </div>
-          <p hlmCardDescription>
-            Set up the Spartan-NG component library for accessible, customizable UI components
-          </p>
-        </div>
-        <div hlmCardContent class="space-y-4">
-          <div class="space-y-2">
-            <p class="text-sm font-medium">Install Spartan-NG CLI:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>npm install -D @spartan-ng/cli</code></pre>
-          </div>
-          <div class="space-y-2">
-            <p class="text-sm font-medium">Initialize Spartan-NG:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>npx ng g @spartan-ng/cli:init</code></pre>
-          </div>
-          <div class="space-y-2">
-            <p class="text-sm font-medium">Install specific components:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>npx ng g @spartan-ng/cli:ui button
-npx ng g @spartan-ng/cli:ui card
-npx ng g @spartan-ng/cli:ui dialog</code></pre>
-          </div>
-          <div class="space-y-2">
-            <p class="text-sm font-medium">Or install all components at once:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>npx ng g @spartan-ng/cli:ui --all</code></pre>
-          </div>
-          <div class="mt-4 p-4 bg-muted/50 rounded-md">
-            <p class="text-sm">
-              For more Spartan-NG components, visit 
-              <a href="https://www.spartan.ng/" target="_blank" class="text-primary hover:underline">
-                spartan-ng.dev
-              </a>
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Theming Section -->
+      <!-- GRG Kit Init Section -->
       <section hlmCard>
         <div hlmCardHeader>
           <div class="flex items-center gap-2">
             <ng-icon hlm name="lucideDownload" size="lg" />
-            <h3 hlmCardTitle>4. Add a GRG Kit Theme</h3>
+            <h3 hlmCardTitle>2. Initialize GRG Kit</h3>
           </div>
           <p hlmCardDescription>
-            Pull a pre-built theme with Tailwind CSS v4, Spartan-NG integration, and dark mode support
+            One command to set up Tailwind CSS, Spartan-NG, theme, components, and examples
           </p>
         </div>
         <div hlmCardContent class="space-y-4">
@@ -158,26 +86,24 @@ npx ng g @spartan-ng/cli:ui dialog</code></pre>
           </div>
 
           <div class="space-y-2">
-            <p class="text-sm font-medium">Option 1: Interactive Mode (Recommended):</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code># Launch interactive menu
-grg
-</code></pre>
+            <p class="text-sm font-medium">Initialize with default theme:</p>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg init</code></pre>
           </div>
 
           <div class="space-y-2">
-            <p class="text-sm font-medium">Option 2: Direct Commands:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code># Initialize with default theme
-grg init
-
-# Or choose a specific theme
-grg init --theme claude</code></pre>
+            <p class="text-sm font-medium">Or choose a specific theme:</p>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg init --theme claude</code></pre>
           </div>
 
           <div class="mt-4 p-4 bg-muted/50 rounded-md">
             <p class="text-sm font-medium mb-2">💡 What <code class="text-xs bg-muted px-1 py-0.5 rounded">grg init</code> does:</p>
             <ul class="text-sm text-muted-foreground space-y-1">
-              <li>• Creates <code class="text-xs bg-muted px-1 py-0.5 rounded">src/themes</code> directory</li>
-              <li>• Downloads the selected theme</li>
+              <li>• Installs Tailwind CSS v4 with PostCSS</li>
+              <li>• Creates <code class="text-xs bg-muted px-1 py-0.5 rounded">.postcssrc.json</code> configuration</li>
+              <li>• Runs <code class="text-xs bg-muted px-1 py-0.5 rounded">npx ng g @spartan-ng/cli:init</code> to initialize Spartan-NG</li>
+              <li>• Downloads the selected theme to <code class="text-xs bg-muted px-1 py-0.5 rounded">src/themes</code></li>
+              <li>• Downloads all GRG Kit components</li>
+              <li>• Downloads all spartan-ng examples (56+)</li>
               <li>• Updates <code class="text-xs bg-muted px-1 py-0.5 rounded">src/styles.css</code> with theme import</li>
             </ul>
           </div>
@@ -185,12 +111,12 @@ grg init --theme claude</code></pre>
           <div class="mt-4 p-4 bg-accent/50 rounded-md">
             <p class="text-sm font-medium mb-2">📋 Available Themes</p>
             <ul class="text-sm text-muted-foreground space-y-1">
-              <li><strong>claude.css</strong> - Claude-inspired warm tones</li>
-              <li><strong>grg-theme.css</strong> - Default theme with purple/orange accents</li>
-              <li><strong>clean-slate.css</strong> - Minimal grayscale palette</li>
-              <li><strong>modern-minimal.css</strong> - Contemporary minimal design</li>
-              <li><strong>amber-minimal.css</strong> - Warm amber accents</li>
-              <li><strong>mocks.css</strong> - Theme for mockups and prototypes</li>
+              <li><strong>grg-theme</strong> - Default theme with purple/orange accents</li>
+              <li><strong>claude</strong> - Claude-inspired warm tones</li>
+              <li><strong>clean-slate</strong> - Minimal grayscale palette</li>
+              <li><strong>modern-minimal</strong> - Contemporary minimal design</li>
+              <li><strong>amber-minimal</strong> - Warm amber accents</li>
+              <li><strong>mocks</strong> - Theme for mockups and prototypes</li>
             </ul>
             <p class="text-sm text-muted-foreground mt-2">
               Browse the <strong>Colors</strong> tab to preview each theme's palette.
@@ -199,89 +125,77 @@ grg init --theme claude</code></pre>
         </div>
       </section>
 
-      <!-- Spartan Examples Section -->
+      <!-- Add Blocks Section -->
       <section hlmCard>
         <div hlmCardHeader>
           <div class="flex items-center gap-2">
             <ng-icon hlm name="lucideDownload" size="lg" />
-            <h3 hlmCardTitle>5. Pull Spartan-NG Examples (Optional)</h3>
+            <h3 hlmCardTitle>3. Add Blocks</h3>
           </div>
           <p hlmCardDescription>
-            Download comprehensive component examples for reference and learning
+            Add pre-built page blocks to your project
           </p>
         </div>
         <div hlmCardContent class="space-y-4">
           <div class="space-y-2">
-            <p class="text-sm font-medium">Pull all Spartan-NG examples:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg add examples:all</code></pre>
+            <p class="text-sm font-medium">Add authentication pages:</p>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg add block --auth</code></pre>
           </div>
           <div class="space-y-2">
-            <p class="text-sm font-medium">Or pull specific component examples:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code># Pull button examples
-grg add examples:button
-
-# Pull dialog examples
-grg add examples:dialog
-
-# Pull form-field examples
-grg add examples:form-field</code></pre>
+            <p class="text-sm font-medium">Add app shell (sidebar, header, content):</p>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg add block --shell</code></pre>
           </div>
           <div class="space-y-2">
-            <p class="text-sm font-medium">List all available examples:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg list examples</code></pre>
+            <p class="text-sm font-medium">Add settings page:</p>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg add block --settings</code></pre>
+          </div>
+          <div class="space-y-2">
+            <p class="text-sm font-medium">Add multiple blocks at once:</p>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg add block --auth --shell</code></pre>
+          </div>
+          <div class="space-y-2">
+            <p class="text-sm font-medium">Add all blocks:</p>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg add block --all</code></pre>
           </div>
           <div class="mt-4 p-4 bg-accent/50 rounded-md">
-            <p class="text-sm font-medium mb-2">📚 What's Included</p>
-            <p class="text-sm text-muted-foreground mb-2">
-              Examples for all Spartan-NG components including variants, usage patterns, and best practices.
-              Perfect for developers and LLMs to understand component implementation.
-            </p>
+            <p class="text-sm font-medium mb-2">📦 Available Blocks</p>
             <ul class="text-sm text-muted-foreground space-y-1">
-              <li>• Complete working code for each component</li>
-              <li>• Import patterns and template syntax</li>
-              <li>• All available variants and configurations</li>
-              <li>• 50+ component examples ready to reference</li>
+              <li><strong>auth</strong> - Login, signup, forgot password pages</li>
+              <li><strong>shell</strong> - Application shell with sidebar and header</li>
+              <li><strong>settings</strong> - Settings page with sidebar navigation</li>
             </ul>
           </div>
         </div>
       </section>
 
-      <!-- Usage Section -->
+      <!-- List Resources Section -->
       <section hlmCard>
         <div hlmCardHeader>
           <div class="flex items-center gap-2">
             <ng-icon hlm name="lucideDownload" size="lg" />
-            <h3 hlmCardTitle>Using GRG Kit Components</h3>
+            <h3 hlmCardTitle>List Available Resources</h3>
           </div>
           <p hlmCardDescription>
-            Pull individual components and layouts into your project
+            Browse what's available in GRG Kit
           </p>
         </div>
         <div hlmCardContent class="space-y-4">
           <div class="space-y-2">
-            <p class="text-sm font-medium">Pull a component:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg add component:stepper</code></pre>
+            <p class="text-sm font-medium">List all resources:</p>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg list</code></pre>
           </div>
           <div class="space-y-2">
-            <p class="text-sm font-medium">Pull a layout:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg add layout:dashboard</code></pre>
-          </div>
-          <div class="space-y-2">
-            <p class="text-sm font-medium">List all available resources:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code># List all categories
-grg list
-
-# List specific category
-grg list components
-grg list layouts
+            <p class="text-sm font-medium">List specific categories:</p>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg list blocks
 grg list themes</code></pre>
           </div>
           <div class="mt-4 p-4 bg-accent/50 rounded-md">
-            <p class="text-sm font-medium mb-2">💡 Quick Commands</p>
+            <p class="text-sm font-medium mb-2">💡 Quick Reference</p>
             <ul class="text-sm text-muted-foreground space-y-1">
-              <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg add theme:claude</code> - Add a theme</li>
-              <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg add component:stepper</code> - Add a component</li>
-              <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg add layout:dashboard</code> - Add a layout</li>
+              <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg init</code> - Initialize with theme + components + examples</li>
+              <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg add block --auth</code> - Add auth block</li>
+              <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg add block --shell</code> - Add app shell block</li>
+              <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg add block --all</code> - Add all blocks</li>
               <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg list</code> - See all available resources</li>
             </ul>
           </div>
@@ -302,7 +216,7 @@ grg list themes</code></pre>
             </li>
             <li class="flex items-start gap-2">
               <span class="text-primary">→</span>
-              <span>Check out <strong>Layouts</strong> for page templates and patterns</span>
+              <span>Check out <strong>Blocks</strong> for page templates (auth, shell, settings)</span>
             </li>
             <li class="flex items-start gap-2">
               <span class="text-primary">→</span>
@@ -465,9 +379,9 @@ grg llm-prompts --output .ai-rules</code></pre>
                   <p class="text-sm font-medium mb-2">✅ What This Enables:</p>
                   <ul class="text-sm text-muted-foreground space-y-1">
                     <li>• AI automatically searches GRG Kit before writing custom code</li>
-                    <li>• AI knows about 60+ available resources (themes, components, layouts, examples)</li>
+                    <li>• AI knows about themes, components, blocks, and 56+ examples</li>
                     <li>• AI follows GRG Kit design system patterns</li>
-                    <li>• AI can install resources directly via MCP tools</li>
+                    <li>• AI can install blocks directly via MCP tools</li>
                     <li>• Faster development with pre-built, tested components</li>
                   </ul>
                 </div>
@@ -485,28 +399,28 @@ grg llm-prompts --output .ai-rules</code></pre>
               <div hlmCardContent>
                 <div class="space-y-4">
                   <div class="p-4 bg-muted/50 rounded-md">
-                    <pre class="text-sm text-muted-foreground whitespace-pre-wrap">User: "I need a button component"
+                    <pre class="text-sm text-muted-foreground whitespace-pre-wrap">User: "I need a login page"
          ↓
 AI reads .windsurf/rules/grg-kit-mcp.md
          ↓
-AI calls MCP tool: search_ui_resources({{ '{' }} query: "button" {{ '}' }})
+AI calls MCP tool: suggest_resources({{ '{' }} requirement: "login page" {{ '}' }})
          ↓
-MCP Server → grg metadata → Returns: examples:button
+MCP Server → Returns: block:auth
          ↓
-AI calls MCP tool: install_resource({{ '{' }} resource: "examples:button" {{ '}' }})
+AI calls MCP tool: install_resource({{ '{' }} resource: "auth" {{ '}' }})
          ↓
-MCP Server → grg add examples:button → Downloads resource
+MCP Server → grg add block --auth → Downloads auth block
          ↓
-AI: "I've installed button examples. Here's how to use them..."</pre>
+AI: "I've installed the auth block. Here's how to use it..."</pre>
                   </div>
 
                   <div class="mt-4 p-4 bg-accent/50 rounded-md">
                     <p class="text-sm font-medium mb-2">🔧 Available MCP Tools:</p>
                     <ul class="text-sm text-muted-foreground space-y-1">
-                      <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">search_ui_resources</code> - Search for components, themes, layouts</li>
+                      <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">search_ui_resources</code> - Search for components, themes, blocks</li>
                       <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">suggest_resources</code> - Get AI-powered suggestions</li>
                       <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">get_resource_details</code> - View detailed resource info</li>
-                      <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">install_resource</code> - Install resources automatically</li>
+                      <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">install_resource</code> - Install blocks automatically</li>
                       <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">list_available_resources</code> - Browse catalog</li>
                     </ul>
                   </div>

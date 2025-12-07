@@ -4,122 +4,80 @@ const ora = require('ora');
 const { RESOURCES, REPO } = require('../config/resources');
 
 /**
- * Add command - downloads a specific resource
- * Format: grg add <category>:<name>
+ * Add command - downloads blocks
+ * Format: grg add block [options]
  * Examples:
- *   grg add theme:claude
- *   grg add component:stepper
- *   grg add examples:button
- *   grg add examples:all
+ *   grg add block --auth
+ *   grg add block --shell --settings
+ *   grg add block --all
  */
-async function add(resource, options) {
-  const [category, name] = resource.split(':');
+async function add(options) {
+  // Determine which blocks to add
+  const blocksToAdd = [];
+  
+  if (options.all) {
+    blocksToAdd.push(...RESOURCES.blocks);
+  } else {
+    if (options.auth) {
+      const block = RESOURCES.blocks.find(b => b.name === 'auth');
+      if (block) blocksToAdd.push(block);
+    }
+    if (options.shell) {
+      const block = RESOURCES.blocks.find(b => b.name === 'shell');
+      if (block) blocksToAdd.push(block);
+    }
+    if (options.settings) {
+      const block = RESOURCES.blocks.find(b => b.name === 'settings');
+      if (block) blocksToAdd.push(block);
+    }
+  }
 
-  if (!category || !name) {
-    console.error(chalk.red('Error: Invalid resource format. Use <category>:<name>'));
-    console.log(chalk.yellow('Examples:'));
-    console.log('  grg add theme:claude');
-    console.log('  grg add component:stepper');
-    console.log('  grg add examples:button');
-    console.log('  grg add examples:all');
+  if (blocksToAdd.length === 0) {
+    console.log(chalk.yellow('\nNo blocks specified. Use one of the following options:\n'));
+    console.log(chalk.cyan('  grg add block --all'), chalk.gray('       Add all blocks'));
+    console.log(chalk.cyan('  grg add block --auth'), chalk.gray('      Add authentication block'));
+    console.log(chalk.cyan('  grg add block --shell'), chalk.gray('     Add app shell block'));
+    console.log(chalk.cyan('  grg add block --settings'), chalk.gray('  Add settings block'));
+    console.log(chalk.gray('\nRun'), chalk.cyan('grg list blocks'), chalk.gray('for more details'));
     process.exit(1);
   }
 
-  let resourceData;
-  let sourcePath;
-  let outputPath;
+  console.log(chalk.bold.cyan(`\n📦 Adding ${blocksToAdd.length} block(s)\n`));
 
-  // Find the resource
-  switch (category) {
-    case 'theme':
-      resourceData = RESOURCES.themes.find(t => t.name === name);
-      if (resourceData) {
-        sourcePath = resourceData.path;
-        outputPath = options.output || resourceData.defaultOutput;
-      }
-      break;
+  const spinner = ora();
 
-    case 'component':
-      resourceData = RESOURCES.components.find(c => c.name === name);
-      if (resourceData) {
-        sourcePath = resourceData.path;
-        outputPath = options.output || resourceData.defaultOutput;
-      }
-      break;
+  for (const block of blocksToAdd) {
+    const outputPath = options.output 
+      ? `${options.output}/${block.name}` 
+      : block.defaultOutput;
 
-    case 'layout':
-      resourceData = RESOURCES.layouts.find(l => l.name === name);
-      if (resourceData) {
-        sourcePath = resourceData.path;
-        outputPath = options.output || resourceData.defaultOutput;
-      }
-      break;
+    spinner.start(`Downloading ${block.title}...`);
 
-    case 'examples':
-      if (name === 'all') {
-        resourceData = RESOURCES.examples.all;
-        sourcePath = resourceData.path;
-        outputPath = options.output || resourceData.defaultOutput;
-      } else {
-        resourceData = RESOURCES.examples.components.find(e => e.name === name);
-        if (resourceData) {
-          sourcePath = resourceData.path;
-          outputPath = options.output || resourceData.defaultOutput;
-        }
-      }
-      break;
-
-    default:
-      console.error(chalk.red(`Error: Unknown category "${category}"`));
-      console.log(chalk.yellow('Valid categories: theme, component, layout, examples'));
-      process.exit(1);
-  }
-
-  if (!resourceData) {
-    console.error(chalk.red(`Error: Resource "${name}" not found in category "${category}"`));
-    console.log(chalk.yellow(`\nRun ${chalk.cyan('grg list ' + category + 's')} to see available resources`));
-    process.exit(1);
-  }
-
-  // Download the resource
-  const spinner = ora(`Downloading ${resourceData.title}...`).start();
-
-  try {
-    const emitter = degit(`${REPO}/${sourcePath}`, {
-      cache: false,
-      force: true,
-      verbose: false,
-    });
-
-    await emitter.clone(outputPath);
-
-    spinner.succeed(chalk.green(`✓ ${resourceData.title} added successfully!`));
-    console.log(chalk.gray(`  Location: ${outputPath}`));
-    
-    if (resourceData.description) {
-      console.log(chalk.gray(`  ${resourceData.description}`));
-    }
-
-    // Show next steps for themes
-    if (category === 'theme') {
-      console.log(chalk.yellow('\nNext steps:'));
-      console.log(chalk.gray(`  1. Import the theme in your src/styles.css:`));
-      console.log(chalk.cyan(`     @import './${outputPath.replace('src/', '')}';`));
-    }
-
-    // Show dependencies if any
-    if (resourceData.dependencies && resourceData.dependencies.length > 0) {
-      console.log(chalk.yellow('\nRequired dependencies:'));
-      resourceData.dependencies.forEach(dep => {
-        console.log(chalk.gray(`  - ${dep}`));
+    try {
+      const emitter = degit(`${REPO}/${block.path}`, {
+        cache: false,
+        force: true,
+        verbose: false,
       });
-    }
 
-  } catch (error) {
-    spinner.fail(chalk.red('Failed to download resource'));
-    console.error(chalk.red(error.message));
-    process.exit(1);
+      await emitter.clone(outputPath);
+
+      spinner.succeed(chalk.green(`✓ ${block.title} added`));
+      console.log(chalk.gray(`  Location: ${outputPath}`));
+      
+      // Show dependencies if any
+      if (block.dependencies && block.dependencies.length > 0) {
+        console.log(chalk.gray(`  Dependencies: ${block.dependencies.join(', ')}`));
+      }
+      console.log();
+
+    } catch (error) {
+      spinner.fail(chalk.red(`Failed to download ${block.title}`));
+      console.error(chalk.red(error.message));
+    }
   }
+
+  console.log(chalk.bold.green('✨ Done!'));
 }
 
 module.exports = { add };

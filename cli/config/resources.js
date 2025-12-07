@@ -156,13 +156,13 @@ const RESOURCES = {
       "prefix": "grg"
     }
   ],
-  "layouts": [
+  "blocks": [
     {
       "name": "auth",
-      "title": "Auth Layout",
+      "title": "Auth Block",
       "description": "Authentication pages layout (login, signup, forgot password)",
       "path": "templates/ui/layouts/auth",
-      "defaultOutput": "src/app/layouts/auth",
+      "defaultOutput": "src/app/blocks/auth",
       "tags": [
         "auth",
         "login",
@@ -177,20 +177,24 @@ const RESOURCES = {
     },
     {
       "name": "settings",
-      "title": "Settings Layout",
-      "description": "settings layout",
+      "title": "Settings Block",
+      "description": "settings block",
       "path": "templates/ui/layouts/settings",
-      "defaultOutput": "src/app/layouts/settings",
-      "tags": [],
+      "defaultOutput": "src/app/blocks/settings",
+      "tags": [
+        "settings"
+      ],
       "dependencies": []
     },
     {
       "name": "shell",
-      "title": "Shell Layout",
-      "description": "shell layout",
+      "title": "Shell Block",
+      "description": "shell block",
       "path": "templates/ui/layouts/shell",
-      "defaultOutput": "src/app/layouts/shell",
-      "tags": [],
+      "defaultOutput": "src/app/blocks/shell",
+      "tags": [
+        "shell"
+      ],
       "dependencies": []
     }
   ],
