@@ -1,9 +1,26 @@
-import { inject, Injectable, OnDestroy } from '@angular/core';
+import { inject, Injectable, OnDestroy, signal, computed } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { ReplaySubject, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-export type Theme = 'light' | 'dark';
+export type DarkMode = 'light' | 'dark';
+
+export type ColorTheme = 'claude' | 'grg' | 'amber-minimal' | 'clean-slate' | 'modern-minimal' | 'mocks';
+
+export interface ThemeConfig {
+  id: ColorTheme;
+  name: string;
+  description: string;
+}
+
+export const AVAILABLE_THEMES: ThemeConfig[] = [
+  { id: 'claude', name: 'Claude', description: 'Inspired by Claude\'s interface' },
+  { id: 'grg', name: 'GRG', description: 'Default GRG theme with purple/violet accents' },
+  { id: 'amber-minimal', name: 'Amber Minimal', description: 'Warm amber tones with minimal styling' },
+  { id: 'clean-slate', name: 'Clean Slate', description: 'Clean blue/indigo palette' },
+  { id: 'modern-minimal', name: 'Modern Minimal', description: 'Modern purple with subtle accents' },
+  { id: 'mocks', name: 'Mocks', description: 'Sketch-style theme for wireframes' },
+];
 
 @Injectable({
   providedIn: 'root',
@@ -11,25 +28,50 @@ export type Theme = 'light' | 'dark';
 export class ThemeService implements OnDestroy {
   private _document = inject(DOCUMENT);
 
-  private _theme$ = new ReplaySubject<Theme>(1);
-  public theme$ = this._theme$.asObservable();
+  // Dark mode state (light/dark)
+  private _darkMode$ = new ReplaySubject<DarkMode>(1);
+  public darkMode$ = this._darkMode$.asObservable();
   private _destroyed$ = new Subject<void>();
 
+  // Color theme state (signal-based)
+  private _colorTheme = signal<ColorTheme>(this.getStoredColorTheme());
+  public colorTheme = this._colorTheme.asReadonly();
+
+  // Computed for current theme config
+  public currentThemeConfig = computed(() => 
+    AVAILABLE_THEMES.find(t => t.id === this._colorTheme()) ?? AVAILABLE_THEMES[0]
+  );
+
+  // Available themes for UI
+  public readonly availableThemes = AVAILABLE_THEMES;
+
   constructor() {
-    this.syncThemeFromLocalStorage();
-    this.toggleClassOnThemeChanges();
+    this.syncDarkModeFromLocalStorage();
+    this.syncColorThemeFromLocalStorage();
+    this.toggleClassOnDarkModeChanges();
   }
 
-  private syncThemeFromLocalStorage(): void {
-    this._theme$.next(
-      localStorage.getItem('theme') === 'dark' ? 'dark' : 'light'
+  private getStoredColorTheme(): ColorTheme {
+    const stored = localStorage.getItem('colorTheme') as ColorTheme;
+    return AVAILABLE_THEMES.some(t => t.id === stored) ? stored : 'claude';
+  }
+
+  private syncDarkModeFromLocalStorage(): void {
+    this._darkMode$.next(
+      localStorage.getItem('darkMode') === 'dark' ? 'dark' : 'light'
     );
   }
 
-  private toggleClassOnThemeChanges(): void {
-    this.theme$.pipe(takeUntil(this._destroyed$)).subscribe((theme: Theme) => {
+  private syncColorThemeFromLocalStorage(): void {
+    const theme = this.getStoredColorTheme();
+    this._colorTheme.set(theme);
+    this.applyColorTheme(theme);
+  }
+
+  private toggleClassOnDarkModeChanges(): void {
+    this.darkMode$.pipe(takeUntil(this._destroyed$)).subscribe((mode: DarkMode) => {
       const html = this._document.documentElement;
-      if (theme === 'dark') {
+      if (mode === 'dark') {
         html.classList.add('dark');
       } else {
         html.classList.remove('dark');
@@ -37,20 +79,41 @@ export class ThemeService implements OnDestroy {
     });
   }
 
+  private applyColorTheme(theme: ColorTheme): void {
+    this._document.documentElement.setAttribute('data-theme', theme);
+  }
+
+  // Dark mode methods
   public toggleDarkMode(): void {
-    const newTheme: Theme =
-      localStorage.getItem('theme') === 'dark' ? 'light' : 'dark';
-    localStorage.setItem('theme', newTheme);
-    this._theme$.next(newTheme);
+    const newMode: DarkMode =
+      localStorage.getItem('darkMode') === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('darkMode', newMode);
+    this._darkMode$.next(newMode);
   }
 
-  public setTheme(theme: Theme): void {
-    localStorage.setItem('theme', theme);
-    this._theme$.next(theme);
+  public setDarkMode(mode: DarkMode): void {
+    localStorage.setItem('darkMode', mode);
+    this._darkMode$.next(mode);
   }
 
-  public getCurrentTheme(): Theme {
-    return localStorage.getItem('theme') === 'dark' ? 'dark' : 'light';
+  public isDarkMode(): boolean {
+    return localStorage.getItem('darkMode') === 'dark';
+  }
+
+  // Color theme methods
+  public setColorTheme(theme: ColorTheme): void {
+    localStorage.setItem('colorTheme', theme);
+    this._colorTheme.set(theme);
+    this.applyColorTheme(theme);
+  }
+
+  public getColorTheme(): ColorTheme {
+    return this._colorTheme();
+  }
+
+  // Legacy compatibility
+  public getCurrentTheme(): DarkMode {
+    return localStorage.getItem('darkMode') === 'dark' ? 'dark' : 'light';
   }
 
   public ngOnDestroy(): void {

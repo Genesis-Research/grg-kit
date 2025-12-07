@@ -2,4 +2,10 @@
 @import "tailwindcss";
 @import "@spartan-ng/brain/hlm-tailwind-preset.css";
 
+/* Import all themes */
 @import './themes/claude.css';
+@import './themes/grg-theme.css';
+@import './themes/amber-minimal.css';
+@import './themes/clean-slate.css';
+@import './themes/modern-minimal.css';
+@import './themes/mocks.css';

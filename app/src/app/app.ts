@@ -1,11 +1,28 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
-import { ThemeService } from './services/theme.service';
+import { ThemeService, ColorTheme } from './services/theme.service';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
+import { BrnSelectImports } from '@spartan-ng/brain/select';
+import { HlmSelectImports } from '@spartan-ng/helm/select';
+import { HlmSwitchImports } from '@spartan-ng/helm/switch';
+import { HlmLabelImports } from '@spartan-ng/helm/label';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { lucideSun, lucideMoon, lucidePalette } from '@ng-icons/lucide';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, HlmButtonImports],
+  imports: [
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+    HlmButtonImports,
+    BrnSelectImports,
+    HlmSelectImports,
+    HlmSwitchImports,
+    HlmLabelImports,
+    NgIcon,
+  ],
+  providers: [provideIcons({ lucideSun, lucideMoon, lucidePalette })],
   template: `
     <div class="min-h-screen bg-background text-foreground">
       <header class="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
@@ -66,9 +83,34 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
                 </a>
               </nav>
             </div>
-            <button hlmBtn variant="outline" size="sm" (click)="themeService.toggleDarkMode()">
-              Toggle Theme
-            </button>
+            <div class="flex items-center gap-4">
+              <!-- Theme Dropdown -->
+              <brn-select
+                class="inline-block"
+                [value]="themeService.colorTheme()"
+                (valueChange)="onThemeChange($event)"
+              >
+                <hlm-select-trigger class="w-44">
+                  <ng-icon name="lucidePalette" class="mr-2 h-4 w-4" />
+                  <hlm-select-value />
+                </hlm-select-trigger>
+                <hlm-select-content>
+                  @for (theme of themeService.availableThemes; track theme.id) {
+                    <hlm-option [value]="theme.id">{{ theme.name }}</hlm-option>
+                  }
+                </hlm-select-content>
+              </brn-select>
+
+              <!-- Dark Mode Toggle -->
+              <label class="flex items-center gap-2 cursor-pointer" hlmLabel>
+                <ng-icon name="lucideSun" class="h-4 w-4" />
+                <hlm-switch
+                  [checked]="themeService.isDarkMode()"
+                  (checkedChange)="onDarkModeChange($event)"
+                />
+                <ng-icon name="lucideMoon" class="h-4 w-4" />
+              </label>
+            </div>
           </div>
         </div>
       </header>
@@ -82,4 +124,14 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
 })
 export class App {
   themeService = inject(ThemeService);
+
+  onThemeChange(theme: ColorTheme | ColorTheme[] | undefined): void {
+    if (theme && typeof theme === 'string') {
+      this.themeService.setColorTheme(theme);
+    }
+  }
+
+  onDarkModeChange(isDark: boolean): void {
+    this.themeService.setDarkMode(isDark ? 'dark' : 'light');
+  }
 }
