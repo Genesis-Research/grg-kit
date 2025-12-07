@@ -15,8 +15,8 @@ program
 
 // Init command - sets up everything in one shot
 program
-  .command('init')
-  .description('Initialize GRG Kit: sets up styles.css with theme, adds all components and spartan-ng examples')
+  .command('init <project-name>')
+  .description('Initialize GRG Kit: creates Angular project with zoneless, sets up styles.css with theme, adds all components')
   .option('-t, --theme <name>', 'Theme to install (grg-theme, claude, clean-slate, modern-minimal, amber-minimal, mocks)', 'grg-theme')
   .action(init);
 

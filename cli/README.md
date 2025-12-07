@@ -5,19 +5,20 @@ CLI tool for initializing Angular projects with GRG Kit and adding blocks.
 ## Installation
 
 ```bash
-npm install -g grg-kit-cli
+pnpm install -g grg-kit-cli
 ```
 
 ## Quick Start
 
 ```bash
-# Initialize GRG Kit (theme + all components + spartan-ng examples)
-grg init
+# Initialize a new Angular project with GRG Kit
+grg init my-app
 
 # Initialize with a specific theme
-grg init --theme claude
+grg init my-app --theme claude
 
-# Add blocks
+# Add blocks (inside project directory)
+cd my-app
 grg add block --auth
 grg add block --shell
 grg add block --all
@@ -30,29 +31,30 @@ grg list themes
 
 ## Commands
 
-### `grg init`
+### `grg init <project-name>`
 
-Initialize GRG Kit in your Angular project. One command to set up everything.
+Create a new Angular project with GRG Kit fully configured. One command to set up everything.
 
 ```bash
-grg init [options]
+grg init <project-name> [options]
 
 Options:
   -t, --theme <name>  Theme to install (default: "grg-theme")
 
 Examples:
-  grg init
-  grg init --theme claude
-  grg init -t modern-minimal
+  grg init my-app
+  grg init my-app --theme claude
+  grg init dashboard -t modern-minimal
 ```
 
 **What it does:**
+- Creates Angular project with CSS styling
 - Installs Tailwind CSS v4 (`tailwindcss @tailwindcss/postcss postcss`)
 - Creates `.postcssrc.json` with PostCSS configuration
-- Runs `npx ng g @spartan-ng/cli:init` to initialize Spartan-NG
+- Installs and configures Spartan-NG CLI
+- Runs `ng g @spartan-ng/cli:ui all` to install all Spartan-NG UI components
+- Downloads 56+ Spartan-NG examples to `libs/examples`
 - Downloads the selected theme
-- Downloads all GRG Kit components
-- Downloads all spartan-ng examples (56+)
 - Updates `src/styles.css` with theme import
 
 **Available themes:**
@@ -118,7 +120,7 @@ For AI assistants to automatically discover and use GRG Kit resources:
 ### 1. Install the MCP Server
 
 ```bash
-npm install -g @grg-kit/mcp-server
+pnpm install -g @grg-kit/mcp-server
 ```
 
 ### 2. Configure Your AI Assistant
@@ -166,10 +168,11 @@ grg llm-prompts
 
 ```bash
 # Initialize project
-grg init                        # Default theme
-grg init --theme claude         # Custom theme
+grg init my-app                        # Default theme
+grg init my-app --theme claude         # Custom theme
 
-# Add blocks
+# Add blocks (inside project directory)
+cd my-app
 grg add block --auth            # Auth pages
 grg add block --shell           # App shell
 grg add block --settings        # Settings page

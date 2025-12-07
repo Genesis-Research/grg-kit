@@ -16,7 +16,7 @@ Ensures the CLI always has up-to-date resource definitions based on what's actua
 
 ```bash
 # Run manually
-npm run generate
+pnpm run generate
 
 # Or directly
 node scripts/generate-resources.js
@@ -26,7 +26,7 @@ node scripts/generate-resources.js
 
 The script runs automatically before publishing:
 ```bash
-npm publish  # Runs prepublishOnly hook → npm run generate
+pnpm publish  # Runs prepublishOnly hook → pnpm run generate
 ```
 
 ### What It Does
@@ -96,6 +96,6 @@ const COMPONENT_METADATA = {
 
 1. Add new resource to `templates/` directory
 2. (Optional) Add metadata to script constants
-3. Run `npm run generate`
+3. Run `pnpm run generate`
 4. Test with `grg list` or `grg add`
-5. Publish with `npm publish` (auto-generates)
+5. Publish with `pnpm publish` (auto-generates)

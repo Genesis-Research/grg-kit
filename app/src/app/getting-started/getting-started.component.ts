@@ -44,26 +44,21 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
         </p>
       </div>
 
-      <!-- Step 1: Angular CLI -->
+      <!-- Step 1: Install GRG CLI -->
       <section hlmCard>
         <div hlmCardHeader>
           <div class="flex items-center gap-2">
             <ng-icon hlm name="lucideTerminal" size="lg" />
-            <h3 hlmCardTitle>1. Install Angular CLI</h3>
+            <h3 hlmCardTitle>1. Install GRG CLI</h3>
           </div>
           <p hlmCardDescription>
-            Install the Angular CLI globally and create a new project with CSS as the default stylesheet
+            Install the GRG Kit CLI globally
           </p>
         </div>
         <div hlmCardContent class="space-y-4">
           <div class="space-y-2">
-            <p class="text-sm font-medium">Install Angular CLI:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>npm install -g @angular/cli@latest</code></pre>
-          </div>
-          <div class="space-y-2">
-            <p class="text-sm font-medium">Create a new Angular project:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>ng new my-app --style=css --routing
-cd my-app</code></pre>
+            <p class="text-sm font-medium">Install GRG CLI:</p>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>pnpm install -g grg-kit-cli</code></pre>
           </div>
         </div>
       </section>
@@ -76,34 +71,35 @@ cd my-app</code></pre>
             <h3 hlmCardTitle>2. Initialize GRG Kit</h3>
           </div>
           <p hlmCardDescription>
-            One command to set up Tailwind CSS, Spartan-NG, theme, components, and examples
+            One command to create an Angular project with Tailwind CSS, Spartan-NG, and theme
           </p>
         </div>
         <div hlmCardContent class="space-y-4">
           <div class="space-y-2">
-            <p class="text-sm font-medium">Install GRG CLI:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>npm install -g grg-kit-cli</code></pre>
-          </div>
-
-          <div class="space-y-2">
             <p class="text-sm font-medium">Initialize with default theme:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg init</code></pre>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg init my-app</code></pre>
           </div>
 
           <div class="space-y-2">
             <p class="text-sm font-medium">Or choose a specific theme:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg init --theme claude</code></pre>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg init my-app --theme claude</code></pre>
+          </div>
+
+          <div class="space-y-2">
+            <p class="text-sm font-medium">Then navigate to your project:</p>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>cd my-app</code></pre>
           </div>
 
           <div class="mt-4 p-4 bg-muted/50 rounded-md">
             <p class="text-sm font-medium mb-2">💡 What <code class="text-xs bg-muted px-1 py-0.5 rounded">grg init</code> does:</p>
             <ul class="text-sm text-muted-foreground space-y-1">
+              <li>• Creates Angular project with CSS styling</li>
               <li>• Installs Tailwind CSS v4 with PostCSS</li>
               <li>• Creates <code class="text-xs bg-muted px-1 py-0.5 rounded">.postcssrc.json</code> configuration</li>
-              <li>• Runs <code class="text-xs bg-muted px-1 py-0.5 rounded">npx ng g @spartan-ng/cli:init</code> to initialize Spartan-NG</li>
+              <li>• Installs and configures Spartan-NG CLI</li>
+              <li>• Runs <code class="text-xs bg-muted px-1 py-0.5 rounded">ng g @spartan-ng/cli:ui all</code> to install all UI components</li>
+              <li>• Downloads 56+ Spartan-NG examples to <code class="text-xs bg-muted px-1 py-0.5 rounded">libs/examples</code></li>
               <li>• Downloads the selected theme to <code class="text-xs bg-muted px-1 py-0.5 rounded">src/themes</code></li>
-              <li>• Downloads all GRG Kit components</li>
-              <li>• Downloads all spartan-ng examples (56+)</li>
               <li>• Updates <code class="text-xs bg-muted px-1 py-0.5 rounded">src/styles.css</code> with theme import</li>
             </ul>
           </div>
@@ -192,7 +188,7 @@ grg list themes</code></pre>
           <div class="mt-4 p-4 bg-accent/50 rounded-md">
             <p class="text-sm font-medium mb-2">💡 Quick Reference</p>
             <ul class="text-sm text-muted-foreground space-y-1">
-              <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg init</code> - Initialize with theme + components + examples</li>
+              <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg init my-app</code> - Create project with theme + all components</li>
               <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg add block --auth</code> - Add auth block</li>
               <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg add block --shell</code> - Add app shell block</li>
               <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg add block --all</code> - Add all blocks</li>
@@ -262,7 +258,7 @@ grg list themes</code></pre>
               <div hlmCardContent class="space-y-4">
                 <div class="space-y-2">
                   <p class="text-sm font-medium">Install globally:</p>
-                  <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>npm install -g grg-kit-cli @grg-kit/mcp-server</code></pre>
+                  <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>pnpm install -g grg-kit-cli @grg-kit/mcp-server</code></pre>
                 </div>
                 <div class="mt-4 p-4 bg-muted/50 rounded-md">
                   <p class="text-sm font-medium mb-2">💡 What gets installed:</p>
