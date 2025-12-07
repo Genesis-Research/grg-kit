@@ -25,36 +25,39 @@ Each component directory follows this pattern:
 
 ## Installation
 
-### Prerequisites
+These examples are automatically downloaded when you initialize a new GRG Kit project.
+
+### Via CLI (Recommended)
 
 ```bash
 # Install GRG CLI globally
-npm install -g grg-kit-cli
+pnpm install -g grg-kit-cli
+
+# Initialize a new project (includes all examples)
+grg init my-app
+
+# Or with a specific theme
+grg init my-app --theme claude
 ```
 
-### Pull All Examples
+Examples are downloaded to `libs/examples/` in your project.
 
-```bash
-grg add examples:all
+### Via MCP Server (AI Assistants)
+
+If using Windsurf, Cursor, or Claude Desktop with the GRG Kit MCP server:
+
+```typescript
+// AI can search for examples
+search_ui_resources({ query: "button", category: "examples" })
+
+// AI can get details about specific examples
+get_resource_details({ resource: "examples:button" })
 ```
 
-### Pull Specific Component Examples
+### List Available Resources
 
 ```bash
-# Example: Pull button examples
-grg add examples:button
-
-# Example: Pull dialog examples
-grg add examples:dialog
-
-# Example: Pull form-field examples
-grg add examples:form-field
-```
-
-### List Available Examples
-
-```bash
-grg list examples
+grg list
 ```
 
 ## Available Components
@@ -118,9 +121,9 @@ grg list examples
 
 ## Usage
 
-After pulling examples, you can:
+After initializing your project, you can:
 
-1. **Reference the code patterns** for implementing components
+1. **Reference the code patterns** in `libs/examples/` for implementing components
 2. **Copy specific examples** into your components
 3. **Learn from the imports** and configuration
 4. **Understand variants** and customization options

@@ -4,40 +4,33 @@ A shared resource library for Angular UI applications with themes, components, b
 
 ## Prerequisites & Setup
 
-### 1. Create Angular Project
+### 1. Install GRG CLI
 
 ```bash
-npm install -g @angular/cli@latest
-ng new my-app --style=css --routing
-cd my-app
+pnpm install -g grg-kit-cli
 ```
 
-### 2. Install GRG CLI
+### 2. Initialize GRG Kit
 
 ```bash
-npm install -g grg-kit-cli
-```
-
-### 3. Initialize GRG Kit
-
-```bash
-grg init
+grg init my-app
 # or with a specific theme
-grg init --theme claude
+grg init my-app --theme claude
 ```
 
-This single command installs Tailwind CSS v4, Spartan-NG, theme, components, and examples.
+This single command creates an Angular project and installs Tailwind CSS v4, Spartan-NG, theme, components, and examples.
 
 ## Quick Start
 
 ```bash
-# Initialize GRG Kit (theme + all components + spartan-ng examples)
-grg init
+# Initialize GRG Kit (creates Angular project + theme + all components + spartan-ng examples)
+grg init my-app
 
 # Initialize with a specific theme
-grg init --theme claude
+grg init my-app --theme claude
 
-# Add blocks
+# Navigate to project and add blocks
+cd my-app
 grg add block --auth
 grg add block --shell
 
@@ -49,8 +42,8 @@ grg list
 
 | Command | Description |
 |---------|-------------|
-| `grg init` | Installs Tailwind v4, Spartan-NG, theme, components, and examples |
-| `grg init --theme <name>` | Same with custom theme |
+| `grg init <project-name>` | Creates Angular project with Tailwind v4, Spartan-NG, theme, components, and examples |
+| `grg init <project-name> --theme <name>` | Same with custom theme |
 | `grg add block --<name>` | Add a block (auth, shell, settings) |
 | `grg add block --all` | Add all blocks |
 | `grg list` | List available blocks and themes |
@@ -100,8 +93,8 @@ Components and spartan-ng examples are installed automatically via `grg init`:
 For AI assistants to automatically discover and use GRG Kit resources:
 
 ```bash
-# Install MCP server
-npm install -g @grg-kit/mcp-server
+# Install CLI and MCP server
+pnpm install -g grg-kit-cli @grg-kit/mcp-server
 ```
 
 Configure your AI assistant (Windsurf, Cursor):

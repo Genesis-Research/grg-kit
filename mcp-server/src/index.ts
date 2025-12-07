@@ -17,10 +17,6 @@ interface GRGResources {
   themes: any[];
   components: any[];
   blocks: any[];
-  examples: {
-    all: any;
-    components: any[];
-  };
 }
 
 // Inline resources - these match cli/config/resources.js
@@ -42,21 +38,6 @@ const RESOURCES: GRGResources = {
     { name: 'settings', title: 'Settings Block', description: 'Settings page layout with sidebar navigation', tags: ['settings', 'preferences', 'account'] },
     { name: 'shell', title: 'App Shell Block', description: 'Application shell with sidebar, header, and content area', tags: ['shell', 'layout', 'sidebar', 'header'] },
   ],
-  examples: {
-    all: { name: 'all', title: 'All Spartan-NG Examples', description: 'Complete collection of 56+ Spartan-NG component examples', count: '56+' },
-    components: [
-      { name: 'accordion', title: 'Accordion Examples', description: 'Collapsible content sections', tags: ['accordion'] },
-      { name: 'alert', title: 'Alert Examples', description: 'Status messages and notifications', tags: ['alert'] },
-      { name: 'button', title: 'Button Examples', description: 'Interactive buttons with multiple variants', tags: ['button'] },
-      { name: 'card', title: 'Card Examples', description: 'Content containers', tags: ['card'] },
-      { name: 'dialog', title: 'Dialog Examples', description: 'Modal dialogs and popups', tags: ['dialog'] },
-      { name: 'form-field', title: 'Form Field Examples', description: 'Complete form fields with validation', tags: ['form-field'] },
-      { name: 'input', title: 'Input Examples', description: 'Form input fields', tags: ['input'] },
-      { name: 'select', title: 'Select Examples', description: 'Dropdown selection controls', tags: ['select'] },
-      { name: 'table', title: 'Table Examples', description: 'Data tables', tags: ['table'] },
-      { name: 'data-table', title: 'Data Table Examples', description: 'Advanced data tables with sorting and filtering', tags: ['data-table'] },
-    ],
-  },
 };
 
 function getResources(): GRGResources {
@@ -82,7 +63,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
     tools: [
       {
         name: 'search_ui_resources',
-        description: 'Search for Angular UI components, themes, blocks, or examples in GRG Kit. Use this FIRST when building UI. Returns matching resources with descriptions, tags, and usage info.',
+        description: 'Search for Angular UI components, themes, or blocks in GRG Kit. Use this FIRST when building UI. Returns matching resources with descriptions, tags, and usage info.',
         inputSchema: {
           type: 'object',
           properties: {
@@ -92,7 +73,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             },
             category: {
               type: 'string',
-              enum: ['all', 'themes', 'components', 'blocks', 'examples'],
+              enum: ['all', 'themes', 'components', 'blocks'],
               description: 'Filter by category (default: all)',
             },
           },
@@ -153,7 +134,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           properties: {
             category: {
               type: 'string',
-              enum: ['all', 'themes', 'components', 'blocks', 'examples'],
+              enum: ['all', 'themes', 'components', 'blocks'],
               description: 'Category to list (default: all)',
             },
           },
@@ -186,12 +167,6 @@ server.setRequestHandler(ListResourcesRequestSchema, async () => {
       description: 'Page blocks (auth, shell, settings, etc.)',
       mimeType: 'application/json',
     },
-    {
-      uri: 'grg://catalog/examples',
-      name: `Spartan-NG Examples (${res.examples.components.length}+ available)`,
-      description: 'Complete examples of all Spartan-NG components',
-      mimeType: 'application/json',
-    },
   ];
   
   return { resources };
@@ -213,9 +188,6 @@ server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
       break;
     case 'grg://catalog/blocks':
       content = res.blocks;
-      break;
-    case 'grg://catalog/examples':
-      content = res.examples;
       break;
     default:
       throw new Error(`Unknown resource: ${uri}`);
@@ -294,15 +266,12 @@ function searchResources(query: string, category: string = 'all') {
   if (category === 'all' || category === 'blocks') {
     results.push(...searchIn(res.blocks, 'block'));
   }
-  if (category === 'all' || category === 'examples') {
-    results.push(...searchIn(res.examples.components, 'examples'));
-  }
   
   // Generate install commands based on type
   const getInstallCommand = (type: string, name: string) => {
     if (type === 'block') return `grg add block --${name}`;
-    if (type === 'theme') return `grg init --theme ${name}`;
-    return `Installed via grg init`;
+    if (type === 'theme') return `grg init <project-name> --theme ${name}`;
+    return 'Included automatically with grg init <project-name>';
   };
   
   return {
@@ -337,23 +306,15 @@ function getResourceDetails(resource: string) {
   switch (category) {
     case 'theme':
       details = res.themes.find((t: any) => t.name === name);
-      installCmd = `grg init --theme ${name}`;
+      installCmd = `grg init <project-name> --theme ${name}`;
       break;
     case 'component':
       details = res.components.find((c: any) => c.name === name);
-      installCmd = 'Installed via grg init';
+      installCmd = 'Included automatically with grg init <project-name>';
       break;
     case 'block':
       details = res.blocks.find((b: any) => b.name === name);
       installCmd = `grg add block --${name}`;
-      break;
-    case 'examples':
-      if (name === 'all') {
-        details = res.examples.all;
-      } else {
-        details = res.examples.components.find((e: any) => e.name === name);
-      }
-      installCmd = 'Installed via grg init';
       break;
   }
   
@@ -399,12 +360,12 @@ function suggestResources(requirement: string) {
       { type: 'block', name: 'settings', install: 'grg add block --settings' },
     ],
     form: [
-      { type: 'component', name: 'stepper', install: 'Installed via grg init' },
+      { type: 'component', name: 'stepper', install: 'Included automatically with grg init <project-name>' },
     ],
     theme: [
-      { type: 'theme', name: 'grg-theme', install: 'grg init --theme grg-theme' },
-      { type: 'theme', name: 'claude', install: 'grg init --theme claude' },
-      { type: 'theme', name: 'modern-minimal', install: 'grg init --theme modern-minimal' },
+      { type: 'theme', name: 'grg-theme', install: 'grg init <project-name> --theme grg-theme' },
+      { type: 'theme', name: 'claude', install: 'grg init <project-name> --theme claude' },
+      { type: 'theme', name: 'modern-minimal', install: 'grg init <project-name> --theme modern-minimal' },
     ],
   };
   
@@ -440,7 +401,7 @@ function suggestResources(requirement: string) {
           requirement,
           suggestions_count: suggestions.length,
           suggestions,
-          note: 'Use grg init to set up theme and components, grg add block --<name> for blocks',
+          note: 'Use grg init <project-name> to set up theme, components, and examples. Use grg add block --<name> for blocks.',
         }, null, 2),
       },
     ],
@@ -483,12 +444,12 @@ function listResources(category: string = 'all') {
   if (category === 'all' || category === 'themes') {
     result.resources.themes = {
       count: res.themes.length,
-      note: 'Themes are set via: grg init --theme <name>',
+      note: 'Themes are set via: grg init <project-name> --theme <name>',
       items: res.themes.map((t: any) => ({
         name: t.name,
         title: t.title,
         description: t.description,
-        install: `grg init --theme ${t.name}`,
+        install: `grg init <project-name> --theme ${t.name}`,
       })),
     };
   }
@@ -496,7 +457,7 @@ function listResources(category: string = 'all') {
   if (category === 'all' || category === 'components') {
     result.resources.components = {
       count: res.components.length,
-      note: 'Components are installed automatically via: grg init',
+      note: 'Components are included automatically via: grg init <project-name>',
       items: res.components.map((c: any) => ({
         name: c.name,
         title: c.title,
@@ -515,17 +476,6 @@ function listResources(category: string = 'all') {
         description: b.description,
         install: `grg add block --${b.name}`,
       })),
-    };
-  }
-  
-  if (category === 'all' || category === 'examples') {
-    result.resources.examples = {
-      count: res.examples.components.length,
-      note: 'Examples are installed automatically via: grg init',
-      all: {
-        title: res.examples.all.title,
-        description: res.examples.all.description,
-      },
     };
   }
   

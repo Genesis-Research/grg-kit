@@ -13,12 +13,12 @@ Makes GRG Kit the **first choice** for AI when building Angular UIs by:
 ## Installation
 
 ```bash
-npm install -g @grg-kit/mcp-server
+pnpm install -g grg-kit-cli @grg-kit/mcp-server
 ```
 
 **Prerequisites:**
-- `grg-kit-cli` must be installed globally
 - Node.js >= 18
+- pnpm (recommended) or npm
 
 ## Configuration
 
