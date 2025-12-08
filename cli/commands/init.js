@@ -253,6 +253,9 @@ async function init(options) {
   console.log(chalk.gray('  2. Run'), chalk.cyan('grg list blocks'), chalk.gray('to see available blocks'));
   console.log(chalk.gray('  3. Add blocks with'), chalk.cyan('grg add block --auth'));
   console.log();
+
+  // Explicitly exit to close any lingering handles (e.g., from degit)
+  process.exit(0);
 }
 
 module.exports = { init };
