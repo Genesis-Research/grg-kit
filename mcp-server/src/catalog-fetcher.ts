@@ -6,6 +6,10 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as https from 'https';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const REPO = 'Genesis-Research/grg-kit';
 const CATALOG_URL = `https://raw.githubusercontent.com/${REPO}/main/templates/catalog.json`;
