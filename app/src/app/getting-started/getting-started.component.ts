@@ -76,8 +76,9 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
         </div>
         <div hlmCardContent class="space-y-4">
           <div class="space-y-2">
-            <p class="text-sm font-medium">Navigate to your Angular project and initialize:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>cd my-app
+            <p class="text-sm font-medium">Create an Angular project (if you don't have one) and initialize:</p>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>ng new my-app --style=css
+cd my-app
 grg init</code></pre>
           </div>
 
@@ -285,12 +286,11 @@ grg list themes</code></pre>
               <div hlmCardContent class="space-y-4">
                 <div class="space-y-2">
                   <p class="text-sm font-medium">Install globally:</p>
-                  <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>pnpm install -g grg-kit-cli grg-kit-mcp-server</code></pre>
+                  <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>pnpm install -g grg-kit-mcp-server</code></pre>
                 </div>
                 <div class="mt-4 p-4 bg-muted/50 rounded-md">
                   <p class="text-sm font-medium mb-2">💡 What gets installed:</p>
                   <ul class="text-sm text-muted-foreground space-y-1">
-                    <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg</code> - CLI for manual resource management</li>
                     <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg-mcp-server</code> - MCP server for AI integration</li>
                   </ul>
                 </div>
