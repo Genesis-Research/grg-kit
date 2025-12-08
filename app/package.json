@@ -6,11 +6,11 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "generate:layouts": "node scripts/generate-sources.js layouts",
-    "generate:components": "node scripts/generate-sources.js components",
-    "generate:blocks": "node scripts/generate-sources.js blocks",
-    "generate:sources": "node scripts/generate-sources.js",
-    "prebuild": "pnpm run generate:sources"
+    "codegen": "node scripts/generate-sources.js",
+    "codegen:blocks": "node scripts/generate-sources.js blocks",
+    "codegen:components": "node scripts/generate-sources.js components",
+    "codegen:grg": "node scripts/generate-sources.js grgComponents",
+    "prebuild": "pnpm run codegen"
   },
   "prettier": {
     "printWidth": 100,

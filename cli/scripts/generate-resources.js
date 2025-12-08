@@ -298,9 +298,33 @@ module.exports = { RESOURCES, REPO };
   
   const totalFiles = catalogBlocks.reduce((sum, b) => sum + (b.files?.length || 0), 0);
   
+  // Read CLI version from package.json
+  const cliPackage = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json'), 'utf-8'));
+  
   const catalog = {
-    version: '1.0.0',
+    _generated: 'AUTO-GENERATED FILE - DO NOT EDIT MANUALLY. Run: pnpm catalog',
+    version: '1.0.1',
     lastUpdated: new Date().toISOString().split('T')[0],
+    cli: {
+      name: 'grg',
+      version: cliPackage.version,
+      commands: {
+        init: {
+          usage: 'grg init [--theme <name>]',
+          description: 'Initialize GRG Kit in current Angular project',
+          themeFlag: '--theme'
+        },
+        addBlock: {
+          usage: 'grg add block <blockName> [fileIds...]',
+          description: 'Add blocks to your project',
+          validBlocks: catalogBlocks.map(b => b.name)
+        },
+        list: {
+          usage: 'grg list [category]',
+          description: 'List available resources'
+        }
+      }
+    },
     themes: catalogThemes,
     components: catalogComponents,
     blocks: catalogBlocks
