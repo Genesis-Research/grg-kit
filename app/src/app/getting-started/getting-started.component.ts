@@ -322,9 +322,13 @@ grg list themes</code></pre>
                 </div>
 
                 <div class="space-y-2">
-                  <p class="text-sm font-medium">For Claude Code:</p>
-                  <p class="text-sm text-muted-foreground mb-2">Add to <code class="text-xs bg-muted px-1 py-0.5 rounded">~/.claude/settings.json</code>:</p>
-                  <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>{{ '{' }}
+                  <p class="text-sm font-medium">For Claude Code (terminal):</p>
+                  <p class="text-sm text-muted-foreground mb-2">Run the CLI command or add to <code class="text-xs bg-muted px-1 py-0.5 rounded">~/.claude.json</code>:</p>
+                  <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code># Option 1: CLI command
+claude mcp add grg-kit -s user -- grg-mcp-server
+
+# Option 2: Edit ~/.claude.json manually
+{{ '{' }}
   "mcpServers": {{ '{' }}
     "grg-kit": {{ '{' }}
       "command": "grg-mcp-server"
@@ -334,8 +338,12 @@ grg list themes</code></pre>
                 </div>
 
                 <div class="space-y-2">
-                  <p class="text-sm font-medium">For Claude Desktop (macOS):</p>
-                  <p class="text-sm text-muted-foreground mb-2">Add to <code class="text-xs bg-muted px-1 py-0.5 rounded">~/Library/Application Support/Claude/claude_desktop_config.json</code>:</p>
+                  <p class="text-sm font-medium">For Claude Desktop:</p>
+                  <p class="text-sm text-muted-foreground mb-2">Add to config file:</p>
+                  <ul class="text-xs text-muted-foreground mb-2 space-y-1">
+                    <li>• <strong>macOS:</strong> <code class="bg-muted px-1 py-0.5 rounded">~/Library/Application Support/Claude/claude_desktop_config.json</code></li>
+                    <li>• <strong>Windows:</strong> <code class="bg-muted px-1 py-0.5 rounded">%APPDATA%\\Claude\\claude_desktop_config.json</code></li>
+                  </ul>
                   <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>{{ '{' }}
   "mcpServers": {{ '{' }}
     "grg-kit": {{ '{' }}
