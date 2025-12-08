@@ -27,15 +27,55 @@ export interface ResourceItem {
   files?: { id: string; file: string; title: string; description: string }[];
 }
 
+export interface CLICommand {
+  usage: string;
+  description: string;
+  themeFlag?: string;
+  validBlocks?: string[];
+}
+
+export interface CLIMetadata {
+  name: string;
+  version: string;
+  commands: {
+    init: CLICommand;
+    addBlock: CLICommand;
+    list: CLICommand;
+  };
+}
+
 export interface GRGResources {
   themes: ResourceItem[];
   components: ResourceItem[];
   blocks: ResourceItem[];
+  cli?: CLIMetadata;
 }
 
 // In-memory cache
 let memoryCache: GRGResources | null = null;
 let memoryCacheTime = 0;
+
+// Inline fallback CLI metadata
+const FALLBACK_CLI: CLIMetadata = {
+  name: 'grg',
+  version: '0.6.2',
+  commands: {
+    init: {
+      usage: 'grg init [--theme <name>]',
+      description: 'Initialize GRG Kit in current Angular project',
+      themeFlag: '--theme'
+    },
+    addBlock: {
+      usage: 'grg add block <blockName> [fileIds...]',
+      description: 'Add blocks to your project',
+      validBlocks: ['auth', 'shell', 'settings']
+    },
+    list: {
+      usage: 'grg list [category]',
+      description: 'List available resources'
+    }
+  }
+};
 
 // Inline fallback resources
 const FALLBACK_RESOURCES: GRGResources = {
@@ -56,6 +96,7 @@ const FALLBACK_RESOURCES: GRGResources = {
     { name: 'settings', title: 'Settings Block', description: 'Settings pages: profile, notifications, security, danger zone', tags: ['settings', 'preferences', 'account', 'profile', 'security'] },
     { name: 'shell', title: 'App Shell Block', description: 'Application shell layouts: sidebar, topnav, collapsible - each with optional footer', tags: ['shell', 'layout', 'sidebar', 'header', 'footer', 'navigation'] },
   ],
+  cli: FALLBACK_CLI,
 };
 
 /**
@@ -134,6 +175,7 @@ function transformCatalog(catalog: any): GRGResources {
       path: `templates/ui/blocks/${b.name}`,
       defaultOutput: `src/app/blocks/${b.name}`,
     })),
+    cli: catalog.cli || FALLBACK_CLI,
   };
 }
 

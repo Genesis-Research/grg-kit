@@ -5,6 +5,18 @@ import { CallToolRequestSchema, ListToolsRequestSchema, ListResourcesRequestSche
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { fetchCatalog, getResourcesSync } from './catalog-fetcher.js';
+// Helper functions to generate CLI commands from metadata
+function getBlockInstallCommand(cli, blockName, fileIds = []) {
+    const files = fileIds.length > 0 ? ` ${fileIds.join(' ')}` : '';
+    return `grg add block ${blockName}${files}`;
+}
+function getThemeInstallCommand(cli, themeName) {
+    const flag = cli?.commands.init.themeFlag || '--theme';
+    return `grg init ${flag} ${themeName}`;
+}
+function getValidBlocks(cli) {
+    return cli?.commands.addBlock.validBlocks || ['auth', 'shell', 'settings'];
+}
 const execAsync = promisify(exec);
 // Get resources - uses cache or fetches dynamically
 async function getResources() {
@@ -16,7 +28,7 @@ function getResourcesSync_() {
 }
 const server = new Server({
     name: 'grg-kit',
-    version: '0.2.1',
+    version: '0.4.0',
 }, {
     capabilities: {
         tools: {},
@@ -48,13 +60,13 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             },
             {
                 name: 'get_resource_details',
-                description: 'Get detailed information about a specific GRG Kit resource including dependencies, tags, and installation command.',
+                description: 'Get detailed information about a specific GRG Kit resource including dependencies, tags, and installation command. Use format "type:name" (e.g., "block:auth", "theme:claude").',
                 inputSchema: {
                     type: 'object',
                     properties: {
                         resource: {
                             type: 'string',
-                            description: 'Resource identifier (e.g., "block:auth", "block:shell", "theme:claude")',
+                            description: 'Resource identifier in "type:name" format. Examples: "block:auth", "block:shell", "block:settings", "theme:claude", "theme:modern-minimal", "component:stepper"',
                         },
                     },
                     required: ['resource'],
@@ -76,18 +88,25 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             },
             {
                 name: 'install_resource',
-                description: 'Install a GRG Kit block into the project. Returns installation status and next steps. Executes: grg add block <name> [files...]',
+                description: `Install a GRG Kit block into the project. Returns installation status and next steps. Executes: grg add block <name>
+
+IMPORTANT: The 'resource' parameter should be JUST the block name (e.g., "auth", "shell", "settings") - NOT prefixed with "block:" or any other prefix.
+
+Examples:
+- To install auth block: resource="auth" → runs: grg add block auth
+- To install shell sidebar: resource="shell", files=["sidebar"] → runs: grg add block shell sidebar
+- To install settings: resource="settings" → runs: grg add block settings`,
                 inputSchema: {
                     type: 'object',
                     properties: {
                         resource: {
                             type: 'string',
-                            description: 'Block name to install (e.g., "auth", "shell", "settings")',
+                            description: 'Block name to install. Must be one of: "auth", "shell", "settings". Do NOT include "block:" prefix - just the name.',
                         },
                         files: {
                             type: 'array',
                             items: { type: 'string' },
-                            description: 'Optional specific files to install (e.g., ["login", "register"] for auth block). If omitted, installs all files.',
+                            description: 'Optional specific file IDs to install. For auth: ["login", "register", "forgot-password"]. For shell: ["sidebar", "sidebar-footer", "topnav", "topnav-footer", "collapsible", "collapsible-footer"]. If omitted, installs all files.',
                         },
                         output: {
                             type: 'string',
@@ -99,14 +118,14 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             },
             {
                 name: 'list_available_resources',
-                description: 'List all available GRG Kit resources by category. Shows counts and descriptions.',
+                description: 'List all available GRG Kit resources by category. Shows counts, descriptions, and CLI install commands. Use this to discover what blocks, themes, and components are available.',
                 inputSchema: {
                     type: 'object',
                     properties: {
                         category: {
                             type: 'string',
                             enum: ['all', 'themes', 'components', 'blocks'],
-                            description: 'Category to list (default: all)',
+                            description: 'Category to list (default: all). Use "blocks" to see installable page blocks like auth, shell, settings.',
                         },
                     },
                 },
@@ -220,12 +239,12 @@ async function searchResources(query, category = 'all') {
     if (category === 'all' || category === 'blocks') {
         results.push(...searchIn(res.blocks, 'block'));
     }
-    // Generate install commands based on type
+    // Generate install commands based on type (using CLI metadata)
     const getInstallCommand = (type, name) => {
         if (type === 'block')
-            return `grg add block ${name}`;
+            return getBlockInstallCommand(res.cli, name);
         if (type === 'theme')
-            return `grg init --theme ${name}`;
+            return getThemeInstallCommand(res.cli, name);
         return 'Included automatically with grg init';
     };
     return {
@@ -257,7 +276,7 @@ async function getResourceDetails(resource) {
     switch (category) {
         case 'theme':
             details = res.themes.find((t) => t.name === name);
-            installCmd = `grg init --theme ${name}`;
+            installCmd = getThemeInstallCommand(res.cli, name);
             break;
         case 'component':
             details = res.components.find((c) => c.name === name);
@@ -265,7 +284,7 @@ async function getResourceDetails(resource) {
             break;
         case 'block':
             details = res.blocks.find((b) => b.name === name);
-            installCmd = `grg add block ${name}`;
+            installCmd = getBlockInstallCommand(res.cli, name);
             break;
     }
     if (!details) {
@@ -375,10 +394,19 @@ async function suggestResources(requirement) {
     };
 }
 async function installResource(resource, files, output) {
-    // For blocks, use grg add block <name> [files...]
-    const filesArg = files && files.length > 0 ? ` ${files.join(' ')}` : '';
-    const outputFlag = output ? ` -o ${output}` : '';
-    const command = `grg add block ${resource}${filesArg}${outputFlag}`;
+    const res = await getResources();
+    // Strip "block:" prefix if provided (common LLM mistake)
+    let blockName = resource;
+    if (resource.startsWith('block:')) {
+        blockName = resource.replace('block:', '');
+    }
+    // Validate block name using CLI metadata
+    const validBlocks = getValidBlocks(res.cli);
+    if (!validBlocks.includes(blockName)) {
+        throw new Error(`Invalid block name: "${blockName}". Valid blocks are: ${validBlocks.join(', ')}`);
+    }
+    // Build command using CLI metadata
+    const command = getBlockInstallCommand(res.cli, blockName, files) + (output ? ` -o ${output}` : '');
     try {
         const { stdout, stderr } = await execAsync(command);
         return {
@@ -401,19 +429,21 @@ async function installResource(resource, files, output) {
 }
 async function listResources(category = 'all') {
     const res = await getResources();
+    const cli = res.cli;
     const result = {
         category,
         resources: {},
+        cli_usage: cli?.commands,
     };
     if (category === 'all' || category === 'themes') {
         result.resources.themes = {
             count: res.themes.length,
-            note: 'Themes are set via: grg init --theme <name>',
+            note: `Themes are set via: ${cli?.commands.init.usage || 'grg init [--theme <name>]'}`,
             items: res.themes.map((t) => ({
                 name: t.name,
                 title: t.title,
                 description: t.description,
-                install: `grg init --theme ${t.name}`,
+                install: getThemeInstallCommand(cli, t.name),
             })),
         };
     }
@@ -431,14 +461,14 @@ async function listResources(category = 'all') {
     if (category === 'all' || category === 'blocks') {
         result.resources.blocks = {
             count: res.blocks.length,
-            note: 'Blocks are added via: grg add block <name> [files...]',
+            note: `Blocks are added via: ${cli?.commands.addBlock.usage || 'grg add block <blockName> [fileIds...]'}`,
             items: res.blocks.map((b) => ({
                 name: b.name,
                 title: b.title,
                 description: b.description,
                 files: b.files?.map((f) => f.id) || [],
-                install: `grg add block ${b.name}`,
-                install_specific: b.files?.length > 0 ? `grg add block ${b.name} <fileId>` : undefined,
+                install: getBlockInstallCommand(cli, b.name),
+                install_specific: b.files?.length > 0 ? getBlockInstallCommand(cli, b.name, ['<fileId>']) : undefined,
             })),
         };
     }

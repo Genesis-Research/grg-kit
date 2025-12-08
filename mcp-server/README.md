@@ -81,15 +81,20 @@ get_resource_details({
 ```
 
 ### 4. `install_resource`
-Install a block into the project.
+Install a block into the project. The `resource` parameter should be just the block name (e.g., "auth", "shell", "settings") - NOT prefixed with "block:".
 
 ```typescript
-install_resource({
-  resource: "auth",
-  files: ["login", "register"], // optional - omit for all files
-  output: "src/app/blocks/auth" // optional
-})
+// Install all auth files
+install_resource({ resource: "auth" })
+// Executes: grg add block auth
+
+// Install specific files from auth block
+install_resource({ resource: "auth", files: ["login", "register"] })
 // Executes: grg add block auth login register
+
+// Install shell sidebar only
+install_resource({ resource: "shell", files: ["sidebar"] })
+// Executes: grg add block shell sidebar
 ```
 
 ### 5. `list_available_resources`
@@ -181,6 +186,31 @@ grg-kit-cli (executes commands)
      ↓
 Templates (downloads resources)
 ```
+
+### CLI Metadata (Single Source of Truth)
+
+The MCP server reads CLI command formats from `catalog.json`, which includes:
+
+```json
+{
+  "cli": {
+    "name": "grg",
+    "version": "0.6.2",
+    "commands": {
+      "init": {
+        "usage": "grg init [--theme <name>]",
+        "themeFlag": "--theme"
+      },
+      "addBlock": {
+        "usage": "grg add block <blockName> [fileIds...]",
+        "validBlocks": ["auth", "shell", "settings"]
+      }
+    }
+  }
+}
+```
+
+This ensures the MCP server always generates correct CLI commands without hardcoding.
 
 ## Key Features
 
