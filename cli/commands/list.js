@@ -1,11 +1,17 @@
 const chalk = require('chalk');
-const { RESOURCES } = require('../config/resources');
+const ora = require('ora');
+const { fetchCatalog } = require('../config/catalog-fetcher');
 
 /**
  * List command - displays available blocks and themes
  * Usage: grg list [category]
  */
 async function list(category) {
+  // Fetch catalog dynamically
+  const spinner = ora('Fetching catalog...').start();
+  const RESOURCES = await fetchCatalog({ silent: true });
+  spinner.stop();
+
   if (!category) {
     // Show overview
     console.log(chalk.bold.cyan('\n📦 GRG Kit Resources\n'));

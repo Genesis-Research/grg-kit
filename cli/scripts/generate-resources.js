@@ -10,69 +10,48 @@ const path = require('path');
 
 const TEMPLATES_DIR = path.join(__dirname, '../../templates');
 const OUTPUT_FILE = path.join(__dirname, '../config/resources.js');
+const CATALOG_FILE = path.join(TEMPLATES_DIR, 'catalog.json');
 
-// Theme metadata (can be enhanced by reading CSS files)
-const THEME_METADATA = {
-  'grg-theme.css': {
-    description: 'Default theme with purple/orange accents',
-    tags: ['default', 'purple', 'orange', 'colorful']
-  },
-  'claude.css': {
-    description: 'Claude-inspired warm tones',
-    tags: ['warm', 'orange', 'brown', 'claude']
-  },
-  'clean-slate.css': {
-    description: 'Minimal grayscale palette',
-    tags: ['minimal', 'grayscale', 'neutral', 'clean']
-  },
-  'modern-minimal.css': {
-    description: 'Contemporary minimal design',
-    tags: ['minimal', 'modern', 'contemporary', 'clean']
-  },
-  'amber-minimal.css': {
-    description: 'Warm amber accents',
-    tags: ['minimal', 'warm', 'amber', 'orange']
-  },
-  'mocks.css': {
-    description: 'Theme for mockups and prototypes',
-    tags: ['mockup', 'prototype', 'design']
+/**
+ * Read meta.json from a directory if it exists
+ */
+function readMeta(dir) {
+  const metaPath = path.join(dir, 'meta.json');
+  try {
+    if (fs.existsSync(metaPath)) {
+      return JSON.parse(fs.readFileSync(metaPath, 'utf-8'));
+    }
+  } catch (error) {
+    console.warn(`Warning: Could not read ${metaPath}`);
   }
-};
+  return null;
+}
 
-// Component metadata
-const COMPONENT_METADATA = {
-  'stepper': {
-    description: 'Multi-step form component with progress indicator',
-    tags: ['form', 'wizard', 'multi-step', 'progress'],
-    dependencies: ['@spartan-ng/helm/button', '@spartan-ng/helm/card'],
-    type: 'grg-component',
-    prefix: 'grg'
-  }
-};
+/**
+ * Default metadata generators
+ */
+function defaultBlockMeta(name) {
+  return {
+    description: `${name} block`,
+    tags: [name],
+    dependencies: []
+  };
+}
 
-// Block metadata (formerly layouts)
-const BLOCK_METADATA = {
-  'dashboard': {
-    description: 'Full dashboard layout with sidebar and header',
-    tags: ['dashboard', 'admin', 'sidebar', 'navigation'],
-    dependencies: ['@spartan-ng/helm/button', '@spartan-ng/helm/card', '@spartan-ng/helm/navigation-menu']
-  },
-  'auth': {
-    description: 'Authentication pages layout (login, signup, forgot password)',
-    tags: ['auth', 'login', 'signup', 'authentication'],
-    dependencies: ['@spartan-ng/helm/button', '@spartan-ng/helm/card', '@spartan-ng/helm/form-field']
-  },
-  'shell': {
-    description: 'Application shell layouts: sidebar, topnav, collapsible - each with optional footer variant',
-    tags: ['shell', 'layout', 'sidebar', 'header', 'footer', 'navigation', 'topnav', 'collapsible'],
-    dependencies: ['@spartan-ng/helm/button', '@spartan-ng/helm/icon', '@spartan-ng/helm/dropdown-menu']
-  },
-  'settings': {
-    description: 'Settings pages: profile, notifications, security, danger zone',
-    tags: ['settings', 'preferences', 'account', 'profile', 'security'],
-    dependencies: ['@spartan-ng/helm/button', '@spartan-ng/helm/card', '@spartan-ng/helm/form-field', '@spartan-ng/helm/switch']
-  }
-};
+function defaultComponentMeta(name) {
+  return {
+    description: `${name} component`,
+    tags: [],
+    dependencies: []
+  };
+}
+
+function defaultThemeMeta(name) {
+  return {
+    description: `${name} theme`,
+    tags: []
+  };
+}
 
 function scanDirectory(dir) {
   try {
@@ -87,14 +66,14 @@ function generateThemes() {
   const themesDir = path.join(TEMPLATES_DIR, 'ui/themes');
   const files = scanDirectory(themesDir);
   
+  // Read themes meta.json (contains all theme metadata keyed by filename)
+  const themesMeta = readMeta(themesDir) || {};
+  
   return files
     .filter(file => file.isFile() && file.name.endsWith('.css'))
     .map(file => {
       const name = file.name.replace('.css', '');
-      const metadata = THEME_METADATA[file.name] || {
-        description: `${name} theme`,
-        tags: []
-      };
+      const metadata = themesMeta[file.name] || defaultThemeMeta(name);
       
       return {
         name,
@@ -103,7 +82,7 @@ function generateThemes() {
         file: file.name,
         path: `templates/ui/themes/${file.name}`,
         defaultOutput: `src/themes/${file.name}`,
-        tags: metadata.tags,
+        tags: metadata.tags || [],
         features: ['dark-mode', 'tailwind-v4', 'spartan-ng', 'oklch']
       };
     });
@@ -116,11 +95,8 @@ function generateComponents() {
   return dirs
     .filter(dir => dir.isDirectory())
     .map(dir => {
-      const metadata = COMPONENT_METADATA[dir.name] || {
-        description: `${dir.name} component`,
-        tags: [],
-        dependencies: []
-      };
+      const componentDir = path.join(componentsDir, dir.name);
+      const metadata = readMeta(componentDir) || defaultComponentMeta(dir.name);
       
       return {
         name: dir.name,
@@ -136,27 +112,150 @@ function generateComponents() {
     });
 }
 
-function generateBlocks() {
+/**
+ * Convert filename to readable title
+ * e.g., 'sidebar-shell-footer.component.ts' -> 'Sidebar Shell Footer'
+ */
+function fileToTitle(filename) {
+  return filename
+    .replace('.component.ts', '')
+    .split('-')
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+}
+
+/**
+ * Convert filename to id
+ * e.g., 'sidebar-shell-footer.component.ts' -> 'sidebar-footer'
+ */
+function fileToId(filename, blockName) {
+  const base = filename.replace('.component.ts', '');
+  // Remove block name prefix if present (e.g., 'sidebar-shell' -> 'sidebar')
+  return base.replace(`-${blockName}`, '').replace(`${blockName}-`, '');
+}
+
+/**
+ * Scan block directory for individual component files
+ */
+function scanBlockFiles(blockDir, blockName) {
+  const files = scanDirectory(blockDir);
+  
+  return files
+    .filter(file => file.isFile() && file.name.endsWith('.component.ts'))
+    .map(file => {
+      const id = fileToId(file.name, blockName);
+      const title = fileToTitle(file.name);
+      
+      return {
+        id,
+        file: file.name,
+        title,
+        description: title
+      };
+    })
+    .sort((a, b) => a.file.localeCompare(b.file));
+}
+
+function generateBlocks(includeFiles = false) {
   const blocksDir = path.join(TEMPLATES_DIR, 'ui/blocks');
   const dirs = scanDirectory(blocksDir);
   
   return dirs
     .filter(dir => dir.isDirectory())
     .map(dir => {
-      const metadata = BLOCK_METADATA[dir.name] || {
-        description: `${dir.name} block`,
-        tags: [dir.name],
-        dependencies: []
-      };
+      const blockDir = path.join(blocksDir, dir.name);
+      const metadata = readMeta(blockDir) || defaultBlockMeta(dir.name);
       
-      return {
+      const block = {
         name: dir.name,
-        title: dir.name.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') + ' Block',
+        title: dir.name.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
         description: metadata.description,
         path: `templates/ui/blocks/${dir.name}`,
         defaultOutput: `src/app/blocks/${dir.name}`,
-        tags: metadata.tags,
-        dependencies: metadata.dependencies
+        tags: metadata.tags || [],
+        dependencies: metadata.dependencies || []
+      };
+      
+      // Include file-level details for catalog
+      if (includeFiles) {
+        block.files = scanBlockFiles(blockDir, dir.name);
+      }
+      
+      return block;
+    });
+}
+
+/**
+ * Generate catalog.json for themes (with features)
+ */
+function generateThemesForCatalog() {
+  const themesDir = path.join(TEMPLATES_DIR, 'ui/themes');
+  const files = scanDirectory(themesDir);
+  
+  // Read themes meta.json
+  const themesMeta = readMeta(themesDir) || {};
+  
+  return files
+    .filter(file => file.isFile() && file.name.endsWith('.css'))
+    .map(file => {
+      const name = file.name.replace('.css', '');
+      const metadata = themesMeta[file.name] || defaultThemeMeta(name);
+      
+      return {
+        name,
+        title: name.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
+        description: metadata.description,
+        file: file.name,
+        tags: metadata.tags || [],
+        features: ['dark-mode', 'tailwind-v4', 'spartan-ng', 'oklch']
+      };
+    });
+}
+
+/**
+ * Generate catalog.json for components
+ */
+function generateComponentsForCatalog() {
+  const componentsDir = path.join(TEMPLATES_DIR, 'ui/components');
+  const dirs = scanDirectory(componentsDir);
+  
+  return dirs
+    .filter(dir => dir.isDirectory())
+    .map(dir => {
+      const componentDir = path.join(componentsDir, dir.name);
+      const metadata = readMeta(componentDir) || defaultComponentMeta(dir.name);
+      
+      return {
+        name: dir.name,
+        title: dir.name.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
+        description: metadata.description,
+        tags: metadata.tags || [],
+        dependencies: metadata.dependencies || []
+      };
+    });
+}
+
+/**
+ * Generate catalog.json for blocks (with files)
+ */
+function generateBlocksForCatalog() {
+  const blocksDir = path.join(TEMPLATES_DIR, 'ui/blocks');
+  const dirs = scanDirectory(blocksDir);
+  
+  return dirs
+    .filter(dir => dir.isDirectory())
+    .map(dir => {
+      const blockDir = path.join(blocksDir, dir.name);
+      const metadata = readMeta(blockDir) || defaultBlockMeta(dir.name);
+      const files = scanBlockFiles(blockDir, dir.name);
+      
+      return {
+        name: dir.name,
+        title: dir.name.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
+        description: metadata.description,
+        tags: metadata.tags || [],
+        dependencies: metadata.dependencies,
+        files
       };
     });
 }
@@ -172,6 +271,7 @@ function generateResourcesFile() {
   console.log(`✓ Found ${components.length} components`);
   console.log(`✓ Found ${blocks.length} blocks`);
   
+  // Generate resources.js (static fallback for CLI)
   const output = `/**
  * Resource definitions for GRG Kit
  * This file is auto-generated from templates directory
@@ -190,10 +290,29 @@ module.exports = { RESOURCES, REPO };
   
   fs.writeFileSync(OUTPUT_FILE, output);
   console.log(`\n✅ Generated ${OUTPUT_FILE}`);
+  
+  // Generate catalog.json (dynamic, fetched at runtime)
+  const catalogThemes = generateThemesForCatalog();
+  const catalogComponents = generateComponentsForCatalog();
+  const catalogBlocks = generateBlocksForCatalog();
+  
+  const totalFiles = catalogBlocks.reduce((sum, b) => sum + (b.files?.length || 0), 0);
+  
+  const catalog = {
+    version: '1.0.0',
+    lastUpdated: new Date().toISOString().split('T')[0],
+    themes: catalogThemes,
+    components: catalogComponents,
+    blocks: catalogBlocks
+  };
+  
+  fs.writeFileSync(CATALOG_FILE, JSON.stringify(catalog, null, 2));
+  console.log(`✅ Generated ${CATALOG_FILE}`);
+  
   console.log('\n📦 Resource Summary:');
   console.log(`   Themes: ${themes.length}`);
   console.log(`   Components: ${components.length}`);
-  console.log(`   Blocks: ${blocks.length}`);
+  console.log(`   Blocks: ${blocks.length} (${totalFiles} files)`);
 }
 
 // Run the generator

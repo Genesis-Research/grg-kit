@@ -1,0 +1,26 @@
+{
+  "grg-theme.css": {
+    "description": "Default theme with purple/orange accents",
+    "tags": ["default", "purple", "orange", "colorful"]
+  },
+  "claude.css": {
+    "description": "Claude-inspired warm tones",
+    "tags": ["warm", "orange", "brown", "claude"]
+  },
+  "clean-slate.css": {
+    "description": "Minimal grayscale palette",
+    "tags": ["minimal", "grayscale", "neutral", "clean"]
+  },
+  "modern-minimal.css": {
+    "description": "Contemporary minimal design",
+    "tags": ["minimal", "modern", "contemporary", "clean"]
+  },
+  "amber-minimal.css": {
+    "description": "Warm amber accents",
+    "tags": ["minimal", "warm", "amber", "orange"]
+  },
+  "mocks.css": {
+    "description": "Theme for mockups and prototypes",
+    "tags": ["mockup", "prototype", "design"]
+  }
+}

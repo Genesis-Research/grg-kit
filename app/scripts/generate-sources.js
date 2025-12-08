@@ -710,6 +710,70 @@ ${mapEntries.join('\n')}
 }
 
 // ============================================================================
+// Meta.json Copying
+// ============================================================================
+
+/**
+ * Copy meta.json files from source to templates directory
+ */
+function copyMetaFiles() {
+  console.log('\n📋 Copying meta.json files...');
+  let copied = 0;
+
+  // Block meta.json files
+  const blocksSourceDir = path.join(__dirname, '../src/app/blocks');
+  const blocksTemplatesDir = path.join(__dirname, '../../templates/ui/blocks');
+  const blockDirs = ['auth', 'shell', 'settings'];
+  
+  for (const blockName of blockDirs) {
+    const sourceMeta = path.join(blocksSourceDir, blockName, 'meta.json');
+    const targetMeta = path.join(blocksTemplatesDir, blockName, 'meta.json');
+    
+    if (fs.existsSync(sourceMeta)) {
+      ensureDir(path.dirname(targetMeta));
+      fs.copyFileSync(sourceMeta, targetMeta);
+      console.log(`   ✓ ${blockName}/meta.json`);
+      copied++;
+    }
+  }
+
+  // Themes meta.json (single file for all themes)
+  const themesSourceMeta = path.join(__dirname, '../src/themes/meta.json');
+  const themesTargetMeta = path.join(__dirname, '../../templates/ui/themes/meta.json');
+  
+  if (fs.existsSync(themesSourceMeta)) {
+    ensureDir(path.dirname(themesTargetMeta));
+    fs.copyFileSync(themesSourceMeta, themesTargetMeta);
+    console.log(`   ✓ themes/meta.json`);
+    copied++;
+  }
+
+  // GRG Components meta.json files
+  const grgSourceDir = path.join(__dirname, '../libs/grg-ui');
+  const grgTemplatesDir = path.join(__dirname, '../../templates/ui/components');
+  
+  if (fs.existsSync(grgSourceDir)) {
+    const grgDirs = fs.readdirSync(grgSourceDir, { withFileTypes: true })
+      .filter(d => d.isDirectory())
+      .map(d => d.name);
+    
+    for (const componentName of grgDirs) {
+      const sourceMeta = path.join(grgSourceDir, componentName, 'meta.json');
+      const targetMeta = path.join(grgTemplatesDir, componentName, 'meta.json');
+      
+      if (fs.existsSync(sourceMeta)) {
+        ensureDir(path.dirname(targetMeta));
+        fs.copyFileSync(sourceMeta, targetMeta);
+        console.log(`   ✓ ${componentName}/meta.json`);
+        copied++;
+      }
+    }
+  }
+
+  console.log(`   📋 Copied ${copied} meta.json files`);
+}
+
+// ============================================================================
 // Main Entry Point
 // ============================================================================
 
@@ -746,6 +810,9 @@ function main() {
       }
     }
   }
+
+  // Copy meta.json files to templates
+  copyMetaFiles();
 
   console.log('\n🎉 All done!');
 }

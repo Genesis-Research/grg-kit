@@ -1,101 +1,233 @@
-# CLI Scripts
+# Resource Generation Flow
 
-## generate-resources.js
+## Overview
 
-Automatically generates `config/resources.js` by scanning the `templates/` directory.
+GRG Kit uses a **two-stage generation pipeline** to ensure CLI and MCP server always have up-to-date resource definitions.
 
-### Purpose
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           SOURCE OF TRUTH                                    │
+│                                                                              │
+│  app/src/app/blocks/{block}/meta.json    ← Block metadata                   │
+│  app/src/themes/meta.json                ← Theme metadata                   │
+│  app/libs/grg-ui/{component}/meta.json   ← Component metadata               │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STAGE 1: pnpm generate:sources (in app/)                                   │
+│                                                                              │
+│  • Transforms source components → template files                            │
+│  • Copies meta.json files → templates/ directory                            │
+│  • Generates generated-sources.ts for showcase app                          │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         TEMPLATES DIRECTORY                                  │
+│                                                                              │
+│  templates/ui/blocks/{block}/meta.json      ← Copied from app               │
+│  templates/ui/blocks/{block}/*.component.ts ← Generated                     │
+│  templates/ui/themes/meta.json              ← Copied from app               │
+│  templates/ui/components/{comp}/meta.json   ← Copied from app               │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STAGE 2: node scripts/generate-resources.js (in cli/)                      │
+│                                                                              │
+│  • Scans templates/ directory                                               │
+│  • Reads meta.json files for metadata                                       │
+│  • Generates cli/config/resources.js (static fallback)                      │
+│  • Generates templates/catalog.json (dynamic, fetched at runtime)           │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         RUNTIME (CLI & MCP)                                  │
+│                                                                              │
+│  1. Check memory cache (instant)                                            │
+│  2. Check file cache (~1ms)                                                 │
+│  3. Fetch catalog.json from GitHub (~100-200ms)                             │
+│  4. Fallback to static resources.js                                         │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
 
-Ensures the CLI always has up-to-date resource definitions based on what's actually available in the templates, preventing:
-- Outdated resource lists
-- Manual maintenance errors
-- Mismatched paths
-- Missing new resources
+---
 
-### Usage
+## Adding New Resources
+
+### 1. Add a New Block
 
 ```bash
-# Run manually
-pnpm run generate
+# 1. Create block component in app
+app/src/app/blocks/my-block/my-block.component.ts
 
-# Or directly
+# 2. Add metadata
+app/src/app/blocks/my-block/meta.json
+```
+
+```json
+{
+  "description": "Description for AI and CLI",
+  "tags": ["keyword1", "keyword2", "searchable"],
+  "dependencies": ["@spartan-ng/helm/button", "@spartan-ng/helm/card"]
+}
+```
+
+```bash
+# 3. Update generate-sources.js CONFIG.blocks.sources array
+
+# 4. Run generation
+cd app && pnpm generate:sources
+cd ../cli && node scripts/generate-resources.js
+
+# 5. Commit and push - CLI/MCP pick up changes automatically
+```
+
+### 2. Add a New Theme
+
+```bash
+# 1. Create theme CSS
+app/src/themes/my-theme.css
+
+# 2. Add entry to themes meta.json
+app/src/themes/meta.json
+```
+
+```json
+{
+  "my-theme.css": {
+    "description": "My custom theme description",
+    "tags": ["custom", "dark", "modern"]
+  }
+}
+```
+
+### 3. Add a New GRG Component
+
+```bash
+# 1. Create component in libs/grg-ui
+app/libs/grg-ui/my-component/src/...
+
+# 2. Add metadata
+app/libs/grg-ui/my-component/meta.json
+```
+
+---
+
+## Scripts
+
+### `app/scripts/generate-sources.js`
+
+Generates template files and copies metadata.
+
+```bash
+cd app
+pnpm generate:sources
+```
+
+**What it does:**
+- Transforms block components → standalone template files
+- Copies `meta.json` files to `templates/` directory
+- Generates `generated-sources.ts` for showcase app
+
+### `cli/scripts/generate-resources.js`
+
+Generates CLI resources and dynamic catalog.
+
+```bash
+cd cli
 node scripts/generate-resources.js
 ```
 
-### Auto-Generation
+**What it does:**
+- Scans `templates/` directory
+- Reads `meta.json` files for metadata
+- Generates `cli/config/resources.js` (static fallback)
+- Generates `templates/catalog.json` (dynamic catalog)
 
-The script runs automatically before publishing:
-```bash
-pnpm publish  # Runs prepublishOnly hook → pnpm run generate
+---
+
+## Dynamic Catalog Fetching
+
+CLI and MCP server fetch `catalog.json` from GitHub at runtime with caching:
+
+| Cache Level | TTL | Speed |
+|-------------|-----|-------|
+| Memory cache | 15 min | <1ms |
+| File cache | 15 min | ~1ms |
+| GitHub fetch | - | ~100-200ms |
+| Static fallback | - | <1ms |
+
+**Benefits:**
+- No CLI/MCP redeploy needed for new resources
+- Changes propagate within 15 minutes
+- Graceful fallback if network fails
+
+---
+
+## File Structure
+
+```
+grg-kit/
+├── app/
+│   ├── src/
+│   │   ├── app/blocks/
+│   │   │   ├── auth/
+│   │   │   │   ├── meta.json           ← Source metadata
+│   │   │   │   └── *.component.ts
+│   │   │   ├── shell/
+│   │   │   │   ├── meta.json
+│   │   │   │   └── *.component.ts
+│   │   │   └── settings/
+│   │   │       ├── meta.json
+│   │   │       └── *.component.ts
+│   │   └── themes/
+│   │       ├── meta.json               ← All themes metadata
+│   │       └── *.css
+│   ├── libs/grg-ui/
+│   │   ├── stepper/meta.json
+│   │   └── file-upload/meta.json
+│   └── scripts/
+│       └── generate-sources.js         ← Stage 1
+│
+├── cli/
+│   ├── config/
+│   │   ├── resources.js                ← Generated (static fallback)
+│   │   └── catalog-fetcher.js          ← Dynamic fetcher
+│   └── scripts/
+│       └── generate-resources.js       ← Stage 2
+│
+├── mcp-server/
+│   └── src/
+│       ├── index.ts
+│       └── catalog-fetcher.ts          ← Dynamic fetcher
+│
+└── templates/
+    ├── catalog.json                    ← Generated (dynamic)
+    └── ui/
+        ├── blocks/
+        │   ├── auth/
+        │   │   ├── meta.json           ← Copied from app
+        │   │   └── *.component.ts      ← Generated
+        │   └── ...
+        ├── themes/
+        │   ├── meta.json               ← Copied from app
+        │   └── *.css
+        └── components/
+            ├── stepper/meta.json       ← Copied from app
+            └── file-upload/meta.json
 ```
 
-### What It Does
+---
 
-1. **Scans templates directory** for:
-   - Themes (`templates/ui/themes/*.css`)
-   - Components (`templates/ui/components/*/`)
-   - Layouts (`templates/ui/layouts/*/`)
-   - Examples (`templates/spartan-examples/components/(*)`)
+## Quick Reference
 
-2. **Generates metadata** for each resource:
-   - Name, title, description
-   - Path and default output location
-   - Tags for searchability
-   - Dependencies (if applicable)
-
-3. **Writes `config/resources.js`** with structured data
-
-### Output
-
-```
-🔍 Scanning templates directory...
-✓ Found 6 themes
-✓ Found 2 components
-✓ Found 3 layouts
-✓ Found 56 example components
-
-✅ Generated /path/to/config/resources.js
-
-📦 Resource Summary:
-   Themes: 6
-   Components: 2
-   Layouts: 3
-   Examples: 56
-```
-
-### Customizing Metadata
-
-Edit the metadata constants in `generate-resources.js`:
-
-```javascript
-const THEME_METADATA = {
-  'grg-theme.css': {
-    description: 'Default theme with purple/orange accents',
-    tags: ['default', 'purple', 'orange', 'colorful']
-  }
-};
-
-const COMPONENT_METADATA = {
-  'stepper': {
-    description: 'Multi-step form component',
-    tags: ['form', 'wizard'],
-    dependencies: ['@spartan-ng/helm/button']
-  }
-};
-```
-
-### Benefits
-
-✅ **Always accurate** - Resources match what's in templates  
-✅ **No manual updates** - Add files to templates, run script  
-✅ **Type-safe** - Consistent structure for all resources  
-✅ **MCP-ready** - Structured metadata for LLM consumption  
-✅ **Auto-discovery** - New resources automatically included  
-
-### Development Workflow
-
-1. Add new resource to `templates/` directory
-2. (Optional) Add metadata to script constants
-3. Run `pnpm run generate`
-4. Test with `grg list` or `grg add`
-5. Publish with `pnpm publish` (auto-generates)
+| Task | Command |
+|------|---------|
+| Generate templates + copy meta | `cd app && pnpm generate:sources` |
+| Generate resources + catalog | `cd cli && node scripts/generate-resources.js` |
+| Full regeneration | Run both above |
+| Test CLI | `cd cli && node bin/grg.js list` |
+| Build MCP | `cd mcp-server && pnpm build` |

@@ -1,7 +1,7 @@
 const degit = require('degit');
 const chalk = require('chalk');
 const ora = require('ora');
-const { RESOURCES, REPO } = require('../config/resources');
+const { fetchCatalog, REPO } = require('../config/catalog-fetcher');
 
 /**
  * Add command - downloads blocks
@@ -12,6 +12,11 @@ const { RESOURCES, REPO } = require('../config/resources');
  *   grg add block --all
  */
 async function add(options) {
+  // Fetch catalog dynamically (with caching)
+  const spinner = ora('Fetching catalog...').start();
+  const RESOURCES = await fetchCatalog({ silent: true });
+  spinner.stop();
+
   // Determine which blocks to add
   const blocksToAdd = [];
   
@@ -44,14 +49,14 @@ async function add(options) {
 
   console.log(chalk.bold.cyan(`\n📦 Adding ${blocksToAdd.length} block(s)\n`));
 
-  const spinner = ora();
+  const downloadSpinner = ora();
 
   for (const block of blocksToAdd) {
     const outputPath = options.output 
       ? `${options.output}/${block.name}` 
       : block.defaultOutput;
 
-    spinner.start(`Downloading ${block.title}...`);
+    downloadSpinner.start(`Downloading ${block.title}...`);
 
     try {
       const emitter = degit(`${REPO}/${block.path}`, {
@@ -62,7 +67,7 @@ async function add(options) {
 
       await emitter.clone(outputPath);
 
-      spinner.succeed(chalk.green(`✓ ${block.title} added`));
+      downloadSpinner.succeed(chalk.green(`✓ ${block.title} added`));
       console.log(chalk.gray(`  Location: ${outputPath}`));
       
       // Show dependencies if any
@@ -72,7 +77,7 @@ async function add(options) {
       console.log();
 
     } catch (error) {
-      spinner.fail(chalk.red(`Failed to download ${block.title}`));
+      downloadSpinner.fail(chalk.red(`Failed to download ${block.title}`));
       console.error(chalk.red(error.message));
     }
   }

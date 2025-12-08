@@ -10,38 +10,18 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import { fetchCatalog, getResourcesSync, type GRGResources } from './catalog-fetcher.js';
 
 const execAsync = promisify(exec);
 
-interface GRGResources {
-  themes: any[];
-  components: any[];
-  blocks: any[];
+// Get resources - uses cache or fetches dynamically
+async function getResources(): Promise<GRGResources> {
+  return await fetchCatalog();
 }
 
-// Inline resources - these match cli/config/resources.js
-const RESOURCES: GRGResources = {
-  themes: [
-    { name: 'amber-minimal', title: 'Amber Minimal', description: 'Warm amber accents', tags: ['minimal', 'warm', 'amber', 'orange'] },
-    { name: 'claude', title: 'Claude', description: 'Claude-inspired warm tones', tags: ['warm', 'orange', 'brown', 'claude'] },
-    { name: 'clean-slate', title: 'Clean Slate', description: 'Minimal grayscale palette', tags: ['minimal', 'grayscale', 'neutral', 'clean'] },
-    { name: 'grg-theme', title: 'GRG Theme', description: 'Default theme with purple/orange accents', tags: ['default', 'purple', 'orange', 'colorful'] },
-    { name: 'mocks', title: 'Mocks', description: 'Theme for mockups and prototypes', tags: ['mockup', 'prototype', 'design'] },
-    { name: 'modern-minimal', title: 'Modern Minimal', description: 'Contemporary minimal design', tags: ['minimal', 'modern', 'contemporary', 'clean'] },
-  ],
-  components: [
-    { name: 'file-upload', title: 'File Upload Component', description: 'File upload component', tags: ['file', 'upload', 'form'] },
-    { name: 'stepper', title: 'Stepper Component', description: 'Multi-step form component with progress indicator', tags: ['form', 'wizard', 'multi-step', 'progress'] },
-  ],
-  blocks: [
-    { name: 'auth', title: 'Auth Block', description: 'Authentication pages (login, signup, forgot password)', tags: ['auth', 'login', 'signup', 'authentication'] },
-    { name: 'settings', title: 'Settings Block', description: 'Settings page layout with sidebar navigation', tags: ['settings', 'preferences', 'account'] },
-    { name: 'shell', title: 'App Shell Block', description: 'Application shell layouts: sidebar, topnav, collapsible - each with optional footer variant', tags: ['shell', 'layout', 'sidebar', 'header', 'footer', 'navigation'] },
-  ],
-};
-
-function getResources(): GRGResources {
-  return RESOURCES;
+// Sync version for non-async contexts
+function getResourcesSync_(): GRGResources {
+  return getResourcesSync();
 }
 
 const server = new Server(
@@ -146,7 +126,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
 
 // List available resources (for MCP resource protocol)
 server.setRequestHandler(ListResourcesRequestSchema, async () => {
-  const res = getResources();
+  const res = await getResources();
   
   const resources = [
     {
@@ -174,7 +154,7 @@ server.setRequestHandler(ListResourcesRequestSchema, async () => {
 
 // Read resource content
 server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
-  const res = getResources();
+  const res = await getResources();
   const uri = request.params.uri;
   
   let content: any;
@@ -245,8 +225,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   }
 });
 
-function searchResources(query: string, category: string = 'all') {
-  const res = getResources();
+async function searchResources(query: string, category: string = 'all') {
+  const res = await getResources();
   const lowerQuery = query.toLowerCase();
   const results: any[] = [];
   
@@ -296,8 +276,8 @@ function searchResources(query: string, category: string = 'all') {
   };
 }
 
-function getResourceDetails(resource: string) {
-  const res = getResources();
+async function getResourceDetails(resource: string) {
+  const res = await getResources();
   const [category, name] = resource.split(':');
   
   let details: any;
@@ -337,8 +317,8 @@ function getResourceDetails(resource: string) {
   };
 }
 
-function suggestResources(requirement: string) {
-  const res = getResources();
+async function suggestResources(requirement: string) {
+  const res = await getResources();
   const lowerReq = requirement.toLowerCase();
   const suggestions: any[] = [];
   
@@ -442,8 +422,8 @@ async function installResource(resource: string, output?: string) {
   }
 }
 
-function listResources(category: string = 'all') {
-  const res = getResources();
+async function listResources(category: string = 'all') {
+  const res = await getResources();
   
   const result: any = {
     category,

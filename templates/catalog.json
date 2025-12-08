@@ -1,21 +1,12 @@
-/**
- * Resource definitions for GRG Kit
- * This file is auto-generated from templates directory
- * Run: node scripts/generate-resources.js to update
- *
- * Note: Spartan-NG examples are NOT included here.
- * They are pre-installed via grg init and documented in design-system.md
- */
-
-const RESOURCES = {
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-12-08",
   "themes": [
     {
       "name": "amber-minimal",
       "title": "Amber Minimal",
       "description": "Warm amber accents",
       "file": "amber-minimal.css",
-      "path": "templates/ui/themes/amber-minimal.css",
-      "defaultOutput": "src/themes/amber-minimal.css",
       "tags": [
         "minimal",
         "warm",
@@ -34,8 +25,6 @@ const RESOURCES = {
       "title": "Claude",
       "description": "Claude-inspired warm tones",
       "file": "claude.css",
-      "path": "templates/ui/themes/claude.css",
-      "defaultOutput": "src/themes/claude.css",
       "tags": [
         "warm",
         "orange",
@@ -54,8 +43,6 @@ const RESOURCES = {
       "title": "Clean Slate",
       "description": "Minimal grayscale palette",
       "file": "clean-slate.css",
-      "path": "templates/ui/themes/clean-slate.css",
-      "defaultOutput": "src/themes/clean-slate.css",
       "tags": [
         "minimal",
         "grayscale",
@@ -74,8 +61,6 @@ const RESOURCES = {
       "title": "Grg Theme",
       "description": "Default theme with purple/orange accents",
       "file": "grg-theme.css",
-      "path": "templates/ui/themes/grg-theme.css",
-      "defaultOutput": "src/themes/grg-theme.css",
       "tags": [
         "default",
         "purple",
@@ -94,8 +79,6 @@ const RESOURCES = {
       "title": "Mocks",
       "description": "Theme for mockups and prototypes",
       "file": "mocks.css",
-      "path": "templates/ui/themes/mocks.css",
-      "defaultOutput": "src/themes/mocks.css",
       "tags": [
         "mockup",
         "prototype",
@@ -113,8 +96,6 @@ const RESOURCES = {
       "title": "Modern Minimal",
       "description": "Contemporary minimal design",
       "file": "modern-minimal.css",
-      "path": "templates/ui/themes/modern-minimal.css",
-      "defaultOutput": "src/themes/modern-minimal.css",
       "tags": [
         "minimal",
         "modern",
@@ -132,10 +113,8 @@ const RESOURCES = {
   "components": [
     {
       "name": "file-upload",
-      "title": "File Upload Component",
+      "title": "File Upload",
       "description": "Drag and drop file upload component",
-      "path": "templates/ui/components/file-upload",
-      "defaultOutput": "src/app/components/file-upload",
       "tags": [
         "file",
         "upload",
@@ -148,10 +127,8 @@ const RESOURCES = {
     },
     {
       "name": "stepper",
-      "title": "Stepper Component",
+      "title": "Stepper",
       "description": "Multi-step form component with progress indicator",
-      "path": "templates/ui/components/stepper",
-      "defaultOutput": "src/app/components/stepper",
       "tags": [
         "form",
         "wizard",
@@ -169,8 +146,6 @@ const RESOURCES = {
       "name": "auth",
       "title": "Auth",
       "description": "Authentication pages (login, signup, forgot password)",
-      "path": "templates/ui/blocks/auth",
-      "defaultOutput": "src/app/blocks/auth",
       "tags": [
         "auth",
         "login",
@@ -182,14 +157,32 @@ const RESOURCES = {
         "@spartan-ng/helm/button",
         "@spartan-ng/helm/card",
         "@spartan-ng/helm/form-field"
+      ],
+      "files": [
+        {
+          "id": "forgot-password",
+          "file": "forgot-password.component.ts",
+          "title": "Forgot Password",
+          "description": "Forgot Password"
+        },
+        {
+          "id": "login",
+          "file": "login.component.ts",
+          "title": "Login",
+          "description": "Login"
+        },
+        {
+          "id": "register",
+          "file": "register.component.ts",
+          "title": "Register",
+          "description": "Register"
+        }
       ]
     },
     {
       "name": "settings",
       "title": "Settings",
       "description": "Settings pages: profile, notifications, security, danger zone",
-      "path": "templates/ui/blocks/settings",
-      "defaultOutput": "src/app/blocks/settings",
       "tags": [
         "settings",
         "preferences",
@@ -202,14 +195,38 @@ const RESOURCES = {
         "@spartan-ng/helm/card",
         "@spartan-ng/helm/form-field",
         "@spartan-ng/helm/switch"
+      ],
+      "files": [
+        {
+          "id": "danger-zone",
+          "file": "danger-zone.component.ts",
+          "title": "Danger Zone",
+          "description": "Danger Zone"
+        },
+        {
+          "id": "notification",
+          "file": "notification-settings.component.ts",
+          "title": "Notification Settings",
+          "description": "Notification Settings"
+        },
+        {
+          "id": "profile",
+          "file": "profile-settings.component.ts",
+          "title": "Profile Settings",
+          "description": "Profile Settings"
+        },
+        {
+          "id": "security",
+          "file": "security-settings.component.ts",
+          "title": "Security Settings",
+          "description": "Security Settings"
+        }
       ]
     },
     {
       "name": "shell",
       "title": "Shell",
       "description": "Application shell layouts: sidebar, topnav, collapsible - each with optional footer variant",
-      "path": "templates/ui/blocks/shell",
-      "defaultOutput": "src/app/blocks/shell",
       "tags": [
         "shell",
         "layout",
@@ -224,11 +241,45 @@ const RESOURCES = {
         "@spartan-ng/helm/button",
         "@spartan-ng/helm/icon",
         "@spartan-ng/helm/dropdown-menu"
+      ],
+      "files": [
+        {
+          "id": "collapsible-footer",
+          "file": "collapsible-shell-footer.component.ts",
+          "title": "Collapsible Shell Footer",
+          "description": "Collapsible Shell Footer"
+        },
+        {
+          "id": "collapsible",
+          "file": "collapsible-shell.component.ts",
+          "title": "Collapsible Shell",
+          "description": "Collapsible Shell"
+        },
+        {
+          "id": "sidebar-footer",
+          "file": "sidebar-shell-footer.component.ts",
+          "title": "Sidebar Shell Footer",
+          "description": "Sidebar Shell Footer"
+        },
+        {
+          "id": "sidebar",
+          "file": "sidebar-shell.component.ts",
+          "title": "Sidebar Shell",
+          "description": "Sidebar Shell"
+        },
+        {
+          "id": "topnav-footer",
+          "file": "topnav-shell-footer.component.ts",
+          "title": "Topnav Shell Footer",
+          "description": "Topnav Shell Footer"
+        },
+        {
+          "id": "topnav",
+          "file": "topnav-shell.component.ts",
+          "title": "Topnav Shell",
+          "description": "Topnav Shell"
+        }
       ]
     }
   ]
-};
-
-const REPO = 'Genesis-Research/grg-kit';
-
-module.exports = { RESOURCES, REPO };
+}

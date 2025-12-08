@@ -1,0 +1,5 @@
+{
+  "description": "Drag and drop file upload component",
+  "tags": ["file", "upload", "form", "drag-drop"],
+  "dependencies": ["@spartan-ng/helm/button"]
+}

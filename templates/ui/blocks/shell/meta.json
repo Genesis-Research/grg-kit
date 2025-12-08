@@ -1,0 +1,5 @@
+{
+  "description": "Application shell layouts: sidebar, topnav, collapsible - each with optional footer variant",
+  "tags": ["shell", "layout", "sidebar", "header", "footer", "navigation", "topnav", "collapsible"],
+  "dependencies": ["@spartan-ng/helm/button", "@spartan-ng/helm/icon", "@spartan-ng/helm/dropdown-menu"]
+}
