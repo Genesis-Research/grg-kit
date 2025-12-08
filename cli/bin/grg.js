@@ -11,7 +11,7 @@ const program = new Command();
 program
   .name('grg')
   .description('GRG Kit CLI - Initialize your Angular project with GRG Kit components and add blocks')
-  .version('0.3.0');
+  .version('0.5.0');
 
 // Init command - sets up everything in one shot
 program

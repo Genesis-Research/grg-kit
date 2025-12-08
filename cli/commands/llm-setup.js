@@ -5,16 +5,59 @@ const ora = require('ora');
 const { RESOURCES } = require('../config/resources');
 
 /**
- * LLM Prompts command - generates LLM-specific prompts and rules
+ * LLM Setup command - generates LLM-specific prompts and rules
  * Helps AI assistants understand GRG Kit design system and use MCP server
  */
 async function llmPrompts(options) {
   const outputDir = options.output || '.windsurf/rules';
+  const isClaudeOutput = outputDir.includes('.claude') || outputDir.includes('CLAUDE');
   
-  console.log(chalk.bold.cyan('\n🤖 Generating LLM Prompts and Rules\n'));
+  console.log(chalk.bold.cyan('\n🤖 Generating LLM Rules\n'));
 
+  const spinner = ora();
+
+  // For Claude Code, generate a single CLAUDE.md file
+  if (isClaudeOutput) {
+    // Step 1: Create output directory
+    spinner.start('Creating directory...');
+    try {
+      await fs.mkdir(outputDir, { recursive: true });
+      spinner.succeed(chalk.green(`✓ Created ${outputDir} directory`));
+    } catch (error) {
+      spinner.fail(chalk.red('Failed to create directory'));
+      console.error(chalk.red(error.message));
+      process.exit(1);
+    }
+
+    // Step 2: Generate combined CLAUDE.md
+    spinner.start('Generating CLAUDE.md...');
+    try {
+      const claudeContent = generateClaudeMdRules();
+      const claudePath = path.join(outputDir, 'CLAUDE.md');
+      await fs.writeFile(claudePath, claudeContent);
+      spinner.succeed(chalk.green('✓ Generated CLAUDE.md'));
+    } catch (error) {
+      spinner.fail(chalk.red('Failed to generate CLAUDE.md'));
+      console.error(chalk.red(error.message));
+      process.exit(1);
+    }
+
+    // Success message for Claude
+    console.log(chalk.bold.green('\n✨ Claude Code rules generated successfully!\n'));
+    console.log(chalk.gray('File created:'));
+    console.log(chalk.cyan(`  ${outputDir}/CLAUDE.md`));
+    
+    console.log(chalk.yellow('\nNext steps:'));
+    console.log(chalk.gray('  1. The CLAUDE.md file will be automatically picked up by Claude Code'));
+    console.log(chalk.gray('  2. Make sure the grg-kit MCP server is configured'));
+    console.log(chalk.gray('  3. Claude will now check GRG Kit resources before writing custom code'));
+    console.log();
+    return;
+  }
+
+  // For Windsurf and other IDEs, generate multiple rule files
   // Step 1: Create output directory
-  const spinner = ora('Creating rules directory...').start();
+  spinner.start('Creating rules directory...');
   try {
     await fs.mkdir(outputDir, { recursive: true });
     spinner.succeed(chalk.green(`✓ Created ${outputDir} directory`));
@@ -64,16 +107,17 @@ async function llmPrompts(options) {
   }
 
   // Success message
-  console.log(chalk.bold.green('\n✨ LLM prompts and rules generated successfully!\n'));
+  console.log(chalk.bold.green('\n✨ LLM rules generated successfully!\n'));
   console.log(chalk.gray('Files created:'));
   console.log(chalk.cyan(`  ${outputDir}/design-system.md`));
   console.log(chalk.cyan(`  ${outputDir}/grg-kit-mcp.md`));
   console.log(chalk.cyan(`  ${outputDir}/angular-components.md`));
   
   console.log(chalk.yellow('\nNext steps:'));
-  console.log(chalk.gray('  1. These rules will be automatically picked up by Windsurf/Cascade'));
+  console.log(chalk.gray('  1. These rules will be automatically picked up by your AI assistant'));
   console.log(chalk.gray('  2. Make sure the grg-kit MCP server is configured in your IDE'));
   console.log(chalk.gray('  3. AI will now check GRG Kit resources before writing custom code'));
+  console.log(chalk.gray('\nSupported IDEs: Windsurf, Claude Code, Claude Desktop'));
   console.log();
 }
 
@@ -465,9 +509,11 @@ trigger: always_on
 
 ## Setup
 
-Add the grg-kit MCP server to your Windsurf configuration:
+Add the grg-kit MCP server to your AI assistant configuration:
 
-**File:** \`~/.codeium/windsurf/mcp_config.json\`
+**Windsurf:** \`~/.codeium/windsurf/mcp_config.json\`
+**Claude Code:** \`~/.claude/settings.json\`
+**Claude Desktop (macOS):** \`~/Library/Application Support/Claude/claude_desktop_config.json\`
 
 \`\`\`json
 {
@@ -480,7 +526,7 @@ Add the grg-kit MCP server to your Windsurf configuration:
 }
 \`\`\`
 
-After adding, restart Windsurf for the MCP server to be available.
+After adding, restart your IDE for the MCP server to be available.
 
 ## Important: Spartan-NG is Pre-installed
 
@@ -776,6 +822,137 @@ Use MCP only for:
 - Follow existing patterns in the codebase
 - Use TailwindCSS v4 for styling
 - Prefer signals for state management
+`;
+}
+
+function generateClaudeMdRules() {
+  // Generate a combined CLAUDE.md file for Claude Code
+  const themes = RESOURCES.themes || [];
+  const components = RESOURCES.components || [];
+  const blocks = RESOURCES.blocks || [];
+  
+  const themesList = themes.map(t => `- \`theme:${t.name}\` - ${t.description}`).join('\n');
+  const componentsList = components.map(c => `- \`component:${c.name}\` - ${c.description}`).join('\n');
+  const blocksList = blocks.map(b => `- \`block:${b.name}\` - ${b.description}`).join('\n');
+
+  return `# GRG Kit Project Rules
+
+This project uses **GRG Kit**, an Angular UI toolkit built on **Spartan-NG UI**.
+
+## Critical: Check GRG Kit First
+
+**BEFORE writing any UI component:**
+1. Use MCP tool \`mcp2_search_ui_resources\` to search for existing resources
+2. Check if a component, layout, or block already exists
+3. Only write custom code if no suitable resource exists
+
+## Architecture
+
+- **Spartan-NG** (\`@spartan-ng/helm\`): Pre-installed UI components with \`hlm\` prefix
+- **GRG Kit** (\`@grg-kit/ui\`): Custom components with \`grg-\` prefix
+- **Blocks**: Pre-built page layouts (auth, shell, settings)
+
+## Import Patterns
+
+**Spartan-NG:**
+\`\`\`typescript
+import { HlmButtonImports } from '@spartan-ng/helm/button';
+import { HlmCardImports } from '@spartan-ng/helm/card';
+import { BrnDialogImports } from '@spartan-ng/brain/dialog';
+import { HlmDialogImports } from '@spartan-ng/helm/dialog';
+\`\`\`
+
+**GRG Kit:**
+\`\`\`typescript
+import { GrgStepperImports } from '@grg-kit/ui/stepper';
+\`\`\`
+
+## Common Components
+
+**Button:**
+\`\`\`html
+<button hlmBtn>Default</button>
+<button hlmBtn variant="outline">Outline</button>
+<button hlmBtn variant="destructive">Destructive</button>
+\`\`\`
+
+**Card:**
+\`\`\`html
+<section hlmCard>
+  <div hlmCardHeader>
+    <h3 hlmCardTitle>Title</h3>
+    <p hlmCardDescription>Description</p>
+  </div>
+  <div hlmCardContent>Content</div>
+</section>
+\`\`\`
+
+**Form Field:**
+\`\`\`html
+<hlm-form-field>
+  <input hlmInput [formControl]="control" placeholder="Email" />
+  <hlm-error>Required</hlm-error>
+</hlm-form-field>
+\`\`\`
+
+**Dialog:**
+\`\`\`html
+<hlm-dialog>
+  <button brnDialogTrigger hlmBtn>Open</button>
+  <hlm-dialog-content *brnDialogContent="let ctx">
+    <hlm-dialog-header>
+      <h3 hlmDialogTitle>Title</h3>
+    </hlm-dialog-header>
+    <!-- content -->
+  </hlm-dialog-content>
+</hlm-dialog>
+\`\`\`
+
+**Icons:**
+\`\`\`typescript
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { lucideCheck } from '@ng-icons/lucide';
+
+@Component({
+  providers: [provideIcons({ lucideCheck })],
+  template: \`<ng-icon hlm name="lucideCheck" />\`
+})
+\`\`\`
+
+## MCP Server Tools
+
+Use the \`grg-kit\` MCP server for themes, blocks, and GRG Kit components:
+
+- \`mcp2_search_ui_resources({ query: "auth" })\` - Search resources
+- \`mcp2_suggest_resources({ requirement: "login page" })\` - Get suggestions
+- \`mcp2_install_resource({ resource: "block:auth" })\` - Install resource
+- \`mcp2_list_available_resources({ category: "all" })\` - List all
+
+## Available Resources
+
+### Themes
+${themesList}
+
+### GRG Kit Components
+${componentsList}
+
+### Blocks
+${blocksList}
+
+## Decision Tree
+
+- Need button, card, dialog, form field, table? → Use Spartan-NG (already installed)
+- Need page layout (dashboard, auth, settings)? → Use MCP: \`mcp2_search_ui_resources\`
+- Need theme? → Use MCP: \`mcp2_list_available_resources({ category: "themes" })\`
+- Need stepper, file-upload? → Use MCP: \`mcp2_search_ui_resources\`
+
+## Package Manager
+
+**ALWAYS use pnpm** instead of npm.
+
+## Styling
+
+Use TailwindCSS v4 for all styling. Prefer signals for state management.
 `;
 }
 

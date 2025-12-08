@@ -109,8 +109,8 @@ Options:
   -o, --output <path>  Output directory for rules (default: ".windsurf/rules")
 
 Examples:
-  grg llm-setup
-  grg llm-setup --output .cursor/rules
+  grg llm-setup                    # Windsurf (multiple .md files)
+  grg llm-setup --output .claude   # Claude Code (single CLAUDE.md)
 ```
 
 ## MCP Server Integration
@@ -137,7 +137,7 @@ pnpm install -g @grg-kit/mcp-server
 }
 ```
 
-**Cursor** (`~/.cursor/mcp_config.json`):
+**Claude Code** (`~/.claude/settings.json`):
 
 ```json
 {

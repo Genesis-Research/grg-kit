@@ -33,7 +33,7 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
         </hlm-tabs-list>
 
         <!-- CLI Usage Tab -->
-        <div hlmTabsContent="cli">
+        <div hlmTabsContent="cli" class="space-y-6 mt-6">
 
       <!-- Prerequisites Alert -->
       <div hlmAlert>
@@ -45,7 +45,7 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
       </div>
 
       <!-- Step 1: Install GRG CLI -->
-      <section hlmCard>
+      <section hlmCard class="mt-6">
         <div hlmCardHeader>
           <div class="flex items-center gap-2">
             <ng-icon hlm name="lucideTerminal" size="lg" />
@@ -64,7 +64,7 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
       </section>
 
       <!-- GRG Kit Init Section -->
-      <section hlmCard>
+      <section hlmCard class="mt-6">
         <div hlmCardHeader>
           <div class="flex items-center gap-2">
             <ng-icon hlm name="lucideDownload" size="lg" />
@@ -121,12 +121,43 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
         </div>
       </section>
 
+      <!-- LLM Setup Section -->
+      <section hlmCard class="mt-6">
+        <div hlmCardHeader>
+          <div class="flex items-center gap-2">
+            <ng-icon hlm name="lucideBrain" size="lg" />
+            <h3 hlmCardTitle>3. Setup AI Rules (Optional)</h3>
+          </div>
+          <p hlmCardDescription>
+            Generate rules for AI assistants to understand GRG Kit patterns
+          </p>
+        </div>
+        <div hlmCardContent class="space-y-4">
+          <div class="space-y-2">
+            <p class="text-sm font-medium">Generate AI rules for Windsurf (default):</p>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg llm-setup</code></pre>
+          </div>
+          <div class="space-y-2">
+            <p class="text-sm font-medium">Or for Claude Code:</p>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg llm-setup --output .claude</code></pre>
+            <p class="text-sm text-muted-foreground mt-1">Creates a <code class="text-xs bg-muted px-1 py-0.5 rounded">CLAUDE.md</code> file</p>
+          </div>
+          <div class="mt-4 p-4 bg-muted/50 rounded-md">
+            <p class="text-sm font-medium mb-2">📝 Generated files:</p>
+            <ul class="text-sm text-muted-foreground space-y-1">
+              <li><strong>Windsurf:</strong> <code class="text-xs bg-muted px-1 py-0.5 rounded">design-system.md</code>, <code class="text-xs bg-muted px-1 py-0.5 rounded">grg-kit-mcp.md</code>, <code class="text-xs bg-muted px-1 py-0.5 rounded">angular-components.md</code></li>
+              <li><strong>Claude Code:</strong> Single <code class="text-xs bg-muted px-1 py-0.5 rounded">CLAUDE.md</code> file with all rules</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
       <!-- Add Blocks Section -->
-      <section hlmCard>
+      <section hlmCard class="mt-6">
         <div hlmCardHeader>
           <div class="flex items-center gap-2">
             <ng-icon hlm name="lucideDownload" size="lg" />
-            <h3 hlmCardTitle>3. Add Blocks</h3>
+            <h3 hlmCardTitle>4. Add Blocks</h3>
           </div>
           <p hlmCardDescription>
             Add pre-built page blocks to your project
@@ -165,11 +196,11 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
       </section>
 
       <!-- List Resources Section -->
-      <section hlmCard>
+      <section hlmCard class="mt-6">
         <div hlmCardHeader>
           <div class="flex items-center gap-2">
             <ng-icon hlm name="lucideDownload" size="lg" />
-            <h3 hlmCardTitle>List Available Resources</h3>
+            <h3 hlmCardTitle>5. List Available Resources</h3>
           </div>
           <p hlmCardDescription>
             Browse what's available in GRG Kit
@@ -189,6 +220,7 @@ grg list themes</code></pre>
             <p class="text-sm font-medium mb-2">💡 Quick Reference</p>
             <ul class="text-sm text-muted-foreground space-y-1">
               <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg init my-app</code> - Create project with theme + all components</li>
+              <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg llm-setup</code> - Generate AI assistant rules</li>
               <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg add block --auth</code> - Add auth block</li>
               <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg add block --shell</code> - Add app shell block</li>
               <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg add block --all</code> - Add all blocks</li>
@@ -199,7 +231,7 @@ grg list themes</code></pre>
       </section>
 
       <!-- Next Steps -->
-      <section hlmCard>
+      <section hlmCard class="mt-6">
         <div hlmCardHeader>
           <h3 hlmCardTitle>Next Steps</h3>
           <p hlmCardDescription>Explore the available resources</p>
@@ -295,8 +327,8 @@ grg list themes</code></pre>
                 </div>
 
                 <div class="space-y-2">
-                  <p class="text-sm font-medium">For Cursor:</p>
-                  <p class="text-sm text-muted-foreground mb-2">Add to <code class="text-xs bg-muted px-1 py-0.5 rounded">~/.cursor/mcp_config.json</code>:</p>
+                  <p class="text-sm font-medium">For Claude Code:</p>
+                  <p class="text-sm text-muted-foreground mb-2">Add to <code class="text-xs bg-muted px-1 py-0.5 rounded">~/.claude/settings.json</code>:</p>
                   <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>{{ '{' }}
   "mcpServers": {{ '{' }}
     "grg-kit": {{ '{' }}
@@ -339,11 +371,8 @@ grg list themes</code></pre>
 # For Windsurf (default)
 grg llm-setup
 
-# For Cursor
-grg llm-setup --output .cursor/rules
-
-# For other IDEs
-grg llm-setup --output .ai-rules</code></pre>
+# For Claude Code (generates CLAUDE.md)
+grg llm-setup --output .claude</code></pre>
                 </div>
 
                 <div class="mt-4 p-4 bg-muted/50 rounded-md">
@@ -369,7 +398,7 @@ grg llm-setup --output .ai-rules</code></pre>
               </div>
               <div hlmCardContent class="space-y-4">
                 <p class="text-sm text-muted-foreground">
-                  Completely restart your IDE (Windsurf, Cursor, or Claude Desktop) to load the MCP server and generated rules.
+                  Completely restart your IDE (Windsurf, Claude Code, or Claude Desktop) to load the MCP server and generated rules.
                 </p>
                 <div class="mt-4 p-4 bg-accent/50 rounded-md">
                   <p class="text-sm font-medium mb-2">✅ What This Enables:</p>
