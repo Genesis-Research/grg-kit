@@ -129,13 +129,29 @@ async function init(options) {
       });
 
       let output = '';
+      let promptHandled = false;
+
+      // Handle stdin errors gracefully (EPIPE if process exits early)
+      child.stdin.on('error', (err) => {
+        if (err.code !== 'EPIPE') {
+          console.error(chalk.gray(`stdin error: ${err.message}`));
+        }
+      });
+
+      const safeWrite = (data) => {
+        if (child.stdin.writable && !child.stdin.destroyed) {
+          child.stdin.write(data);
+        }
+      };
+
       child.stdout.on('data', (data) => {
         output += data.toString();
         // When we see the prompt, send 'a' to select all, then Enter
-        if (output.includes('Choose which primitives')) {
-          child.stdin.write('a');
+        if (!promptHandled && output.includes('Choose which primitives')) {
+          promptHandled = true;
+          safeWrite('a');
           setTimeout(() => {
-            child.stdin.write('\n');
+            safeWrite('\n');
           }, 100);
         }
       });
