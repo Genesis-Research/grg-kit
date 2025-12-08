@@ -42,7 +42,7 @@ function getResourcesSync_(): GRGResources {
 const server = new Server(
   {
     name: 'grg-kit',
-    version: '0.4.0',
+    version: '0.4.1',
   },
   {
     capabilities: {
