@@ -63,32 +63,12 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
         </div>
       </section>
 
-      <!-- Create Angular Project Section -->
-      <section hlmCard class="mt-6">
-        <div hlmCardHeader>
-          <div class="flex items-center gap-2">
-            <ng-icon hlm name="lucideTerminal" size="lg" />
-            <h3 hlmCardTitle>2. Create Angular Project</h3>
-          </div>
-          <p hlmCardDescription>
-            Create a new Angular project (if you don't have one)
-          </p>
-        </div>
-        <div hlmCardContent class="space-y-4">
-          <div class="space-y-2">
-            <p class="text-sm font-medium">Create and navigate to project:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>ng new my-app --style=css
-cd my-app</code></pre>
-          </div>
-        </div>
-      </section>
-
       <!-- GRG Kit Init Section -->
       <section hlmCard class="mt-6">
         <div hlmCardHeader>
           <div class="flex items-center gap-2">
             <ng-icon hlm name="lucideDownload" size="lg" />
-            <h3 hlmCardTitle>3. Initialize GRG Kit</h3>
+            <h3 hlmCardTitle>2. Initialize GRG Kit</h3>
           </div>
           <p hlmCardDescription>
             Install Tailwind CSS, Spartan-NG, and theme in your Angular project
@@ -96,8 +76,9 @@ cd my-app</code></pre>
         </div>
         <div hlmCardContent class="space-y-4">
           <div class="space-y-2">
-            <p class="text-sm font-medium">Initialize with default theme:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg init</code></pre>
+            <p class="text-sm font-medium">Navigate to your Angular project and initialize:</p>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>cd my-app
+grg init</code></pre>
           </div>
 
           <div class="space-y-2">
@@ -140,7 +121,7 @@ cd my-app</code></pre>
         <div hlmCardHeader>
           <div class="flex items-center gap-2">
             <ng-icon hlm name="lucideBrain" size="lg" />
-            <h3 hlmCardTitle>4. Setup AI Rules (Optional)</h3>
+            <h3 hlmCardTitle>3. Setup AI Rules (Optional)</h3>
           </div>
           <p hlmCardDescription>
             Generate rules for AI assistants to understand GRG Kit patterns
@@ -171,7 +152,7 @@ cd my-app</code></pre>
         <div hlmCardHeader>
           <div class="flex items-center gap-2">
             <ng-icon hlm name="lucideDownload" size="lg" />
-            <h3 hlmCardTitle>5. Add Blocks</h3>
+            <h3 hlmCardTitle>4. Add Blocks</h3>
           </div>
           <p hlmCardDescription>
             Add pre-built page blocks to your project
@@ -214,7 +195,7 @@ cd my-app</code></pre>
         <div hlmCardHeader>
           <div class="flex items-center gap-2">
             <ng-icon hlm name="lucideDownload" size="lg" />
-            <h3 hlmCardTitle>6. List Available Resources</h3>
+            <h3 hlmCardTitle>5. List Available Resources</h3>
           </div>
           <p hlmCardDescription>
             Browse what's available in GRG Kit
@@ -304,7 +285,7 @@ grg list themes</code></pre>
               <div hlmCardContent class="space-y-4">
                 <div class="space-y-2">
                   <p class="text-sm font-medium">Install globally:</p>
-                  <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>pnpm install -g grg-kit-cli @grg-kit/mcp-server</code></pre>
+                  <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>pnpm install -g grg-kit-cli grg-kit-mcp-server</code></pre>
                 </div>
                 <div class="mt-4 p-4 bg-muted/50 rounded-md">
                   <p class="text-sm font-medium mb-2">💡 What gets installed:</p>
