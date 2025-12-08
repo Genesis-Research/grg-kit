@@ -24,12 +24,9 @@ program
 const addCommand = program.command('add').description('Add resources to your project');
 
 addCommand
-  .command('block')
-  .description('Add blocks to your project')
+  .command('block [blockName] [fileIds...]')
+  .description('Add blocks to your project (e.g., grg add block auth login)')
   .option('--all', 'Add all blocks')
-  .option('--auth', 'Add authentication block (login, signup, forgot password)')
-  .option('--shell', 'Add app shell block (sidebar, header, content area)')
-  .option('--settings', 'Add settings block (settings page with sidebar navigation)')
   .option('-o, --output <path>', 'Custom output directory')
   .action(add);
 

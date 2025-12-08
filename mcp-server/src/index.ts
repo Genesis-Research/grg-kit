@@ -90,13 +90,18 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: 'install_resource',
-        description: 'Install a GRG Kit block into the project. Returns installation status and next steps. Executes: grg add block --<name>',
+        description: 'Install a GRG Kit block into the project. Returns installation status and next steps. Executes: grg add block <name> [files...]',
         inputSchema: {
           type: 'object',
           properties: {
             resource: {
               type: 'string',
               description: 'Block name to install (e.g., "auth", "shell", "settings")',
+            },
+            files: {
+              type: 'array',
+              items: { type: 'string' },
+              description: 'Optional specific files to install (e.g., ["login", "register"] for auth block). If omitted, installs all files.',
             },
             output: {
               type: 'string',
@@ -204,7 +209,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         return await suggestResources(args.requirement as string);
         
       case 'install_resource':
-        return await installResource(args.resource as string, args.output as string | undefined);
+        return await installResource(args.resource as string, args.files as string[] | undefined, args.output as string | undefined);
         
       case 'list_available_resources':
         return await listResources(args.category as string | undefined);
@@ -249,9 +254,9 @@ async function searchResources(query: string, category: string = 'all') {
   
   // Generate install commands based on type
   const getInstallCommand = (type: string, name: string) => {
-    if (type === 'block') return `grg add block --${name}`;
-    if (type === 'theme') return `grg init <project-name> --theme ${name}`;
-    return 'Included automatically with grg init <project-name>';
+    if (type === 'block') return `grg add block ${name}`;
+    if (type === 'theme') return `grg init --theme ${name}`;
+    return 'Included automatically with grg init';
   };
   
   return {
@@ -286,15 +291,15 @@ async function getResourceDetails(resource: string) {
   switch (category) {
     case 'theme':
       details = res.themes.find((t: any) => t.name === name);
-      installCmd = `grg init <project-name> --theme ${name}`;
+      installCmd = `grg init --theme ${name}`;
       break;
     case 'component':
       details = res.components.find((c: any) => c.name === name);
-      installCmd = 'Included automatically with grg init <project-name>';
+      installCmd = 'Included automatically with grg init';
       break;
     case 'block':
       details = res.blocks.find((b: any) => b.name === name);
-      installCmd = `grg add block --${name}`;
+      installCmd = `grg add block ${name}`;
       break;
   }
   
@@ -325,36 +330,48 @@ async function suggestResources(requirement: string) {
   // Simple keyword matching for suggestions
   const keywords: Record<string, { type: string; name: string; install: string }[]> = {
     login: [
-      { type: 'block', name: 'auth', install: 'grg add block --auth' },
+      { type: 'block', name: 'auth', install: 'grg add block auth login' },
+    ],
+    signup: [
+      { type: 'block', name: 'auth', install: 'grg add block auth register' },
+    ],
+    register: [
+      { type: 'block', name: 'auth', install: 'grg add block auth register' },
     ],
     auth: [
-      { type: 'block', name: 'auth', install: 'grg add block --auth' },
+      { type: 'block', name: 'auth', install: 'grg add block auth' },
     ],
     dashboard: [
-      { type: 'block', name: 'shell', install: 'grg add block --shell' },
+      { type: 'block', name: 'shell', install: 'grg add block shell' },
     ],
     shell: [
-      { type: 'block', name: 'shell', install: 'grg add block --shell' },
+      { type: 'block', name: 'shell', install: 'grg add block shell' },
     ],
     footer: [
-      { type: 'block', name: 'shell', install: 'grg add block --shell' },
+      { type: 'block', name: 'shell', install: 'grg add block shell sidebar-footer' },
     ],
     navigation: [
-      { type: 'block', name: 'shell', install: 'grg add block --shell' },
+      { type: 'block', name: 'shell', install: 'grg add block shell' },
     ],
     sidebar: [
-      { type: 'block', name: 'shell', install: 'grg add block --shell' },
+      { type: 'block', name: 'shell', install: 'grg add block shell sidebar' },
+    ],
+    topnav: [
+      { type: 'block', name: 'shell', install: 'grg add block shell topnav' },
+    ],
+    collapsible: [
+      { type: 'block', name: 'shell', install: 'grg add block shell collapsible' },
     ],
     settings: [
-      { type: 'block', name: 'settings', install: 'grg add block --settings' },
+      { type: 'block', name: 'settings', install: 'grg add block settings' },
     ],
     form: [
-      { type: 'component', name: 'stepper', install: 'Included automatically with grg init <project-name>' },
+      { type: 'component', name: 'stepper', install: 'Included automatically with grg init' },
     ],
     theme: [
-      { type: 'theme', name: 'grg-theme', install: 'grg init <project-name> --theme grg-theme' },
-      { type: 'theme', name: 'claude', install: 'grg init <project-name> --theme claude' },
-      { type: 'theme', name: 'modern-minimal', install: 'grg init <project-name> --theme modern-minimal' },
+      { type: 'theme', name: 'grg-theme', install: 'grg init --theme grg-theme' },
+      { type: 'theme', name: 'claude', install: 'grg init --theme claude' },
+      { type: 'theme', name: 'modern-minimal', install: 'grg init --theme modern-minimal' },
     ],
   };
   
@@ -390,17 +407,18 @@ async function suggestResources(requirement: string) {
           requirement,
           suggestions_count: suggestions.length,
           suggestions,
-          note: 'Use grg init to set up theme and Spartan-NG components. Use grg add block --<name> for blocks.',
+          note: 'Run grg init in an Angular project to set up theme and Spartan-NG components. Use grg add block <name> [files...] for blocks.',
         }, null, 2),
       },
     ],
   };
 }
 
-async function installResource(resource: string, output?: string) {
-  // For blocks, use grg add block --<name>
+async function installResource(resource: string, files?: string[], output?: string) {
+  // For blocks, use grg add block <name> [files...]
+  const filesArg = files && files.length > 0 ? ` ${files.join(' ')}` : '';
   const outputFlag = output ? ` -o ${output}` : '';
-  const command = `grg add block --${resource}${outputFlag}`;
+  const command = `grg add block ${resource}${filesArg}${outputFlag}`;
   
   try {
     const { stdout, stderr } = await execAsync(command);
@@ -433,12 +451,12 @@ async function listResources(category: string = 'all') {
   if (category === 'all' || category === 'themes') {
     result.resources.themes = {
       count: res.themes.length,
-      note: 'Themes are set via: grg init <project-name> --theme <name>',
+      note: 'Themes are set via: grg init --theme <name>',
       items: res.themes.map((t: any) => ({
         name: t.name,
         title: t.title,
         description: t.description,
-        install: `grg init <project-name> --theme ${t.name}`,
+        install: `grg init --theme ${t.name}`,
       })),
     };
   }
@@ -446,7 +464,7 @@ async function listResources(category: string = 'all') {
   if (category === 'all' || category === 'components') {
     result.resources.components = {
       count: res.components.length,
-      note: 'Components are included automatically via: grg init <project-name>',
+      note: 'Components are included automatically via: grg init',
       items: res.components.map((c: any) => ({
         name: c.name,
         title: c.title,
@@ -458,12 +476,14 @@ async function listResources(category: string = 'all') {
   if (category === 'all' || category === 'blocks') {
     result.resources.blocks = {
       count: res.blocks.length,
-      note: 'Blocks are added via: grg add block --<name>',
+      note: 'Blocks are added via: grg add block <name> [files...]',
       items: res.blocks.map((b: any) => ({
         name: b.name,
         title: b.title,
         description: b.description,
-        install: `grg add block --${b.name}`,
+        files: b.files?.map((f: any) => f.id) || [],
+        install: `grg add block ${b.name}`,
+        install_specific: b.files?.length > 0 ? `grg add block ${b.name} <fileId>` : undefined,
       })),
     };
   }

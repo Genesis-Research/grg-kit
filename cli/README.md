@@ -21,9 +21,15 @@ grg init
 # Or with a specific theme
 grg init --theme claude
 
-# Add blocks
-grg add block --auth
-grg add block --shell
+# Add blocks (all files)
+grg add block auth
+grg add block shell
+
+# Add specific files from a block
+grg add block auth login
+grg add block shell sidebar
+
+# Add all blocks
 grg add block --all
 
 # List available resources
@@ -73,23 +79,31 @@ Examples:
 
 ### `grg add block`
 
-Add blocks to your project.
+Add blocks or specific block files to your project.
 
 ```bash
-grg add block [options]
+grg add block <blockName> [fileIds...]
 
 Options:
-  --all       Add all blocks
-  --auth      Add authentication block (login, signup, forgot password)
-  --shell     Add app shell block (sidebar, header, content area)
-  --settings  Add settings block (settings page with sidebar navigation)
-  -o, --output <path>  Custom output directory
+  --all                  Add all blocks
+  -o, --output <path>    Custom output directory
 
 Examples:
-  grg add block --auth
-  grg add block --shell --settings
-  grg add block --all
+  grg add block auth                    # All auth files
+  grg add block auth login              # Only login
+  grg add block auth login register     # Login and register
+  grg add block shell sidebar           # Only sidebar shell
+  grg add block shell topnav topnav-footer  # Topnav variants
+  grg add block --all                   # All blocks
 ```
+
+**Available blocks and files:**
+
+| Block | Files |
+|-------|-------|
+| `auth` | `login`, `register`, `forgot-password` |
+| `shell` | `sidebar`, `sidebar-footer`, `topnav`, `topnav-footer`, `collapsible`, `collapsible-footer` |
+| `settings` | `profile`, `security`, `notification`, `danger-zone` |
 
 ### `grg list [category]`
 
@@ -181,11 +195,14 @@ cd my-app
 grg init                        # Default theme
 grg init --theme claude         # Custom theme
 
-# Add blocks
-grg add block --auth            # Auth pages
-grg add block --shell           # App shell
-grg add block --settings        # Settings page
-grg add block --auth --shell    # Multiple blocks
+# Add blocks (all files)
+grg add block auth              # All auth files
+grg add block shell             # All shell layouts
+grg add block settings          # All settings pages
+
+# Add specific files
+grg add block auth login        # Just login
+grg add block shell sidebar     # Just sidebar shell
 grg add block --all             # All blocks
 
 # List resources

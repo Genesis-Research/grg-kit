@@ -1,14 +1,13 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmAlertImports } from '@spartan-ng/helm/alert';
-import { HlmTabsImports } from '@spartan-ng/helm/tabs';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideTerminal, lucidePackage, lucideDownload, lucideBrain, lucideZap } from '@ng-icons/lucide';
 import { HlmIcon } from '@spartan-ng/helm/icon';
 
 @Component({
   selector: 'app-getting-started',
-  imports: [HlmCardImports, HlmAlertImports, HlmTabsImports, NgIcon, HlmIcon],
+  imports: [HlmCardImports, HlmAlertImports, NgIcon, HlmIcon],
   providers: [provideIcons({ lucideTerminal, lucidePackage, lucideDownload, lucideBrain, lucideZap })],
   template: `
     <div class="max-w-4xl mx-auto space-y-8">
@@ -19,22 +18,6 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
         </p>
       </div>
 
-      <!-- Tabs for CLI vs MCP -->
-      <hlm-tabs tab="cli">
-        <hlm-tabs-list class="grid w-full grid-cols-2" aria-label="Usage options">
-          <button hlmTabsTrigger="cli">
-            <ng-icon hlm name="lucideTerminal" class="mr-2" size="sm" />
-            CLI Usage
-          </button>
-          <button hlmTabsTrigger="mcp">
-            <ng-icon hlm name="lucideBrain" class="mr-2" size="sm" />
-            MCP Server (AI Assistants)
-          </button>
-        </hlm-tabs-list>
-
-        <!-- CLI Usage Tab -->
-        <div hlmTabsContent="cli" class="space-y-6 mt-6">
-
       <!-- Prerequisites Alert -->
       <div hlmAlert>
         <ng-icon hlm hlmAlertIcon name="lucideTerminal" />
@@ -44,21 +27,28 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
         </p>
       </div>
 
-      <!-- Step 1: Install GRG CLI -->
+      <!-- Step 1: Install GRG CLI & MCP Server -->
       <section hlmCard class="mt-6">
         <div hlmCardHeader>
           <div class="flex items-center gap-2">
             <ng-icon hlm name="lucideTerminal" size="lg" />
-            <h3 hlmCardTitle>1. Install GRG CLI</h3>
+            <h3 hlmCardTitle>1. Install GRG CLI & MCP Server</h3>
           </div>
           <p hlmCardDescription>
-            Install the GRG Kit CLI globally
+            Install the CLI and MCP server for AI assistant integration
           </p>
         </div>
         <div hlmCardContent class="space-y-4">
           <div class="space-y-2">
-            <p class="text-sm font-medium">Install GRG CLI:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>pnpm install -g grg-kit-cli</code></pre>
+            <p class="text-sm font-medium">Install both globally:</p>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>pnpm install -g grg-kit-cli grg-kit-mcp-server</code></pre>
+          </div>
+          <div class="mt-4 p-4 bg-muted/50 rounded-md">
+            <p class="text-sm font-medium mb-2">💡 What gets installed:</p>
+            <ul class="text-sm text-muted-foreground space-y-1">
+              <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg</code> - CLI for initializing projects and adding blocks</li>
+              <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg-mcp-server</code> - MCP server for AI assistant integration</li>
+            </ul>
           </div>
         </div>
       </section>
@@ -122,27 +112,53 @@ grg init</code></pre>
         <div hlmCardHeader>
           <div class="flex items-center gap-2">
             <ng-icon hlm name="lucideBrain" size="lg" />
-            <h3 hlmCardTitle>3. Setup AI Rules (Optional)</h3>
+            <h3 hlmCardTitle>3. Setup AI Assistant (Optional)</h3>
           </div>
           <p hlmCardDescription>
-            Generate rules for AI assistants to understand GRG Kit patterns
+            Configure MCP server and generate rules for AI assistants
           </p>
         </div>
         <div hlmCardContent class="space-y-4">
           <div class="space-y-2">
-            <p class="text-sm font-medium">Generate AI rules for Windsurf (default):</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg llm-setup</code></pre>
+            <p class="text-sm font-medium">Generate AI rules and configure MCP:</p>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code># For Windsurf (default)
+grg llm-setup
+
+# For Claude Code
+grg llm-setup --output .claude</code></pre>
           </div>
-          <div class="space-y-2">
-            <p class="text-sm font-medium">Or for Claude Code:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg llm-setup --output .claude</code></pre>
-            <p class="text-sm text-muted-foreground mt-1">Creates a <code class="text-xs bg-muted px-1 py-0.5 rounded">CLAUDE.md</code> file</p>
-          </div>
+
           <div class="mt-4 p-4 bg-muted/50 rounded-md">
-            <p class="text-sm font-medium mb-2">📝 Generated files:</p>
+            <p class="text-sm font-medium mb-2">🔧 Configure MCP Server in your IDE:</p>
+            <div class="space-y-3 text-sm text-muted-foreground">
+              <div>
+                <p class="font-medium text-foreground">Windsurf:</p>
+                <p class="text-xs">Add to <code class="bg-muted px-1 py-0.5 rounded">~/.codeium/windsurf/mcp_config.json</code></p>
+              </div>
+              <div>
+                <p class="font-medium text-foreground">Claude Code:</p>
+                <p class="text-xs"><code class="bg-muted px-1 py-0.5 rounded">claude mcp add grg-kit -s user -- grg-mcp-server</code></p>
+              </div>
+              <div>
+                <p class="font-medium text-foreground">Claude Desktop:</p>
+                <p class="text-xs">Add to <code class="bg-muted px-1 py-0.5 rounded">~/Library/Application Support/Claude/claude_desktop_config.json</code></p>
+              </div>
+              <pre class="bg-muted p-3 rounded-md overflow-x-auto text-xs mt-2"><code>{{ '{' }}
+  "mcpServers": {{ '{' }}
+    "grg-kit": {{ '{' }}
+      "command": "grg-mcp-server"
+    {{ '}' }}
+  {{ '}' }}
+{{ '}' }}</code></pre>
+            </div>
+          </div>
+
+          <div class="mt-4 p-4 bg-accent/50 rounded-md">
+            <p class="text-sm font-medium mb-2">✅ What This Enables:</p>
             <ul class="text-sm text-muted-foreground space-y-1">
-              <li><strong>Windsurf:</strong> <code class="text-xs bg-muted px-1 py-0.5 rounded">design-system.md</code>, <code class="text-xs bg-muted px-1 py-0.5 rounded">grg-kit-mcp.md</code>, <code class="text-xs bg-muted px-1 py-0.5 rounded">angular-components.md</code></li>
-              <li><strong>Claude Code:</strong> Single <code class="text-xs bg-muted px-1 py-0.5 rounded">CLAUDE.md</code> file with all rules</li>
+              <li>• AI automatically searches GRG Kit before writing custom code</li>
+              <li>• AI knows about themes, components, blocks, and 56+ examples</li>
+              <li>• AI can install blocks directly via MCP tools</li>
             </ul>
           </div>
         </div>
@@ -161,31 +177,28 @@ grg init</code></pre>
         </div>
         <div hlmCardContent class="space-y-4">
           <div class="space-y-2">
-            <p class="text-sm font-medium">Add authentication pages:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg add block --auth</code></pre>
+            <p class="text-sm font-medium">Add entire block (all files):</p>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg add block auth      # All auth files
+grg add block shell     # All shell layouts
+grg add block settings  # All settings pages</code></pre>
           </div>
           <div class="space-y-2">
-            <p class="text-sm font-medium">Add app shell (sidebar, header, content):</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg add block --shell</code></pre>
-          </div>
-          <div class="space-y-2">
-            <p class="text-sm font-medium">Add settings page:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg add block --settings</code></pre>
-          </div>
-          <div class="space-y-2">
-            <p class="text-sm font-medium">Add multiple blocks at once:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg add block --auth --shell</code></pre>
+            <p class="text-sm font-medium">Add specific files only:</p>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg add block auth login              # Just login
+grg add block auth login register     # Login and register
+grg add block shell sidebar           # Just sidebar shell
+grg add block shell topnav topnav-footer  # Topnav variants</code></pre>
           </div>
           <div class="space-y-2">
             <p class="text-sm font-medium">Add all blocks:</p>
             <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg add block --all</code></pre>
           </div>
           <div class="mt-4 p-4 bg-accent/50 rounded-md">
-            <p class="text-sm font-medium mb-2">📦 Available Blocks</p>
-            <ul class="text-sm text-muted-foreground space-y-1">
-              <li><strong>auth</strong> - Login, signup, forgot password pages</li>
-              <li><strong>shell</strong> - Application shell with sidebar and header</li>
-              <li><strong>settings</strong> - Settings page with sidebar navigation</li>
+            <p class="text-sm font-medium mb-2">📦 Available Blocks & Files</p>
+            <ul class="text-sm text-muted-foreground space-y-2">
+              <li><strong>auth</strong> - <code class="text-xs bg-muted px-1 py-0.5 rounded">login</code>, <code class="text-xs bg-muted px-1 py-0.5 rounded">register</code>, <code class="text-xs bg-muted px-1 py-0.5 rounded">forgot-password</code></li>
+              <li><strong>shell</strong> - <code class="text-xs bg-muted px-1 py-0.5 rounded">sidebar</code>, <code class="text-xs bg-muted px-1 py-0.5 rounded">sidebar-footer</code>, <code class="text-xs bg-muted px-1 py-0.5 rounded">topnav</code>, <code class="text-xs bg-muted px-1 py-0.5 rounded">topnav-footer</code>, <code class="text-xs bg-muted px-1 py-0.5 rounded">collapsible</code>, <code class="text-xs bg-muted px-1 py-0.5 rounded">collapsible-footer</code></li>
+              <li><strong>settings</strong> - <code class="text-xs bg-muted px-1 py-0.5 rounded">profile</code>, <code class="text-xs bg-muted px-1 py-0.5 rounded">security</code>, <code class="text-xs bg-muted px-1 py-0.5 rounded">notification</code>, <code class="text-xs bg-muted px-1 py-0.5 rounded">danger-zone</code></li>
             </ul>
           </div>
         </div>
@@ -217,8 +230,9 @@ grg list themes</code></pre>
             <ul class="text-sm text-muted-foreground space-y-1">
               <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg init</code> - Initialize GRG Kit in current Angular project</li>
               <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg llm-setup</code> - Generate AI assistant rules</li>
-              <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg add block --auth</code> - Add auth block</li>
-              <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg add block --shell</code> - Add app shell block</li>
+              <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg add block auth</code> - Add all auth files</li>
+              <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg add block auth login</code> - Add just login</li>
+              <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg add block shell sidebar</code> - Add just sidebar shell</li>
               <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg add block --all</code> - Add all blocks</li>
               <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg list</code> - See all available resources</li>
             </ul>
@@ -257,237 +271,6 @@ grg list themes</code></pre>
           </ul>
         </div>
       </section>
-        </div>
-
-        <!-- MCP Server Tab -->
-        <div hlmTabsContent="mcp">
-          <div class="space-y-8 mt-8">
-            <!-- MCP Overview Alert -->
-            <div hlmAlert>
-              <ng-icon hlm hlmAlertIcon name="lucideBrain" />
-              <h4 hlmAlertTitle>AI-Powered Development</h4>
-              <p hlmAlertDescription>
-                Enable AI assistants (Windsurf, Cursor, Claude Desktop) to automatically discover and use GRG Kit resources.
-                The MCP server allows AI to search, suggest, and install components without manual intervention.
-              </p>
-            </div>
-
-            <!-- Step 1: Install MCP Server -->
-            <section hlmCard>
-              <div hlmCardHeader>
-                <div class="flex items-center gap-2">
-                  <ng-icon hlm name="lucidePackage" size="lg" />
-                  <h3 hlmCardTitle>1. Install MCP Server</h3>
-                </div>
-                <p hlmCardDescription>
-                  Install both the CLI and MCP server globally
-                </p>
-              </div>
-              <div hlmCardContent class="space-y-4">
-                <div class="space-y-2">
-                  <p class="text-sm font-medium">Install globally:</p>
-                  <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>pnpm install -g grg-kit-mcp-server</code></pre>
-                </div>
-                <div class="mt-4 p-4 bg-muted/50 rounded-md">
-                  <p class="text-sm font-medium mb-2">💡 What gets installed:</p>
-                  <ul class="text-sm text-muted-foreground space-y-1">
-                    <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg-mcp-server</code> - MCP server for AI integration</li>
-                  </ul>
-                </div>
-              </div>
-            </section>
-
-            <!-- Step 2: Configure AI Assistant -->
-            <section hlmCard>
-              <div hlmCardHeader>
-                <div class="flex items-center gap-2">
-                  <ng-icon hlm name="lucideBrain" size="lg" />
-                  <h3 hlmCardTitle>2. Configure Your AI Assistant</h3>
-                </div>
-                <p hlmCardDescription>
-                  Add MCP server configuration to your AI assistant
-                </p>
-              </div>
-              <div hlmCardContent class="space-y-4">
-                <div class="space-y-2">
-                  <p class="text-sm font-medium">For Windsurf:</p>
-                  <p class="text-sm text-muted-foreground mb-2">Add to <code class="text-xs bg-muted px-1 py-0.5 rounded">~/.codeium/windsurf/mcp_config.json</code>:</p>
-                  <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>{{ '{' }}
-  "mcpServers": {{ '{' }}
-    "grg-kit": {{ '{' }}
-      "command": "grg-mcp-server"
-    {{ '}' }}
-  {{ '}' }}
-{{ '}' }}</code></pre>
-                </div>
-
-                <div class="space-y-2">
-                  <p class="text-sm font-medium">For Claude Code (terminal):</p>
-                  <p class="text-sm text-muted-foreground mb-2">Run the CLI command or add to <code class="text-xs bg-muted px-1 py-0.5 rounded">~/.claude.json</code>:</p>
-                  <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code># Option 1: CLI command
-claude mcp add grg-kit -s user -- grg-mcp-server
-
-# Option 2: Edit ~/.claude.json manually
-{{ '{' }}
-  "mcpServers": {{ '{' }}
-    "grg-kit": {{ '{' }}
-      "command": "grg-mcp-server"
-    {{ '}' }}
-  {{ '}' }}
-{{ '}' }}</code></pre>
-                </div>
-
-                <div class="space-y-2">
-                  <p class="text-sm font-medium">For Claude Desktop:</p>
-                  <p class="text-sm text-muted-foreground mb-2">Add to config file:</p>
-                  <ul class="text-xs text-muted-foreground mb-2 space-y-1">
-                    <li>• <strong>macOS:</strong> <code class="bg-muted px-1 py-0.5 rounded">~/Library/Application Support/Claude/claude_desktop_config.json</code></li>
-                    <li>• <strong>Windows:</strong> <code class="bg-muted px-1 py-0.5 rounded">%APPDATA%\\Claude\\claude_desktop_config.json</code></li>
-                  </ul>
-                  <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>{{ '{' }}
-  "mcpServers": {{ '{' }}
-    "grg-kit": {{ '{' }}
-      "command": "grg-mcp-server"
-    {{ '}' }}
-  {{ '}' }}
-{{ '}' }}</code></pre>
-                </div>
-              </div>
-            </section>
-
-            <!-- Step 3: Generate AI Rules -->
-            <section hlmCard>
-              <div hlmCardHeader>
-                <div class="flex items-center gap-2">
-                  <ng-icon hlm name="lucideZap" size="lg" />
-                  <h3 hlmCardTitle>3. Generate AI Rules</h3>
-                </div>
-                <p hlmCardDescription>
-                  Create rule files that teach AI about GRG Kit patterns
-                </p>
-              </div>
-              <div hlmCardContent class="space-y-4">
-                <div class="space-y-2">
-                  <p class="text-sm font-medium">Navigate to your project and run:</p>
-                  <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>cd your-angular-project
-
-# For Windsurf (default)
-grg llm-setup
-
-# For Claude Code (generates CLAUDE.md)
-grg llm-setup --output .claude</code></pre>
-                </div>
-
-                <div class="mt-4 p-4 bg-muted/50 rounded-md">
-                  <p class="text-sm font-medium mb-2">📝 Generated Files:</p>
-                  <ul class="text-sm text-muted-foreground space-y-1">
-                    <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">design-system.md</code> - GRG Kit design patterns and component usage</li>
-                    <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg-kit-mcp.md</code> - MCP integration workflow and best practices</li>
-                  </ul>
-                </div>
-              </div>
-            </section>
-
-            <!-- Step 4: Restart IDE -->
-            <section hlmCard>
-              <div hlmCardHeader>
-                <div class="flex items-center gap-2">
-                  <ng-icon hlm name="lucideTerminal" size="lg" />
-                  <h3 hlmCardTitle>4. Restart Your IDE</h3>
-                </div>
-                <p hlmCardDescription>
-                  Reload to activate MCP server and rules
-                </p>
-              </div>
-              <div hlmCardContent class="space-y-4">
-                <p class="text-sm text-muted-foreground">
-                  Completely restart your IDE (Windsurf, Claude Code, or Claude Desktop) to load the MCP server and generated rules.
-                </p>
-                <div class="mt-4 p-4 bg-accent/50 rounded-md">
-                  <p class="text-sm font-medium mb-2">✅ What This Enables:</p>
-                  <ul class="text-sm text-muted-foreground space-y-1">
-                    <li>• AI automatically searches GRG Kit before writing custom code</li>
-                    <li>• AI knows about themes, components, blocks, and 56+ examples</li>
-                    <li>• AI follows GRG Kit design system patterns</li>
-                    <li>• AI can install blocks directly via MCP tools</li>
-                    <li>• Faster development with pre-built, tested components</li>
-                  </ul>
-                </div>
-              </div>
-            </section>
-
-            <!-- How It Works -->
-            <section hlmCard>
-              <div hlmCardHeader>
-                <h3 hlmCardTitle>How It Works</h3>
-                <p hlmCardDescription>
-                  Understanding the AI-powered workflow
-                </p>
-              </div>
-              <div hlmCardContent>
-                <div class="space-y-4">
-                  <div class="p-4 bg-muted/50 rounded-md">
-                    <pre class="text-sm text-muted-foreground whitespace-pre-wrap">User: "I need a login page"
-         ↓
-AI reads .windsurf/rules/grg-kit-mcp.md
-         ↓
-AI calls MCP tool: suggest_resources({{ '{' }} requirement: "login page" {{ '}' }})
-         ↓
-MCP Server → Returns: block:auth
-         ↓
-AI calls MCP tool: install_resource({{ '{' }} resource: "auth" {{ '}' }})
-         ↓
-MCP Server → grg add block --auth → Downloads auth block
-         ↓
-AI: "I've installed the auth block. Here's how to use it..."</pre>
-                  </div>
-
-                  <div class="mt-4 p-4 bg-accent/50 rounded-md">
-                    <p class="text-sm font-medium mb-2">🔧 Available MCP Tools:</p>
-                    <ul class="text-sm text-muted-foreground space-y-1">
-                      <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">search_ui_resources</code> - Search for components, themes, blocks</li>
-                      <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">suggest_resources</code> - Get AI-powered suggestions</li>
-                      <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">get_resource_details</code> - View detailed resource info</li>
-                      <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">install_resource</code> - Install blocks automatically</li>
-                      <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">list_available_resources</code> - Browse catalog</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <!-- Testing MCP Integration -->
-            <section hlmCard>
-              <div hlmCardHeader>
-                <h3 hlmCardTitle>Test Your Setup</h3>
-                <p hlmCardDescription>
-                  Verify MCP integration is working
-                </p>
-              </div>
-              <div hlmCardContent class="space-y-4">
-                <div class="space-y-2">
-                  <p class="text-sm font-medium">Ask your AI assistant:</p>
-                  <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>"Search for GRG Kit button components"</code></pre>
-                  <p class="text-sm text-muted-foreground mt-2">
-                    The AI should use the <code class="text-xs bg-muted px-1 py-0.5 rounded">search_ui_resources</code> MCP tool automatically.
-                  </p>
-                </div>
-
-                <div class="mt-4 p-4 bg-muted/50 rounded-md">
-                  <p class="text-sm font-medium mb-2">🔍 Troubleshooting:</p>
-                  <ul class="text-sm text-muted-foreground space-y-1">
-                    <li>• Verify <code class="text-xs bg-muted px-1 py-0.5 rounded">grg-mcp-server</code> is installed: <code class="text-xs bg-muted px-1 py-0.5 rounded">which grg-mcp-server</code></li>
-                    <li>• Check MCP config file exists and has valid JSON</li>
-                    <li>• Ensure rules are generated in correct directory</li>
-                    <li>• Restart IDE completely (not just reload window)</li>
-                    <li>• Check IDE logs for MCP connection errors</li>
-                  </ul>
-                </div>
-              </div>
-            </section>
-          </div>
-        </div>
-      </hlm-tabs>
     </div>
   `,
   styles: [],

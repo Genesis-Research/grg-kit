@@ -124,7 +124,8 @@ async function fetchCatalog(options = {}) {
       blocks: catalog.blocks.map(b => ({
         ...b,
         path: `templates/ui/blocks/${b.name}`,
-        defaultOutput: `src/app/blocks/${b.name}`
+        defaultOutput: `src/app/blocks/${b.name}`,
+        files: b.files || []
       }))
     };
 

@@ -40,9 +40,10 @@ The MCP server works with the GRG CLI:
 
 | Command | Description |
 |---------|-------------|
-| `grg init` | Sets up theme and all Spartan-NG components |
-| `grg init --theme <name>` | Same with custom theme |
-| `grg add block --<name>` | Add a block (auth, shell, settings) |
+| `grg init` | Initialize GRG Kit in current Angular project (installs Tailwind, Spartan-NG, theme) |
+| `grg init --theme <name>` | Initialize with a specific theme |
+| `grg add block <name>` | Add all files from a block (auth, shell, settings) |
+| `grg add block <name> <files...>` | Add specific files from a block |
 | `grg add block --all` | Add all blocks |
 | `grg list` | List available blocks and themes |
 
@@ -66,7 +67,7 @@ Get AI-powered suggestions based on requirements.
 suggest_resources({
   requirement: "I need a login page"
 })
-// Returns: block:auth with install command (grg add block --auth)
+// Returns: block:auth with install command
 ```
 
 ### 3. `get_resource_details`
@@ -85,9 +86,10 @@ Install a block into the project.
 ```typescript
 install_resource({
   resource: "auth",
+  files: ["login", "register"], // optional - omit for all files
   output: "src/app/blocks/auth" // optional
 })
-// Executes: grg add block --auth
+// Executes: grg add block auth login register
 ```
 
 ### 5. `list_available_resources`
@@ -115,9 +117,9 @@ User: "Create a dashboard with a sidebar"
 
 AI:
 1. search_ui_resources({ query: "dashboard" })
-2. Finds: block:shell
-3. install_resource({ resource: "shell" })
-   → Executes: grg add block --shell
+2. Finds: block:shell (files: sidebar, sidebar-footer, topnav, topnav-footer, collapsible, collapsible-footer)
+3. install_resource({ resource: "shell", files: ["sidebar"] })
+   → Executes: grg add block shell sidebar
 ```
 
 ### Scenario 2: User Wants to Initialize Project
@@ -126,8 +128,9 @@ AI:
 User: "Set up GRG Kit with the Claude theme"
 
 AI:
-1. Run: grg init --theme claude
-2. This installs theme + all Spartan-NG components
+1. User must be in an existing Angular project directory
+2. Run: grg init --theme claude
+3. This installs Tailwind CSS v4, Spartan-NG components, theme, and examples
 ```
 
 ### Scenario 3: User Wants Login Page
@@ -137,9 +140,9 @@ User: "I need a login page"
 
 AI:
 1. suggest_resources({ requirement: "login page" })
-2. Finds: block:auth
-3. install_resource({ resource: "auth" })
-   → Executes: grg add block --auth
+2. Finds: block:auth (files: login, register, forgot-password)
+3. install_resource({ resource: "auth", files: ["login"] })
+   → Executes: grg add block auth login
 ```
 
 ## Why This Matters
@@ -198,16 +201,18 @@ AI (internal):
    → Suggests: block:shell, block:auth, theme:modern-minimal
    
 2. Run: grg init --theme modern-minimal
-   → Installs theme + Spartan-NG components
+   → Installs Tailwind, Spartan-NG, theme, and examples
    
-3. install_resource("shell")
-   → grg add block --shell
+3. install_resource({ resource: "shell", files: ["sidebar"] })
+   → grg add block shell sidebar
    
-4. install_resource("auth")
-   → grg add block --auth
+4. install_resource({ resource: "auth" })
+   → grg add block auth
 
 AI (to user):
 "I've set up your project with:
+- Tailwind CSS v4 with PostCSS
+- All Spartan-NG UI components
 - Modern minimal theme
 - App shell with sidebar
 - Authentication pages (login/signup)

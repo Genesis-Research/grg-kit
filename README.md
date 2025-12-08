@@ -38,9 +38,13 @@ grg init
 # Or with a specific theme
 grg init --theme claude
 
-# Add blocks
-grg add block --auth
-grg add block --shell
+# Add blocks (all files)
+grg add block auth
+grg add block shell
+
+# Add specific files from a block
+grg add block auth login
+grg add block shell sidebar
 
 # List available resources
 grg list
@@ -52,7 +56,8 @@ grg list
 |---------|-------------|
 | `grg init` | Installs Tailwind v4, Spartan-NG, theme, components, and examples in current Angular project |
 | `grg init --theme <name>` | Same with custom theme |
-| `grg add block --<name>` | Add a block (auth, shell, settings) |
+| `grg add block <name>` | Add all files from a block (auth, shell, settings) |
+| `grg add block <name> <files...>` | Add specific files from a block |
 | `grg add block --all` | Add all blocks |
 | `grg list` | List available blocks and themes |
 | `grg list blocks` | List available blocks |
@@ -79,14 +84,23 @@ Page blocks that can be added individually.
 
 | Block | Description |
 |-------|-------------|
-| `auth` | Authentication pages (login, signup, forgot password) |
-| `shell` | Application shell with sidebar, header, and content area |
-| `settings` | Settings page with sidebar navigation |
+| `auth` | Authentication pages: `login`, `register`, `forgot-password` |
+| `shell` | App shell layouts: `sidebar`, `sidebar-footer`, `topnav`, `topnav-footer`, `collapsible`, `collapsible-footer` |
+| `settings` | Settings pages: `profile`, `security`, `notification`, `danger-zone` |
 
 ```bash
-grg add block --auth
-grg add block --shell
-grg add block --settings
+# Add entire block (all files)
+grg add block auth
+grg add block shell
+grg add block settings
+
+# Add specific files only
+grg add block auth login                # Just login
+grg add block auth login register       # Login and register
+grg add block shell sidebar             # Just sidebar shell
+grg add block shell topnav topnav-footer  # Topnav variants
+
+# Add all blocks
 grg add block --all
 ```
 
