@@ -117,15 +117,39 @@ async function init(projectName, options) {
   }
 
   // Step 7: Run Spartan-NG UI generator (install all components)
+  // The spartan CLI prompts for component selection - we send 'a' to select all, then Enter
   spinner.start('Installing all Spartan-NG UI components...');
   try {
     const { spawn } = require('child_process');
     await new Promise((resolve, reject) => {
-      const child = spawn('pnpm', ['ng', 'g', '@spartan-ng/cli:ui', 'all', '--defaults'], {
-        stdio: 'inherit',
+      const child = spawn('pnpm', ['ng', 'g', '@spartan-ng/cli:ui'], {
+        stdio: ['pipe', 'pipe', 'pipe'],
         shell: true
       });
+
+      let output = '';
+      child.stdout.on('data', (data) => {
+        output += data.toString();
+        // When we see the prompt, send 'a' to select all, then Enter
+        if (output.includes('Choose which primitives')) {
+          child.stdin.write('a');
+          setTimeout(() => {
+            child.stdin.write('\n');
+          }, 100);
+        }
+      });
+
+      child.stderr.on('data', (data) => {
+        // Spartan CLI outputs progress to stderr
+        const text = data.toString();
+        if (text.includes('CREATE') || text.includes('UPDATE')) {
+          // Show progress dots
+          process.stdout.write('.');
+        }
+      });
+
       child.on('close', (code) => {
+        console.log(); // New line after progress dots
         if (code === 0) resolve();
         else reject(new Error(`Process exited with code ${code}`));
       });
