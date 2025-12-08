@@ -337,13 +337,13 @@ grg list themes</code></pre>
                   <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>cd your-angular-project
 
 # For Windsurf (default)
-grg llm-prompts
+grg llm-setup
 
 # For Cursor
-grg llm-prompts --output .cursor/rules
+grg llm-setup --output .cursor/rules
 
 # For other IDEs
-grg llm-prompts --output .ai-rules</code></pre>
+grg llm-setup --output .ai-rules</code></pre>
                 </div>
 
                 <div class="mt-4 p-4 bg-muted/50 rounded-md">

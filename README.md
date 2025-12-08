@@ -112,7 +112,7 @@ Configure your AI assistant (Windsurf, Cursor):
 Generate AI rules:
 
 ```bash
-grg llm-prompts
+grg llm-setup
 ```
 
 ## License

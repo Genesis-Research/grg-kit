@@ -98,19 +98,19 @@ Examples:
   grg list themes    # List all themes
 ```
 
-### `grg llm-prompts`
+### `grg llm-setup`
 
 Generate LLM-specific prompts and rules for AI assistants (Windsurf, Cursor, etc.).
 
 ```bash
-grg llm-prompts [options]
+grg llm-setup [options]
 
 Options:
   -o, --output <path>  Output directory for rules (default: ".windsurf/rules")
 
 Examples:
-  grg llm-prompts
-  grg llm-prompts --output .cursor/rules
+  grg llm-setup
+  grg llm-setup --output .cursor/rules
 ```
 
 ## MCP Server Integration
@@ -153,7 +153,7 @@ pnpm install -g @grg-kit/mcp-server
 
 ```bash
 cd your-angular-project
-grg llm-prompts
+grg llm-setup
 ```
 
 ### 4. Restart Your IDE
@@ -185,7 +185,7 @@ grg list blocks                 # Available blocks
 grg list themes                 # Available themes
 
 # AI setup
-grg llm-prompts                 # Generate AI rules
+grg llm-setup                   # Generate AI rules
 ```
 
 ## License

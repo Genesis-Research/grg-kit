@@ -4,7 +4,7 @@ const { Command } = require('commander');
 const { add } = require('../commands/add');
 const { list } = require('../commands/list');
 const { init } = require('../commands/init');
-const { llmPrompts } = require('../commands/llm-prompts');
+const { llmPrompts } = require('../commands/llm-setup');
 
 const program = new Command();
 
@@ -39,9 +39,9 @@ program
   .description('List available blocks and components')
   .action(list);
 
-// LLM Prompts command
+// LLM Setup command
 program
-  .command('llm-prompts')
+  .command('llm-setup')
   .description('Generate LLM-specific prompts and rules for AI assistants (Windsurf, Cursor, etc.)')
   .option('-o, --output <path>', 'Output directory for rules', '.windsurf/rules')
   .action(llmPrompts);

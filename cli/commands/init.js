@@ -249,8 +249,9 @@ async function init(projectName, options) {
   
   console.log(chalk.yellow('\nNext steps:'));
   console.log(chalk.gray('  1.'), chalk.cyan(`cd ${projectName}`));
-  console.log(chalk.gray('  2. Run'), chalk.cyan('grg list blocks'), chalk.gray('to see available blocks'));
-  console.log(chalk.gray('  3. Add blocks with'), chalk.cyan('grg add block --auth'));
+  console.log(chalk.gray('  2. Run'), chalk.cyan('grg llm-setup'), chalk.gray('to generate AI assistant rules'));
+  console.log(chalk.gray('  3. Run'), chalk.cyan('grg list blocks'), chalk.gray('to see available blocks'));
+  console.log(chalk.gray('  4. Add blocks with'), chalk.cyan('grg add block --auth'));
   console.log();
 }
 
