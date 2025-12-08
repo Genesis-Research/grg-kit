@@ -1,4 +1,4 @@
-/* Theme: grg */
+/* Theme: grg – minimalistic */
 
 :root[data-theme="grg"] {
   --background: oklch(0.9940 0 0);
@@ -33,25 +33,33 @@
   --sidebar-accent-foreground: oklch(0 0 0);
   --sidebar-border: oklch(0.9401 0 0);
   --sidebar-ring: oklch(0 0 0);
+
   --font-sans: Open Sans, ui-sans-serif, sans-serif, system-ui;
   --font-serif: Open Sans, ui-sans-serif, sans-serif, system-ui;
   --font-mono: IBM Plex Mono, monospace;
-  --radius: 1.4rem;
+
+  /* Softer, tighter radius for a minimal look */
+  --radius: 0.9rem;
+
+  /* Minimal, subtle shadow system */
   --shadow-x: 0px;
-  --shadow-y: 2px;
-  --shadow-blur: 3px;
+  --shadow-y: 1px;
+  --shadow-blur: 2px;
   --shadow-spread: 0px;
-  --shadow-opacity: 0.16;
+  --shadow-opacity: 0.08;
   --shadow-color: hsl(0 0% 0%);
-  --shadow-2xs: 0px 2px 3px 0px hsl(0 0% 0% / 0.08);
-  --shadow-xs: 0px 2px 3px 0px hsl(0 0% 0% / 0.08);
-  --shadow-sm: 0px 2px 3px 0px hsl(0 0% 0% / 0.16), 0px 1px 2px -1px hsl(0 0% 0% / 0.16);
-  --shadow: 0px 2px 3px 0px hsl(0 0% 0% / 0.16), 0px 1px 2px -1px hsl(0 0% 0% / 0.16);
-  --shadow-md: 0px 2px 3px 0px hsl(0 0% 0% / 0.16), 0px 2px 4px -1px hsl(0 0% 0% / 0.16);
-  --shadow-lg: 0px 2px 3px 0px hsl(0 0% 0% / 0.16), 0px 4px 6px -1px hsl(0 0% 0% / 0.16);
-  --shadow-xl: 0px 2px 3px 0px hsl(0 0% 0% / 0.16), 0px 8px 10px -1px hsl(0 0% 0% / 0.16);
-  --shadow-2xl: 0px 2px 3px 0px hsl(0 0% 0% / 0.40);
-  --tracking-normal: -0.025em;
+
+  --shadow-2xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.04);
+  --shadow-xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.05);
+  --shadow-sm: 0px 1px 3px 0px hsl(0 0% 0% / 0.06);
+  --shadow: 0px 1px 3px 0px hsl(0 0% 0% / 0.06);
+  --shadow-md: 0px 2px 4px 0px hsl(0 0% 0% / 0.07);
+  --shadow-lg: 0px 4px 8px 0px hsl(0 0% 0% / 0.08);
+  --shadow-xl: 0px 8px 16px 0px hsl(0 0% 0% / 0.10);
+  --shadow-2xl: 0px 12px 24px 0px hsl(0 0% 0% / 0.12);
+
+  /* Neutral tracking feels cleaner for minimal UIs */
+  --tracking-normal: 0em;
   --spacing: 0.27rem;
 }
 
@@ -90,24 +98,28 @@
   --sidebar-accent-foreground: oklch(0.6132 0.2294 291.7437);
   --sidebar-border: oklch(0.3289 0.0092 268.3843);
   --sidebar-ring: oklch(0.6132 0.2294 291.7437);
+
   --font-sans: Open Sans, ui-sans-serif, sans-serif, system-ui;
   --font-serif: Open Sans, ui-sans-serif, sans-serif, system-ui;
   --font-mono: IBM Plex Mono, monospace;
-  --radius: 1.4rem;
+
+  --radius: 0.9rem;
+
   --shadow-x: 0px;
-  --shadow-y: 2px;
-  --shadow-blur: 3px;
+  --shadow-y: 1px;
+  --shadow-blur: 2px;
   --shadow-spread: 0px;
-  --shadow-opacity: 0.16;
+  --shadow-opacity: 0.08;
   --shadow-color: hsl(0 0% 0%);
-  --shadow-2xs: 0px 2px 3px 0px hsl(0 0% 0% / 0.08);
-  --shadow-xs: 0px 2px 3px 0px hsl(0 0% 0% / 0.08);
-  --shadow-sm: 0px 2px 3px 0px hsl(0 0% 0% / 0.16), 0px 1px 2px -1px hsl(0 0% 0% / 0.16);
-  --shadow: 0px 2px 3px 0px hsl(0 0% 0% / 0.16), 0px 1px 2px -1px hsl(0 0% 0% / 0.16);
-  --shadow-md: 0px 2px 3px 0px hsl(0 0% 0% / 0.16), 0px 2px 4px -1px hsl(0 0% 0% / 0.16);
-  --shadow-lg: 0px 2px 3px 0px hsl(0 0% 0% / 0.16), 0px 4px 6px -1px hsl(0 0% 0% / 0.16);
-  --shadow-xl: 0px 2px 3px 0px hsl(0 0% 0% / 0.16), 0px 8px 10px -1px hsl(0 0% 0% / 0.16);
-  --shadow-2xl: 0px 2px 3px 0px hsl(0 0% 0% / 0.40);
+
+  --shadow-2xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.20);
+  --shadow-xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.22);
+  --shadow-sm: 0px 1px 3px 0px hsl(0 0% 0% / 0.24);
+  --shadow: 0px 1px 3px 0px hsl(0 0% 0% / 0.24);
+  --shadow-md: 0px 2px 4px 0px hsl(0 0% 0% / 0.26);
+  --shadow-lg: 0px 4px 8px 0px hsl(0 0% 0% / 0.28);
+  --shadow-xl: 0px 8px 16px 0px hsl(0 0% 0% / 0.30);
+  --shadow-2xl: 0px 12px 24px 0px hsl(0 0% 0% / 0.34);
 }
 
 @theme inline {

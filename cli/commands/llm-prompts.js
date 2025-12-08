@@ -2,6 +2,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const chalk = require('chalk');
 const ora = require('ora');
+const { RESOURCES } = require('../config/resources');
 
 /**
  * LLM Prompts command - generates LLM-specific prompts and rules
@@ -49,11 +50,25 @@ async function llmPrompts(options) {
     process.exit(1);
   }
 
+  // Step 4: Generate angular-components.md (glob-triggered)
+  spinner.start('Generating angular-components.md...');
+  try {
+    const angularContent = generateAngularComponentRules();
+    const angularPath = path.join(outputDir, 'angular-components.md');
+    await fs.writeFile(angularPath, angularContent);
+    spinner.succeed(chalk.green('✓ Generated angular-components.md'));
+  } catch (error) {
+    spinner.fail(chalk.red('Failed to generate angular-components.md'));
+    console.error(chalk.red(error.message));
+    process.exit(1);
+  }
+
   // Success message
   console.log(chalk.bold.green('\n✨ LLM prompts and rules generated successfully!\n'));
   console.log(chalk.gray('Files created:'));
   console.log(chalk.cyan(`  ${outputDir}/design-system.md`));
   console.log(chalk.cyan(`  ${outputDir}/grg-kit-mcp.md`));
+  console.log(chalk.cyan(`  ${outputDir}/angular-components.md`));
   
   console.log(chalk.yellow('\nNext steps:'));
   console.log(chalk.gray('  1. These rules will be automatically picked up by Windsurf/Cascade'));
@@ -430,113 +445,125 @@ This design system provides a comprehensive foundation for building consistent, 
 }
 
 function generateMCPRules() {
+  // Dynamically build resource lists from resources.js
+  // Note: Spartan-NG components are pre-installed, so we only list GRG Kit resources
+  const themes = RESOURCES.themes || [];
+  const components = RESOURCES.components || [];
+  const blocks = RESOURCES.blocks || [];
+  
+  const themesList = themes.map(t => `- \`theme:${t.name}\` - ${t.description}`).join('\n');
+  const componentsList = components.map(c => `- \`component:${c.name}\` - ${c.description}`).join('\n');
+  const blocksList = blocks.map(b => `- \`block:${b.name}\` - ${b.description}`).join('\n');
+  
+  const totalResources = themes.length + components.length + blocks.length;
+
   return `---
 trigger: always_on
 ---
 
 # GRG Kit MCP Server Integration
 
-## Critical Workflow
+## Setup
 
-**BEFORE writing ANY UI component, layout, or page, you MUST:**
+Add the grg-kit MCP server to your Windsurf configuration:
 
-1. **Search for existing resources** using the MCP server
-2. **Install if found** - don't reinvent the wheel
-3. **Only write custom code** if no suitable resource exists
+**File:** \`~/.codeium/windsurf/mcp_config.json\`
+
+\`\`\`json
+{
+  "mcpServers": {
+    "grg-kit": {
+      "command": "npx",
+      "args": ["-y", "@grg-kit/mcp-server"]
+    }
+  }
+}
+\`\`\`
+
+After adding, restart Windsurf for the MCP server to be available.
+
+## Important: Spartan-NG is Pre-installed
+
+**Spartan-NG components are already installed** in this project. You do NOT need to use MCP to install them.
+
+- For Spartan-NG usage patterns → Refer to \`design-system.md\`
+- For themes, blocks, and GRG Kit components → Use MCP tools below
+
+## When to Use MCP
+
+Use the MCP server for:
+1. **Themes** - Install different color themes
+2. **Blocks** - Pre-built page layouts (auth, shell, settings)
+3. **GRG Kit Components** - Custom components like stepper, file-upload
+
+**Do NOT use MCP for:**
+- Spartan-NG components (button, card, dialog, etc.) - already installed
+- Basic UI patterns - see \`design-system.md\`
 
 ## MCP Server Tools
 
 The \`grg-kit\` MCP server provides these tools:
 
-### 1. search_ui_resources (USE THIS FIRST!)
+### 1. mcp2_search_ui_resources
 
-Search for UI resources by keyword. **This should be your FIRST action** when building UI.
+Search for GRG Kit resources (themes, blocks, components).
 
 \`\`\`typescript
-// Example: User asks for a form
-search_ui_resources({
-  query: "form",
-  category: "all" // or "themes", "components", "layouts", "examples"
+mcp2_search_ui_resources({
+  query: "auth",
+  category: "all" // or "themes", "components", "layouts"
 })
-
-// Returns: matching resources with install commands
 \`\`\`
 
 **When to use:**
-- User asks for any UI component
-- Building a new page or layout
-- Need examples of how to use a component
+- User needs a page layout or block
 - Looking for a theme
+- Need a GRG Kit component (stepper, file-upload)
 
-### 2. suggest_resources
+### 2. mcp2_suggest_resources
 
-Get AI-powered suggestions based on user requirements.
+Get suggestions based on user requirements.
 
 \`\`\`typescript
-// Example: User says "build a login page"
-suggest_resources({
+mcp2_suggest_resources({
   requirement: "I need a login page"
 })
 
-// Returns: layout:auth, examples:form-field, examples:input, etc.
+// Returns: block:auth, theme suggestions
 \`\`\`
 
-**When to use:**
-- User describes what they want to build
-- Need recommendations for a specific use case
-- Want to see what's available for a feature
+### 3. mcp2_get_resource_details
 
-### 3. get_resource_details
-
-Get detailed information about a specific resource.
+Get detailed information about a resource.
 
 \`\`\`typescript
-get_resource_details({
-  resource: "theme:claude"
+mcp2_get_resource_details({
+  resource: "block:auth"
 })
 
-// Returns: full metadata, dependencies, tags, install command
+// Returns: dependencies, tags, install command
 \`\`\`
 
-**When to use:**
-- Need to know dependencies before installing
-- Want to understand what a resource provides
-- Checking compatibility
-
-### 4. install_resource
+### 4. mcp2_install_resource
 
 Install a resource into the project.
 
 \`\`\`typescript
-install_resource({
-  resource: "theme:claude",
-  output: "src/themes" // optional
+mcp2_install_resource({
+  resource: "block:auth",
+  output: "src/app/pages/auth" // optional
 })
-
-// Executes: grg add theme:claude
 \`\`\`
 
-**When to use:**
-- After finding a suitable resource
-- User explicitly asks to install something
-- Building a feature that needs specific components
+### 5. mcp2_list_available_resources
 
-### 5. list_available_resources
-
-List all resources by category.
+List all available resources.
 
 \`\`\`typescript
-list_available_resources({
-  category: "all" // or specific category
+mcp2_list_available_resources({
+  category: "all" // or "themes", "components", "layouts"
 })
-
-// Returns: complete catalog with counts
 \`\`\`
-
-**When to use:**
-- User asks "what's available?"
-- Need to show options
-- Exploring the catalog
 
 ## Workflow Examples
 
@@ -546,160 +573,195 @@ list_available_resources({
 User: "Create a dashboard with a sidebar"
 
 AI Workflow:
-1. search_ui_resources({ query: "dashboard" })
-   → Finds: layout:dashboard, examples:navigation-menu, examples:card
+1. mcp2_search_ui_resources({ query: "shell sidebar" })
+   → Finds: block:shell
    
-2. get_resource_details({ resource: "layout:dashboard" })
-   → Check what it includes
+2. mcp2_install_resource({ resource: "block:shell" })
+   → Install the shell layout
    
-3. install_resource({ resource: "layout:dashboard" })
-   → Install the layout
-   
-4. install_resource({ resource: "examples:navigation-menu" })
-   → Install navigation examples
-   
-5. Use the installed code as a base
-   → Customize as needed
+3. Customize using Spartan-NG components (from design-system.md)
+   → Add cards, tables, etc.
 \`\`\`
 
-### Example 2: User Wants Form Components
+### Example 2: User Wants a Login Page
 
 \`\`\`
-User: "I need a form with validation"
+User: "I need a login page"
 
 AI Workflow:
-1. search_ui_resources({ query: "form" })
-   → Finds: component:stepper, examples:form-field, examples:input
+1. mcp2_search_ui_resources({ query: "auth login" })
+   → Finds: block:auth
    
-2. suggest_resources({ requirement: "form with validation" })
-   → Get recommendations
+2. mcp2_install_resource({ resource: "block:auth" })
+   → Install auth block (includes login, signup, forgot password)
    
-3. install_resource({ resource: "examples:form-field" })
-   → Install form field examples
-   
-4. install_resource({ resource: "examples:input" })
-   → Install input examples
-   
-5. Build the form using installed examples
-   → Follow the patterns from examples
+3. Customize as needed
 \`\`\`
 
 ### Example 3: User Wants a Theme
 
 \`\`\`
-User: "Add a nice theme to my app"
+User: "Change the theme to something warmer"
 
 AI Workflow:
-1. list_available_resources({ category: "themes" })
-   → Show available themes
+1. mcp2_list_available_resources({ category: "themes" })
+   → Show: claude, amber-minimal, etc.
    
-2. Present options to user
-   → Let them choose
+2. mcp2_install_resource({ resource: "theme:claude" })
+   → Install theme
    
-3. install_resource({ resource: "theme:claude" })
-   → Install chosen theme
+3. Update src/styles.css import
+\`\`\`
+
+### Example 4: User Wants a Form Component
+
+\`\`\`
+User: "I need a multi-step form"
+
+AI Workflow:
+1. mcp2_search_ui_resources({ query: "stepper form" })
+   → Finds: component:stepper
    
-4. Verify installation
-   → Check src/styles.css for import
+2. mcp2_install_resource({ resource: "component:stepper" })
+   → Install stepper component
+   
+3. Use with Spartan-NG form components (from design-system.md)
 \`\`\`
 
-## Available Resources
+## Available Resources (${totalResources} total)
 
-### Themes (6 available)
-- \`theme:grg-theme\` - Default GRG Kit theme
-- \`theme:claude\` - Claude-inspired theme
-- \`theme:modern-minimal\` - Modern minimal theme
-- \`theme:vibrant\` - Vibrant color theme
-- \`theme:dark-pro\` - Professional dark theme
-- \`theme:nature\` - Nature-inspired theme
+### Themes (${themes.length} available)
+${themesList}
 
-### Components (2+ available)
-- \`component:stepper\` - Multi-step form wizard
-- More components available via search
+### GRG Kit Components (${components.length} available)
+${componentsList}
 
-### Layouts (3+ available)
-- \`layout:dashboard\` - Dashboard with sidebar
-- \`layout:auth\` - Authentication pages
-- \`layout:landing\` - Landing page template
-- More layouts available via search
+### Blocks/Layouts (${blocks.length} available)
+${blocksList}
 
-### Examples (56+ available)
-All Spartan-NG components with complete examples:
-- \`examples:button\` - Button examples
-- \`examples:card\` - Card examples
-- \`examples:dialog\` - Dialog examples
-- \`examples:form-field\` - Form field examples
-- \`examples:table\` - Table examples
-- \`examples:all\` - Install ALL examples
-- Many more available via search
+## Decision Tree
 
-## Best Practices
-
-### 1. Always Search First
-\`\`\`typescript
-// ❌ DON'T: Immediately write custom code
-// User: "I need a button"
-// AI: "Here's a custom button component..."
-
-// ✅ DO: Search for existing resources first
-// User: "I need a button"
-// AI: search_ui_resources({ query: "button" })
-//     → Finds examples:button
-//     → install_resource({ resource: "examples:button" })
-//     → "I've installed button examples. Let me show you how to use them..."
 \`\`\`
-
-### 2. Use Suggestions for Complex Requests
-\`\`\`typescript
-// User: "Build a user profile page"
-// AI: suggest_resources({ requirement: "user profile page" })
-//     → Get recommendations for layouts, components, examples
-//     → Install relevant resources
-//     → Build using installed code
+User request:
+│
+├─ Need a button, card, dialog, form field, table, etc.?
+│  └─ Use Spartan-NG (see design-system.md) - ALREADY INSTALLED
+│
+├─ Need a page layout (dashboard, auth, settings)?
+│  └─ Use MCP: mcp2_search_ui_resources({ query: "..." })
+│
+├─ Need a theme?
+│  └─ Use MCP: mcp2_list_available_resources({ category: "themes" })
+│
+└─ Need stepper, file-upload, or other GRG Kit component?
+   └─ Use MCP: mcp2_search_ui_resources({ query: "..." })
 \`\`\`
-
-### 3. Check Details Before Installing
-\`\`\`typescript
-// Before installing, check what it includes
-get_resource_details({ resource: "layout:dashboard" })
-// → See dependencies, tags, description
-// → Make informed decision
-\`\`\`
-
-### 4. Install Examples for Learning
-\`\`\`typescript
-// When user asks "how do I use X?"
-// Install the example instead of explaining
-install_resource({ resource: "examples:X" })
-// → User can see working code
-// → Better than verbal explanation
-\`\`\`
-
-## Error Handling
-
-If a resource is not found:
-1. Try broader search terms
-2. Check if it's a Spartan-NG component (use examples)
-3. Only then write custom code
-4. Inform user that no pre-built resource exists
-
-## Integration with Design System
-
-After installing resources:
-1. Follow the patterns from installed code
-2. Use the same import style
-3. Maintain consistency with design system
-4. Leverage Tailwind CSS v4 for styling
 
 ## Remember
 
-- **Search before you code** - GRG Kit has 60+ resources
-- **Install examples** - They show best practices
-- **Use layouts** - Don't build pages from scratch
-- **Leverage themes** - Consistent styling out of the box
-- **Check MCP first** - It knows what's available
+- **Spartan-NG is pre-installed** - Don't search for button, card, dialog, etc.
+- **Use design-system.md** for Spartan-NG patterns
+- **Use MCP** only for themes, blocks, and GRG Kit components
+- **Check blocks first** when building pages - don't start from scratch
+`;
+}
 
-This workflow ensures you're using GRG Kit to its full potential and providing users with production-ready, consistent code.
+function generateAngularComponentRules() {
+  const exampleComponents = RESOURCES.examples?.components || [];
+  const componentNames = exampleComponents.map(e => e.name).join(', ');
+
+  return `---
+trigger: glob
+globs: ["**/*.component.ts", "**/*.component.html"]
+---
+
+# Angular Component Development with GRG Kit
+
+You are editing an Angular component. Before writing UI code:
+
+## Quick Reference
+
+### Check for Existing Resources
+\`\`\`typescript
+// ALWAYS run this first when adding UI elements
+mcp2_search_ui_resources({ query: "<component-name>" })
+\`\`\`
+
+### Available Spartan-NG Examples
+These components have ready-to-use examples: ${componentNames}
+
+### Import Patterns
+
+**Spartan-NG (hlm prefix):**
+\`\`\`typescript
+import { HlmButtonImports } from '@spartan-ng/helm/button';
+import { HlmCardImports } from '@spartan-ng/helm/card';
+import { BrnDialogImports } from '@spartan-ng/brain/dialog';
+import { HlmDialogImports } from '@spartan-ng/helm/dialog';
+\`\`\`
+
+**GRG Kit (grg- prefix):**
+\`\`\`typescript
+import { GrgStepperImports } from '@grg-kit/ui/stepper';
+\`\`\`
+
+### Common Patterns
+
+**Button:**
+\`\`\`html
+<button hlmBtn>Default</button>
+<button hlmBtn variant="outline">Outline</button>
+<button hlmBtn variant="destructive">Destructive</button>
+\`\`\`
+
+**Card:**
+\`\`\`html
+<section hlmCard>
+  <div hlmCardHeader>
+    <h3 hlmCardTitle>Title</h3>
+    <p hlmCardDescription>Description</p>
+  </div>
+  <div hlmCardContent>Content</div>
+</section>
+\`\`\`
+
+**Form Field:**
+\`\`\`html
+<hlm-form-field>
+  <input hlmInput [formControl]="control" placeholder="Email" />
+  <hlm-error>Required</hlm-error>
+</hlm-form-field>
+\`\`\`
+
+**Dialog:**
+\`\`\`html
+<hlm-dialog>
+  <button brnDialogTrigger hlmBtn>Open</button>
+  <hlm-dialog-content *brnDialogContent="let ctx">
+    <hlm-dialog-header>
+      <h3 hlmDialogTitle>Title</h3>
+    </hlm-dialog-header>
+    <!-- content -->
+  </hlm-dialog-content>
+</hlm-dialog>
+\`\`\`
+
+### Icons
+\`\`\`typescript
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { lucideCheck, lucideX } from '@ng-icons/lucide';
+
+@Component({
+  providers: [provideIcons({ lucideCheck, lucideX })],
+  template: \`<ng-icon hlm name="lucideCheck" />\`
+})
+\`\`\`
+
+## Remember
+- Use \`mcp2_search_ui_resources\` before writing custom components
+- Follow existing patterns in the codebase
+- Use TailwindCSS v4 for styling
+- Prefer signals for state management
 `;
 }
 
