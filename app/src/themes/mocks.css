@@ -1,7 +1,6 @@
 /* Theme: mocks */
 
-:root,
-[data-theme="mocks"] {
+:root[data-theme="mocks"] {
   --background: oklch(0.9821 0 0);
   --foreground: oklch(0.3485 0 0);
   --card: oklch(1.0000 0 0);

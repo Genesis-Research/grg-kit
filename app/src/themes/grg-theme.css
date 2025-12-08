@@ -1,7 +1,6 @@
 /* Theme: grg */
 
-:root,
-[data-theme="grg"] {
+:root[data-theme="grg"] {
   --background: oklch(0.9940 0 0);
   --foreground: oklch(0 0 0);
   --card: oklch(0.9940 0 0);
