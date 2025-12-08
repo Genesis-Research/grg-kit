@@ -5,13 +5,14 @@ const { add } = require('../commands/add');
 const { list } = require('../commands/list');
 const { init } = require('../commands/init');
 const { llmPrompts } = require('../commands/llm-setup');
+const { version } = require('../package.json');
 
 const program = new Command();
 
 program
   .name('grg')
   .description('GRG Kit CLI - Initialize your Angular project with GRG Kit components and add blocks')
-  .version('0.5.0');
+  .version(version);
 
 // Init command - sets up GRG Kit in existing Angular project
 program
