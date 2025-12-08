@@ -667,8 +667,18 @@ User request:
 }
 
 function generateAngularComponentRules() {
-  const exampleComponents = RESOURCES.examples?.components || [];
-  const componentNames = exampleComponents.map(e => e.name).join(', ');
+  // Spartan-NG components are pre-installed - list the common ones
+  const spartanComponents = [
+    'accordion', 'alert', 'alert-dialog', 'avatar', 'badge', 'breadcrumb',
+    'button', 'calendar', 'card', 'checkbox', 'collapsible', 'combobox',
+    'command', 'context-menu', 'data-table', 'date-picker', 'dialog',
+    'dropdown-menu', 'form-field', 'hover-card', 'input', 'label', 'menubar',
+    'navigation-menu', 'pagination', 'popover', 'progress', 'radio-group',
+    'scroll-area', 'select', 'separator', 'sheet', 'sidebar', 'skeleton',
+    'slider', 'sonner', 'spinner', 'switch', 'table', 'tabs', 'textarea',
+    'toggle', 'tooltip'
+  ];
+  const componentNames = spartanComponents.join(', ');
 
   return `---
 trigger: glob
@@ -681,14 +691,9 @@ You are editing an Angular component. Before writing UI code:
 
 ## Quick Reference
 
-### Check for Existing Resources
-\`\`\`typescript
-// ALWAYS run this first when adding UI elements
-mcp2_search_ui_resources({ query: "<component-name>" })
-\`\`\`
-
-### Available Spartan-NG Examples
-These components have ready-to-use examples: ${componentNames}
+### Spartan-NG Components (Pre-installed)
+These components are already available - just import and use them:
+${componentNames}
 
 ### Import Patterns
 
@@ -757,8 +762,17 @@ import { lucideCheck, lucideX } from '@ng-icons/lucide';
 })
 \`\`\`
 
+## When to Use MCP
+
+Use MCP only for:
+- **Blocks** (auth, shell, settings) - \`mcp2_search_ui_resources({ query: "auth" })\`
+- **Themes** - \`mcp2_list_available_resources({ category: "themes" })\`
+- **GRG Kit components** (stepper, file-upload) - \`mcp2_search_ui_resources({ query: "stepper" })\`
+
+**Do NOT use MCP for Spartan-NG components** - they are already installed!
+
 ## Remember
-- Use \`mcp2_search_ui_resources\` before writing custom components
+- Spartan-NG components are pre-installed - just import and use
 - Follow existing patterns in the codebase
 - Use TailwindCSS v4 for styling
 - Prefer signals for state management
