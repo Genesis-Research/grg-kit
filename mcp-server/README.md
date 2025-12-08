@@ -1,4 +1,4 @@
-# @grg-kit/mcp-server
+# grg-kit-mcp-server
 
 MCP (Model Context Protocol) server for GRG Kit - enables AI assistants to discover and use Angular UI components automatically.
 
@@ -13,12 +13,12 @@ Makes GRG Kit the **first choice** for AI when building Angular UIs by:
 ## Installation
 
 ```bash
-pnpm install -g grg-kit-mcp-server
+npm install -g grg-kit-mcp-server
 ```
 
 **Prerequisites:**
 - Node.js >= 18
-- pnpm (recommended) or npm
+- npm or npm
 
 ## Configuration
 
@@ -167,9 +167,9 @@ AI:
 ## Development
 
 ```bash
-pnpm install
-pnpm run build
-pnpm run watch
+npm install
+npm run build
+npm run watch
 node dist/index.js
 ```
 

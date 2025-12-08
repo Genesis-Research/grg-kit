@@ -5,7 +5,7 @@ CLI tool for initializing Angular projects with GRG Kit and adding blocks.
 ## Installation
 
 ```bash
-pnpm install -g grg-kit-cli
+npm install -g grg-kit-cli
 ```
 
 ## Quick Start
@@ -140,7 +140,7 @@ For AI assistants to automatically discover and use GRG Kit resources:
 ### 1. Install the MCP Server
 
 ```bash
-pnpm install -g @grg-kit/mcp-server
+npm install -g grg-kit-mcp-server
 ```
 
 ### 2. Configure Your AI Assistant

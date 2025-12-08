@@ -2,7 +2,7 @@
 
 > **AUTO-GENERATED** - Do not edit directly.  
 > Source of truth: `app/libs/spartan-examples/components/`  
-> Run `pnpm generate:components` to regenerate.
+> Run `npm generate:components` to regenerate.
 
 ## Available Components
 

@@ -6,10 +6,10 @@ The showcase application for GRG Kit - displays themes, components, blocks, and 
 
 ```bash
 # Install dependencies
-pnpm install
+npm install
 
 # Start dev server
-pnpm run start
+npm run start
 # or
 ng serve
 ```
@@ -19,7 +19,7 @@ Open `http://localhost:4200/` in your browser.
 ## Building
 
 ```bash
-pnpm run build
+npm run build
 ```
 
 Build artifacts are stored in `dist/app/`.
@@ -37,6 +37,6 @@ Build artifacts are stored in `dist/app/`.
 
 | Script | Description |
 |--------|-------------|
-| `pnpm run start` | Start dev server |
-| `pnpm run build` | Build for production |
-| `pnpm run generate:sources` | Generate source code for examples |
+| `npm run start` | Start dev server |
+| `npm run build` | Build for production |
+| `npm run generate:sources` | Generate source code for examples |

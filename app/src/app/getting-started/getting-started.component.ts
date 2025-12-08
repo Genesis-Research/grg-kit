@@ -41,7 +41,7 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
         <div hlmCardContent class="space-y-4">
           <div class="space-y-2">
             <p class="text-sm font-medium">Install both globally:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>pnpm install -g grg-kit-cli grg-kit-mcp-server</code></pre>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>npm install -g grg-kit-cli grg-kit-mcp-server</code></pre>
           </div>
           <div class="mt-4 p-4 bg-muted/50 rounded-md">
             <p class="text-sm font-medium mb-2">💡 What gets installed:</p>

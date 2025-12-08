@@ -10,7 +10,7 @@
     "codegen:blocks": "node scripts/generate-sources.js blocks",
     "codegen:components": "node scripts/generate-sources.js components",
     "codegen:grg": "node scripts/generate-sources.js grgComponents",
-    "prebuild": "pnpm run codegen"
+    "prebuild": "npm run codegen"
   },
   "prettier": {
     "printWidth": 100,

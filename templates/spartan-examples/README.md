@@ -31,7 +31,7 @@ These examples are automatically downloaded when you initialize a new GRG Kit pr
 
 ```bash
 # Install GRG CLI globally
-pnpm install -g grg-kit-cli
+npm install -g grg-kit-cli
 
 # Initialize a new project (includes all examples)
 grg init my-app

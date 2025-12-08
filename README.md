@@ -7,7 +7,7 @@ A shared resource library for Angular UI applications with themes, components, b
 ### 1. Install GRG CLI
 
 ```bash
-pnpm install -g grg-kit-cli
+npm install -g grg-kit-cli
 ```
 
 ### 2. Create Angular Project & Initialize GRG Kit
@@ -115,11 +115,11 @@ Components and spartan-ng examples are installed automatically via `grg init`:
 For AI assistants to automatically discover and use GRG Kit resources:
 
 ```bash
-# Install CLI and MCP server
-pnpm install -g grg-kit-cli @grg-kit/mcp-server
+# Install CLI (includes MCP server)
+npm install -g grg-kit-cli grg-kit-mcp-server
 ```
 
-Configure your AI assistant (Windsurf, Cursor):
+Configure your AI assistant (Windsurf, Cursor, Claude Code):
 
 ```json
 {

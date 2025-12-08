@@ -2,7 +2,7 @@
 
 > **AUTO-GENERATED** - Do not edit directly.  
 > Source of truth: `app/src/app/blocks/`  
-> Run `pnpm generate:blocks` to regenerate.
+> Run `npm generate:blocks` to regenerate.
 
 ## Available Blocks
 

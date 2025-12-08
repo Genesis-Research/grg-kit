@@ -302,7 +302,7 @@ module.exports = { RESOURCES, REPO };
   const cliPackage = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json'), 'utf-8'));
   
   const catalog = {
-    _generated: 'AUTO-GENERATED FILE - DO NOT EDIT MANUALLY. Run: pnpm catalog',
+    _generated: 'AUTO-GENERATED FILE - DO NOT EDIT MANUALLY. Run: npm catalog',
     version: '1.0.1',
     lastUpdated: new Date().toISOString().split('T')[0],
     cli: {

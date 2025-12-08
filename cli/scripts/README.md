@@ -15,7 +15,7 @@ GRG Kit uses a **two-stage generation pipeline** to ensure CLI and MCP server al
                                     │
                                     ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│  STAGE 1: pnpm generate:sources (in app/)                                   │
+│  STAGE 1: npm generate:sources (in app/)                                   │
 │                                                                              │
 │  • Transforms source components → template files                            │
 │  • Copies meta.json files → templates/ directory                            │
@@ -79,7 +79,7 @@ app/src/app/blocks/my-block/meta.json
 # 3. Update generate-sources.js CONFIG.blocks.sources array
 
 # 4. Run generation
-cd app && pnpm generate:sources
+cd app && npm generate:sources
 cd ../cli && node scripts/generate-resources.js
 
 # 5. Commit and push - CLI/MCP pick up changes automatically
@@ -124,7 +124,7 @@ Generates template files and copies metadata.
 
 ```bash
 cd app
-pnpm generate:sources
+npm generate:sources
 ```
 
 **What it does:**
@@ -226,8 +226,8 @@ grg-kit/
 
 | Task | Command |
 |------|---------|
-| Generate templates + copy meta | `cd app && pnpm generate:sources` |
+| Generate templates + copy meta | `cd app && npm generate:sources` |
 | Generate resources + catalog | `cd cli && node scripts/generate-resources.js` |
 | Full regeneration | Run both above |
 | Test CLI | `cd cli && node bin/grg.js list` |
-| Build MCP | `cd mcp-server && pnpm build` |
+| Build MCP | `cd mcp-server && npm build` |

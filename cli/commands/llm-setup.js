@@ -508,10 +508,10 @@ export class FormComponent {
 
 ## Package Manager
 
-**ALWAYS use pnpm** instead of npm for all package management operations:
-- \`pnpm install\` instead of \`npm install\`
-- \`pnpm add\` instead of \`npm install <package>\`
-- \`pnpm remove\` instead of \`npm uninstall\`
+Use npm for package management operations:
+- \`npm install\` for installing dependencies
+- \`npm install <package>\` for adding packages
+- \`npm uninstall\` for removing packages
 
 This design system provides a comprehensive foundation for building consistent, accessible, and maintainable Angular applications using modern UI patterns and best practices.
 `;
@@ -548,8 +548,7 @@ Add the grg-kit MCP server to your AI assistant configuration:
 {
   "mcpServers": {
     "grg-kit": {
-      "command": "npx",
-      "args": ["-y", "@grg-kit/mcp-server"]
+      "command": "grg-mcp-server"
     }
   }
 }
@@ -987,7 +986,7 @@ ${blocksList}
 
 ## Package Manager
 
-**ALWAYS use pnpm** instead of npm.
+Use npm for package management.
 
 ## Styling
 

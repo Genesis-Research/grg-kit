@@ -48,7 +48,7 @@ async function init(options) {
   // Step 1: Install Tailwind CSS v4
   spinner.start('Installing Tailwind CSS v4...');
   try {
-    await execAsync('pnpm install tailwindcss @tailwindcss/postcss postcss', { stdio: 'pipe' });
+    await execAsync('npm install tailwindcss @tailwindcss/postcss postcss', { stdio: 'pipe' });
     spinner.succeed(chalk.green('✓ Tailwind CSS v4 installed'));
   } catch (error) {
     spinner.warn(chalk.yellow('Tailwind CSS installation skipped (may already be installed)'));
@@ -71,7 +71,7 @@ async function init(options) {
   // Step 4: Install Spartan-NG CLI
   spinner.start('Installing Spartan-NG CLI...');
   try {
-    await execAsync('pnpm install -D @spartan-ng/cli', { stdio: 'pipe' });
+    await execAsync('npm install -D @spartan-ng/cli', { stdio: 'pipe' });
     spinner.succeed(chalk.green('✓ Spartan-NG CLI installed'));
   } catch (error) {
     spinner.warn(chalk.yellow('Spartan-NG CLI installation skipped'));
@@ -123,7 +123,7 @@ async function init(options) {
   try {
     const { spawn } = require('child_process');
     await new Promise((resolve, reject) => {
-      const child = spawn('pnpm', ['ng', 'g', '@spartan-ng/cli:ui'], {
+      const child = spawn('npx', ['ng', 'g', '@spartan-ng/cli:ui'], {
         stdio: ['pipe', 'pipe', 'pipe'],
         shell: true
       });
