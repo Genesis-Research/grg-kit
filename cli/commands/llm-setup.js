@@ -586,7 +586,7 @@ Search for GRG Kit resources (themes, blocks, components).
 \`\`\`typescript
 mcp2_search_ui_resources({
   query: "auth",
-  category: "all" // or "themes", "components", "layouts"
+  category: "all" // or "themes", "components", "blocks"
 })
 \`\`\`
 
@@ -621,14 +621,18 @@ mcp2_get_resource_details({
 
 ### 4. mcp2_install_resource
 
-Install a resource into the project.
+Get the install command for a block. Returns a command to run via run_command tool.
 
 \`\`\`typescript
 mcp2_install_resource({
-  resource: "block:auth",
-  output: "src/app/pages/auth" // optional
+  resource: "auth",  // Just the block name, NOT "block:auth"
+  files: ["login"],  // Optional: specific files to install
+  output: "src/app/pages/auth" // Optional: custom output directory
 })
+// Returns: { command: "grg add block auth login", instruction: "Run this command..." }
 \`\`\`
+
+**Important:** The resource parameter should be just the block name (e.g., "auth", "shell", "settings"), NOT prefixed with "block:".
 
 ### 5. mcp2_list_available_resources
 
@@ -636,7 +640,7 @@ List all available resources.
 
 \`\`\`typescript
 mcp2_list_available_resources({
-  category: "all" // or "themes", "components", "layouts"
+  category: "all" // or "themes", "components", "blocks"
 })
 \`\`\`
 
@@ -651,10 +655,12 @@ AI Workflow:
 1. mcp2_search_ui_resources({ query: "shell sidebar" })
    → Finds: block:shell
    
-2. mcp2_install_resource({ resource: "block:shell" })
-   → Install the shell layout
+2. mcp2_install_resource({ resource: "shell", files: ["sidebar"] })
+   → Returns command: "grg add block shell sidebar"
    
-3. Customize using Spartan-NG components (from design-system.md)
+3. Run the command via run_command tool in the Angular project root
+   
+4. Customize using Spartan-NG components (from design-system.md)
    → Add cards, tables, etc.
 \`\`\`
 
@@ -667,10 +673,12 @@ AI Workflow:
 1. mcp2_search_ui_resources({ query: "auth login" })
    → Finds: block:auth
    
-2. mcp2_install_resource({ resource: "block:auth" })
-   → Install auth block (includes login, signup, forgot password)
+2. mcp2_install_resource({ resource: "auth", files: ["login"] })
+   → Returns command: "grg add block auth login"
    
-3. Customize as needed
+3. Run the command via run_command tool in the Angular project root
+   
+4. Customize as needed
 \`\`\`
 
 ### Example 3: User Wants a Theme
@@ -682,10 +690,10 @@ AI Workflow:
 1. mcp2_list_available_resources({ category: "themes" })
    → Show: claude, amber-minimal, etc.
    
-2. mcp2_install_resource({ resource: "theme:claude" })
-   → Install theme
+2. Themes are set via: grg init --theme <name>
+   → Run: grg init --theme claude
    
-3. Update src/styles.css import
+3. Update src/styles.css import if needed
 \`\`\`
 
 ### Example 4: User Wants a Form Component
@@ -697,8 +705,8 @@ AI Workflow:
 1. mcp2_search_ui_resources({ query: "stepper form" })
    → Finds: component:stepper
    
-2. mcp2_install_resource({ resource: "component:stepper" })
-   → Install stepper component
+2. Components are included automatically with grg init
+   → Just import and use: import { GrgStepperImports } from '@grg-kit/ui/stepper';
    
 3. Use with Spartan-NG form components (from design-system.md)
 \`\`\`
@@ -954,8 +962,10 @@ Use the \`grg-kit\` MCP server for themes, blocks, and GRG Kit components:
 
 - \`mcp2_search_ui_resources({ query: "auth" })\` - Search resources
 - \`mcp2_suggest_resources({ requirement: "login page" })\` - Get suggestions
-- \`mcp2_install_resource({ resource: "block:auth" })\` - Install resource
-- \`mcp2_list_available_resources({ category: "all" })\` - List all
+- \`mcp2_install_resource({ resource: "auth", files: ["login"] })\` - Get install command (returns command to run)
+- \`mcp2_list_available_resources({ category: "blocks" })\` - List all
+
+**Note:** \`mcp2_install_resource\` returns a command string. Use \`run_command\` to execute it in the Angular project root.
 
 ## Available Resources
 

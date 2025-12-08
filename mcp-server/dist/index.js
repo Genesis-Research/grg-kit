@@ -2,9 +2,15 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { CallToolRequestSchema, ListToolsRequestSchema, ListResourcesRequestSchema, ReadResourceRequestSchema, } from '@modelcontextprotocol/sdk/types.js';
-import { exec } from 'child_process';
-import { promisify } from 'util';
+import * as fs from 'fs';
+import * as path from 'path';
+import { fileURLToPath } from 'url';
 import { fetchCatalog, getResourcesSync } from './catalog-fetcher.js';
+// Read version from package.json
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf-8'));
+const VERSION = packageJson.version;
 // Helper functions to generate CLI commands from metadata
 function getBlockInstallCommand(cli, blockName, fileIds = []) {
     const files = fileIds.length > 0 ? ` ${fileIds.join(' ')}` : '';
@@ -17,7 +23,6 @@ function getThemeInstallCommand(cli, themeName) {
 function getValidBlocks(cli) {
     return cli?.commands.addBlock.validBlocks || ['auth', 'shell', 'settings'];
 }
-const execAsync = promisify(exec);
 // Get resources - uses cache or fetches dynamically
 async function getResources() {
     return await fetchCatalog();
@@ -28,7 +33,7 @@ function getResourcesSync_() {
 }
 const server = new Server({
     name: 'grg-kit',
-    version: '0.4.1',
+    version: VERSION,
 }, {
     capabilities: {
         tools: {},
@@ -92,6 +97,8 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
 
 IMPORTANT: The 'resource' parameter should be JUST the block name (e.g., "auth", "shell", "settings") - NOT prefixed with "block:" or any other prefix.
 
+The tool will auto-detect the Angular project root by searching for angular.json from the current working directory.
+
 Examples:
 - To install auth block: resource="auth" → runs: grg add block auth
 - To install shell sidebar: resource="shell", files=["sidebar"] → runs: grg add block shell sidebar
@@ -110,7 +117,7 @@ Examples:
                         },
                         output: {
                             type: 'string',
-                            description: 'Optional custom output directory',
+                            description: 'Optional custom output directory (relative to project root)',
                         },
                     },
                     required: ['resource'],
@@ -407,25 +414,22 @@ async function installResource(resource, files, output) {
     }
     // Build command using CLI metadata
     const command = getBlockInstallCommand(res.cli, blockName, files) + (output ? ` -o ${output}` : '');
-    try {
-        const { stdout, stderr } = await execAsync(command);
-        return {
-            content: [
-                {
-                    type: 'text',
-                    text: JSON.stringify({
-                        success: true,
-                        resource,
-                        command,
-                        output: stdout || stderr,
-                    }, null, 2),
-                },
-            ],
-        };
-    }
-    catch (error) {
-        throw new Error(`Installation failed: ${error.message}`);
-    }
+    // Return the command for the AI to execute via run_command tool
+    // MCP servers run in a separate process and don't have access to the user's project directory
+    return {
+        content: [
+            {
+                type: 'text',
+                text: JSON.stringify({
+                    success: true,
+                    resource: blockName,
+                    command,
+                    instruction: 'Run this command in the Angular project root directory using the run_command tool.',
+                    note: 'The MCP server cannot execute commands directly. Use your run_command tool to execute the command above.',
+                }, null, 2),
+            },
+        ],
+    };
 }
 async function listResources(category = 'all') {
     const res = await getResources();
