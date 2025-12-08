@@ -168,7 +168,7 @@ interface BlockCategory {
         </div>
 
         <!-- Full Page Layout Preview or Code -->
-        <div class="flex-1 overflow-hidden" [class]="showCode() ? '' : 'bg-muted/20'">
+        <div class="flex-1 overflow-hidden p-6" [class]="showCode() ? '' : 'bg-muted/20'">
           @if (showCode()) {
             <app-code-block [code]="currentSourceCode()" class="block h-full" />
           } @else {

@@ -29,13 +29,42 @@ async function llmPrompts(options) {
       process.exit(1);
     }
 
-    // Step 2: Generate combined CLAUDE.md
-    spinner.start('Generating CLAUDE.md...');
+    // Step 2: Check if CLAUDE.md already exists
+    const claudePath = path.join(outputDir, 'CLAUDE.md');
+    let existingContent = '';
+    let fileExists = false;
+    
+    try {
+      existingContent = await fs.readFile(claudePath, 'utf-8');
+      fileExists = true;
+    } catch (error) {
+      // File doesn't exist, that's fine
+    }
+
+    // Step 3: Generate CLAUDE.md (append GRG Kit section if file exists)
+    spinner.start(fileExists ? 'Updating CLAUDE.md...' : 'Generating CLAUDE.md...');
     try {
       const claudeContent = generateClaudeMdRules();
-      const claudePath = path.join(outputDir, 'CLAUDE.md');
-      await fs.writeFile(claudePath, claudeContent);
-      spinner.succeed(chalk.green('✓ Generated CLAUDE.md'));
+      
+      if (fileExists) {
+        // Check if GRG Kit section already exists
+        if (existingContent.includes('# GRG Kit Project Rules')) {
+          // Replace existing GRG Kit section
+          const grgKitStart = existingContent.indexOf('# GRG Kit Project Rules');
+          const beforeGrgKit = existingContent.substring(0, grgKitStart).trim();
+          const newContent = beforeGrgKit ? `${beforeGrgKit}\n\n${claudeContent}` : claudeContent;
+          await fs.writeFile(claudePath, newContent);
+          spinner.succeed(chalk.green('✓ Updated GRG Kit section in CLAUDE.md'));
+        } else {
+          // Append GRG Kit section
+          const newContent = `${existingContent.trim()}\n\n${claudeContent}`;
+          await fs.writeFile(claudePath, newContent);
+          spinner.succeed(chalk.green('✓ Appended GRG Kit rules to existing CLAUDE.md'));
+        }
+      } else {
+        await fs.writeFile(claudePath, claudeContent);
+        spinner.succeed(chalk.green('✓ Generated CLAUDE.md'));
+      }
     } catch (error) {
       spinner.fail(chalk.red('Failed to generate CLAUDE.md'));
       console.error(chalk.red(error.message));

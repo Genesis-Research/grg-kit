@@ -12,7 +12,7 @@ import { codeToHtml } from 'shiki';
   imports: [NgIcon, HlmIcon, HlmButtonImports],
   viewProviders: [provideIcons({ lucideCopy, lucideCheck })],
   template: `
-    <div class="relative h-full">
+    <div class="relative h-full max-w-full">
       <button
         hlmBtn
         variant="ghost"

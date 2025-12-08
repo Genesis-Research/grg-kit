@@ -11,14 +11,17 @@ pnpm install -g grg-kit-cli
 ## Quick Start
 
 ```bash
-# Initialize a new Angular project with GRG Kit
-grg init my-app
-
-# Initialize with a specific theme
-grg init my-app --theme claude
-
-# Add blocks (inside project directory)
+# Create Angular project first
+ng new my-app --style=css
 cd my-app
+
+# Initialize GRG Kit in the project
+grg init
+
+# Or with a specific theme
+grg init --theme claude
+
+# Add blocks
 grg add block --auth
 grg add block --shell
 grg add block --all
@@ -31,24 +34,27 @@ grg list themes
 
 ## Commands
 
-### `grg init <project-name>`
+### `grg init`
 
-Create a new Angular project with GRG Kit fully configured. One command to set up everything.
+Initialize GRG Kit in an existing Angular project.
 
 ```bash
-grg init <project-name> [options]
+grg init [options]
 
 Options:
   -t, --theme <name>  Theme to install (default: "grg-theme")
 
 Examples:
-  grg init my-app
-  grg init my-app --theme claude
-  grg init dashboard -t modern-minimal
+  grg init
+  grg init --theme claude
+  grg init -t modern-minimal
 ```
 
+**Prerequisites:**
+- Must be run inside an existing Angular project (with `angular.json`)
+- Create one with: `ng new my-app --style=css`
+
 **What it does:**
-- Creates Angular project with CSS styling
 - Installs Tailwind CSS v4 (`tailwindcss @tailwindcss/postcss postcss`)
 - Creates `.postcssrc.json` with PostCSS configuration
 - Installs and configures Spartan-NG CLI
@@ -167,12 +173,15 @@ grg llm-setup
 ## Quick Reference
 
 ```bash
-# Initialize project
-grg init my-app                        # Default theme
-grg init my-app --theme claude         # Custom theme
-
-# Add blocks (inside project directory)
+# Create Angular project first
+ng new my-app --style=css
 cd my-app
+
+# Initialize GRG Kit
+grg init                        # Default theme
+grg init --theme claude         # Custom theme
+
+# Add blocks
 grg add block --auth            # Auth pages
 grg add block --shell           # App shell
 grg add block --settings        # Settings page

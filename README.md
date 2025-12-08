@@ -10,27 +10,35 @@ A shared resource library for Angular UI applications with themes, components, b
 pnpm install -g grg-kit-cli
 ```
 
-### 2. Initialize GRG Kit
+### 2. Create Angular Project & Initialize GRG Kit
 
 ```bash
-grg init my-app
+# Create Angular project first
+ng new my-app --style=css
+cd my-app
+
+# Initialize GRG Kit
+grg init
 # or with a specific theme
-grg init my-app --theme claude
+grg init --theme claude
 ```
 
-This single command creates an Angular project and installs Tailwind CSS v4, Spartan-NG, theme, components, and examples.
+This installs Tailwind CSS v4, Spartan-NG, theme, and examples into your Angular project.
 
 ## Quick Start
 
 ```bash
-# Initialize GRG Kit (creates Angular project + theme + all components + spartan-ng examples)
-grg init my-app
-
-# Initialize with a specific theme
-grg init my-app --theme claude
-
-# Navigate to project and add blocks
+# Create Angular project
+ng new my-app --style=css
 cd my-app
+
+# Initialize GRG Kit (installs theme + all components + spartan-ng examples)
+grg init
+
+# Or with a specific theme
+grg init --theme claude
+
+# Add blocks
 grg add block --auth
 grg add block --shell
 
@@ -42,8 +50,8 @@ grg list
 
 | Command | Description |
 |---------|-------------|
-| `grg init <project-name>` | Creates Angular project with Tailwind v4, Spartan-NG, theme, components, and examples |
-| `grg init <project-name> --theme <name>` | Same with custom theme |
+| `grg init` | Installs Tailwind v4, Spartan-NG, theme, components, and examples in current Angular project |
+| `grg init --theme <name>` | Same with custom theme |
 | `grg add block --<name>` | Add a block (auth, shell, settings) |
 | `grg add block --all` | Add all blocks |
 | `grg list` | List available blocks and themes |

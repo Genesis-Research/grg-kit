@@ -10,10 +10,12 @@ const { RESOURCES, REPO } = require('../config/resources');
 const execAsync = promisify(exec);
 
 /**
- * Init command - initializes GRG Kit in the project
- * Creates Angular project, installs Tailwind CSS v4, runs spartan-ng ui, downloads theme
+ * Init command - initializes GRG Kit in an existing Angular project
+ * Installs Tailwind CSS v4, runs spartan-ng ui, downloads theme
+ * 
+ * Prerequisites: Must be run inside an existing Angular project directory
  */
-async function init(projectName, options) {
+async function init(options) {
   const themeName = options.theme || 'grg-theme';
   const theme = RESOURCES.themes.find(t => t.name === themeName);
 
@@ -24,27 +26,26 @@ async function init(projectName, options) {
     process.exit(1);
   }
 
-  console.log(chalk.bold.cyan('\n🚀 Initializing GRG Kit\n'));
-  console.log(chalk.gray(`  Project: ${projectName}`));
-  console.log(chalk.gray(`  Theme: ${theme.title}\n`));
-
+  // Check if we're in an Angular project
   const spinner = ora();
-
-  // Step 1: Create Angular project
-  spinner.start(`Creating Angular project "${projectName}"...`);
+  spinner.start('Checking for Angular project...');
   try {
-    await execAsync(`ng new ${projectName} --style=css`, { stdio: 'pipe' });
-    spinner.succeed(chalk.green(`✓ Created Angular project "${projectName}"`));
+    await fs.access('angular.json');
+    spinner.succeed(chalk.green('✓ Angular project detected'));
   } catch (error) {
-    spinner.fail(chalk.red('Failed to create Angular project'));
-    console.error(chalk.red(error.message));
+    spinner.fail(chalk.red('Not an Angular project'));
+    console.error(chalk.red('\nError: angular.json not found'));
+    console.log(chalk.yellow('\nPlease run this command inside an existing Angular project:'));
+    console.log(chalk.cyan('  ng new my-app --style=css'));
+    console.log(chalk.cyan('  cd my-app'));
+    console.log(chalk.cyan('  grg init'));
     process.exit(1);
   }
 
-  // Change to project directory for remaining steps
-  process.chdir(projectName);
+  console.log(chalk.bold.cyan('\n🚀 Initializing GRG Kit\n'));
+  console.log(chalk.gray(`  Theme: ${theme.title}\n`));
 
-  // Step 2: Install Tailwind CSS v4
+  // Step 1: Install Tailwind CSS v4
   spinner.start('Installing Tailwind CSS v4...');
   try {
     await execAsync('pnpm install tailwindcss @tailwindcss/postcss postcss', { stdio: 'pipe' });
@@ -243,15 +244,14 @@ async function init(projectName, options) {
   
   console.log(chalk.bold('Installed:'));
   console.log(chalk.gray('  Tailwind CSS:'), chalk.cyan('v4 with PostCSS'));
-  console.log(chalk.gray('  Spartan-NG:'), chalk.cyan('All UI components in libs/ui'));
+  console.log(chalk.gray('  Spartan-NG:'), chalk.cyan('All UI components in libs/spartan-ui'));
   console.log(chalk.gray('  Examples:'), chalk.cyan('56+ component examples in libs/examples'));
   console.log(chalk.gray('  Theme:'), chalk.cyan(theme.title));
   
   console.log(chalk.yellow('\nNext steps:'));
-  console.log(chalk.gray('  1.'), chalk.cyan(`cd ${projectName}`));
-  console.log(chalk.gray('  2. Run'), chalk.cyan('grg llm-setup'), chalk.gray('to generate AI assistant rules'));
-  console.log(chalk.gray('  3. Run'), chalk.cyan('grg list blocks'), chalk.gray('to see available blocks'));
-  console.log(chalk.gray('  4. Add blocks with'), chalk.cyan('grg add block --auth'));
+  console.log(chalk.gray('  1. Run'), chalk.cyan('grg llm-setup'), chalk.gray('to generate AI assistant rules'));
+  console.log(chalk.gray('  2. Run'), chalk.cyan('grg list blocks'), chalk.gray('to see available blocks'));
+  console.log(chalk.gray('  3. Add blocks with'), chalk.cyan('grg add block --auth'));
   console.log();
 }
 

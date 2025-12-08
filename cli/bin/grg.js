@@ -13,10 +13,10 @@ program
   .description('GRG Kit CLI - Initialize your Angular project with GRG Kit components and add blocks')
   .version('0.5.0');
 
-// Init command - sets up everything in one shot
+// Init command - sets up GRG Kit in existing Angular project
 program
-  .command('init <project-name>')
-  .description('Initialize GRG Kit: creates Angular project with zoneless, sets up styles.css with theme, adds all components')
+  .command('init')
+  .description('Initialize GRG Kit in current Angular project: installs Tailwind CSS v4, Spartan-NG, theme, and examples')
   .option('-t, --theme <name>', 'Theme to install (grg-theme, claude, clean-slate, modern-minimal, amber-minimal, mocks)', 'grg-theme')
   .action(init);
 
