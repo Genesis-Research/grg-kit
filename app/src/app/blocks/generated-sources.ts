@@ -539,6 +539,279 @@ export class ShellCollapsibleBlockComponent {
   ];
 }`;
 
+export const shellSidebarFooterSource = `import { Component } from '@angular/core';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { lucideHome, lucideUsers, lucideSettings, lucideFileText, lucideBarChart3, lucideBell, lucideUser } from '@ng-icons/lucide';
+import { HlmButtonImports } from '@spartan-ng/helm/button';
+import { HlmIcon } from '@spartan-ng/helm/icon';
+
+@Component({
+  selector: 'app-shell-sidebar-footer-block',
+  standalone: true,
+  imports: [NgIcon, HlmIcon, HlmButtonImports],
+  viewProviders: [provideIcons({ lucideHome, lucideUsers, lucideSettings, lucideFileText, lucideBarChart3, lucideBell, lucideUser })],
+  template: \`
+    <div class="flex h-full">
+      <aside class="w-64 border-r bg-card flex flex-col">
+        <div class="p-4 border-b">
+          <div class="flex items-center gap-2">
+            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+              <span class="text-sm font-bold">A</span>
+            </div>
+            <span class="font-semibold">Acme Inc</span>
+          </div>
+        </div>
+        <nav class="flex-1 p-4 space-y-1">
+          @for (item of navItems; track item.label) {
+            <a href="#" class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors"
+               [class]="item.active ? 'bg-accent text-accent-foreground' : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'">
+              <ng-icon hlm [name]="item.icon" size="sm" />
+              {{ item.label }}
+            </a>
+          }
+        </nav>
+        <div class="p-4 border-t">
+          <div class="flex items-center gap-3">
+            <div class="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
+              <ng-icon hlm name="lucideUser" size="sm" />
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium truncate">John Doe</p>
+              <p class="text-xs text-muted-foreground truncate">john&#64;example.com</p>
+            </div>
+          </div>
+        </div>
+      </aside>
+      <div class="flex-1 flex flex-col">
+        <header class="h-14 border-b px-6 flex items-center justify-between">
+          <h1 class="text-lg font-semibold">Dashboard</h1>
+          <div class="flex items-center gap-2">
+            <button hlmBtn variant="ghost" size="icon"><ng-icon hlm name="lucideBell" size="sm" /></button>
+            <button hlmBtn variant="ghost" size="icon"><ng-icon hlm name="lucideSettings" size="sm" /></button>
+          </div>
+        </header>
+        <main class="flex-1 p-6 bg-muted/30 overflow-auto">
+          <div class="grid gap-4 md:grid-cols-3">
+            <div class="rounded-lg border bg-card p-4"><p class="text-sm text-muted-foreground">Total Users</p><p class="text-2xl font-bold">1,234</p></div>
+            <div class="rounded-lg border bg-card p-4"><p class="text-sm text-muted-foreground">Revenue</p><p class="text-2xl font-bold">$12,345</p></div>
+            <div class="rounded-lg border bg-card p-4"><p class="text-sm text-muted-foreground">Active Projects</p><p class="text-2xl font-bold">23</p></div>
+          </div>
+        </main>
+        <footer class="border-t bg-card px-6 py-4">
+          <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <p class="text-sm text-muted-foreground">© {{ currentYear }} Acme Inc. All rights reserved.</p>
+            <nav class="flex items-center gap-4">
+              @for (link of footerLinks; track link.label) {
+                <a href="#" class="text-sm text-muted-foreground hover:text-foreground transition-colors">{{ link.label }}</a>
+              }
+            </nav>
+          </div>
+        </footer>
+      </div>
+    </div>
+  \`,
+})
+export class ShellSidebarFooterBlockComponent {
+  currentYear = new Date().getFullYear();
+
+  navItems = [
+    { icon: 'lucideHome', label: 'Dashboard', active: true },
+    { icon: 'lucideUsers', label: 'Users', active: false },
+    { icon: 'lucideFileText', label: 'Documents', active: false },
+    { icon: 'lucideBarChart3', label: 'Analytics', active: false },
+    { icon: 'lucideSettings', label: 'Settings', active: false },
+  ];
+
+  footerLinks = [
+    { label: 'Privacy Policy' },
+    { label: 'Terms of Service' },
+    { label: 'Help Center' },
+  ];
+}`;
+
+export const shellTopnavFooterSource = `import { Component } from '@angular/core';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { lucideBell, lucideSearch, lucideChevronDown, lucideLogOut, lucideUser, lucideSettings } from '@ng-icons/lucide';
+import { HlmButtonImports } from '@spartan-ng/helm/button';
+import { HlmInputImports } from '@spartan-ng/helm/input';
+import { HlmIcon } from '@spartan-ng/helm/icon';
+import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
+
+@Component({
+  selector: 'app-shell-topnav-footer-block',
+  standalone: true,
+  imports: [NgIcon, HlmIcon, HlmButtonImports, HlmInputImports, HlmDropdownMenuImports],
+  viewProviders: [provideIcons({ lucideBell, lucideSearch, lucideChevronDown, lucideLogOut, lucideUser, lucideSettings })],
+  template: \`
+    <div class="flex flex-col h-full">
+      <header class="border-b bg-card">
+        <div class="flex h-14 items-center px-6 gap-6">
+          <div class="flex items-center gap-2">
+            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+              <span class="text-sm font-bold">A</span>
+            </div>
+            <span class="font-semibold">Acme Inc</span>
+          </div>
+          <nav class="flex items-center gap-1">
+            @for (item of navItems; track item.label) {
+              <a href="#" class="px-3 py-1.5 text-sm font-medium rounded-md transition-colors"
+                 [class]="item.active ? 'bg-accent text-accent-foreground' : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'">
+                {{ item.label }}
+              </a>
+            }
+          </nav>
+          <div class="flex-1"></div>
+          <div class="flex items-center gap-2">
+            <div class="relative">
+              <ng-icon hlm name="lucideSearch" size="sm" class="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <input hlmInput type="search" placeholder="Search..." class="pl-9 w-64" />
+            </div>
+            <button hlmBtn variant="ghost" size="icon"><ng-icon hlm name="lucideBell" size="sm" /></button>
+            <button hlmBtn variant="ghost" size="sm" [hlmDropdownMenuTrigger]="userMenu">
+              <div class="flex h-6 w-6 items-center justify-center rounded-full bg-muted"><ng-icon hlm name="lucideUser" size="xs" /></div>
+              <ng-icon hlm name="lucideChevronDown" size="xs" />
+            </button>
+            <ng-template #userMenu>
+              <hlm-dropdown-menu class="w-48">
+                <hlm-dropdown-menu-label>My Account</hlm-dropdown-menu-label>
+                <hlm-dropdown-menu-separator />
+                <button hlmDropdownMenuItem><ng-icon hlm name="lucideUser" class="mr-2" size="sm" />Profile</button>
+                <button hlmDropdownMenuItem><ng-icon hlm name="lucideSettings" class="mr-2" size="sm" />Settings</button>
+                <hlm-dropdown-menu-separator />
+                <button hlmDropdownMenuItem><ng-icon hlm name="lucideLogOut" class="mr-2" size="sm" />Log out</button>
+              </hlm-dropdown-menu>
+            </ng-template>
+          </div>
+        </div>
+      </header>
+      <main class="flex-1 p-6 bg-muted/30 overflow-auto">
+        <div class="max-w-5xl mx-auto space-y-6">
+          <div><h1 class="text-2xl font-bold">Welcome back, John</h1><p class="text-muted-foreground">Here's what's happening with your projects today.</p></div>
+          <div class="grid gap-4 md:grid-cols-4">
+            <div class="rounded-lg border bg-card p-4"><p class="text-sm text-muted-foreground">Total Users</p><p class="text-2xl font-bold">1,234</p></div>
+            <div class="rounded-lg border bg-card p-4"><p class="text-sm text-muted-foreground">Revenue</p><p class="text-2xl font-bold">$12,345</p></div>
+            <div class="rounded-lg border bg-card p-4"><p class="text-sm text-muted-foreground">Active Projects</p><p class="text-2xl font-bold">23</p></div>
+            <div class="rounded-lg border bg-card p-4"><p class="text-sm text-muted-foreground">Pending Tasks</p><p class="text-2xl font-bold">8</p></div>
+          </div>
+        </div>
+      </main>
+      <footer class="border-t bg-card px-6 py-4">
+        <div class="max-w-5xl mx-auto flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <p class="text-sm text-muted-foreground">© {{ currentYear }} Acme Inc. All rights reserved.</p>
+          <nav class="flex items-center gap-4">
+            @for (link of footerLinks; track link.label) {
+              <a href="#" class="text-sm text-muted-foreground hover:text-foreground transition-colors">{{ link.label }}</a>
+            }
+          </nav>
+        </div>
+      </footer>
+    </div>
+  \`,
+})
+export class ShellTopnavFooterBlockComponent {
+  currentYear = new Date().getFullYear();
+
+  navItems = [
+    { label: 'Dashboard', active: true },
+    { label: 'Projects', active: false },
+    { label: 'Team', active: false },
+    { label: 'Reports', active: false },
+  ];
+
+  footerLinks = [
+    { label: 'Privacy Policy' },
+    { label: 'Terms of Service' },
+    { label: 'Help Center' },
+  ];
+}`;
+
+export const shellCollapsibleFooterSource = `import { Component, signal } from '@angular/core';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { lucideHome, lucideUsers, lucideSettings, lucideFileText, lucideBarChart3, lucideBell, lucideMenu } from '@ng-icons/lucide';
+import { HlmButtonImports } from '@spartan-ng/helm/button';
+import { HlmIcon } from '@spartan-ng/helm/icon';
+
+@Component({
+  selector: 'app-shell-collapsible-footer-block',
+  standalone: true,
+  imports: [NgIcon, HlmIcon, HlmButtonImports],
+  viewProviders: [provideIcons({ lucideHome, lucideUsers, lucideSettings, lucideFileText, lucideBarChart3, lucideBell, lucideMenu })],
+  template: \`
+    <div class="flex h-full">
+      <aside class="border-r bg-card flex flex-col transition-all duration-300" [class]="collapsed() ? 'w-16' : 'w-64'">
+        <div class="p-4 border-b flex items-center" [class.justify-center]="collapsed()">
+          @if (!collapsed()) {
+            <div class="flex items-center gap-2">
+              <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground"><span class="text-sm font-bold">A</span></div>
+              <span class="font-semibold">Acme Inc</span>
+            </div>
+          } @else {
+            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground"><span class="text-sm font-bold">A</span></div>
+          }
+        </div>
+        <nav class="flex-1 p-2 space-y-1">
+          @for (item of navItems; track item.label) {
+            <a href="#" class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors"
+               [class]="item.active ? 'bg-accent text-accent-foreground' : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'"
+               [class.justify-center]="collapsed()">
+              <ng-icon hlm [name]="item.icon" size="sm" />
+              @if (!collapsed()) { <span>{{ item.label }}</span> }
+            </a>
+          }
+        </nav>
+        <div class="p-2 border-t">
+          <button hlmBtn variant="ghost" size="sm" class="w-full" [class.justify-center]="collapsed()" (click)="collapsed.set(!collapsed())">
+            <ng-icon hlm name="lucideMenu" size="sm" />
+            @if (!collapsed()) { <span class="ml-2">Collapse</span> }
+          </button>
+        </div>
+      </aside>
+      <div class="flex-1 flex flex-col">
+        <header class="h-14 border-b px-6 flex items-center justify-between">
+          <h1 class="text-lg font-semibold">Dashboard</h1>
+          <button hlmBtn variant="ghost" size="icon"><ng-icon hlm name="lucideBell" size="sm" /></button>
+        </header>
+        <main class="flex-1 p-6 bg-muted/30 overflow-auto">
+          <p class="text-muted-foreground mb-4">Click "Collapse" in the sidebar to toggle between expanded and collapsed states.</p>
+          <div class="grid gap-4 md:grid-cols-3">
+            <div class="rounded-lg border bg-card p-4"><p class="text-sm text-muted-foreground">Total Users</p><p class="text-2xl font-bold">1,234</p></div>
+            <div class="rounded-lg border bg-card p-4"><p class="text-sm text-muted-foreground">Revenue</p><p class="text-2xl font-bold">$12,345</p></div>
+            <div class="rounded-lg border bg-card p-4"><p class="text-sm text-muted-foreground">Active Projects</p><p class="text-2xl font-bold">23</p></div>
+          </div>
+        </main>
+        <footer class="border-t bg-card px-6 py-4">
+          <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <p class="text-sm text-muted-foreground">© {{ currentYear }} Acme Inc. All rights reserved.</p>
+            <nav class="flex items-center gap-4">
+              @for (link of footerLinks; track link.label) {
+                <a href="#" class="text-sm text-muted-foreground hover:text-foreground transition-colors">{{ link.label }}</a>
+              }
+            </nav>
+          </div>
+        </footer>
+      </div>
+    </div>
+  \`,
+})
+export class ShellCollapsibleFooterBlockComponent {
+  collapsed = signal(false);
+  currentYear = new Date().getFullYear();
+
+  navItems = [
+    { icon: 'lucideHome', label: 'Dashboard', active: true },
+    { icon: 'lucideUsers', label: 'Users', active: false },
+    { icon: 'lucideFileText', label: 'Documents', active: false },
+    { icon: 'lucideBarChart3', label: 'Analytics', active: false },
+    { icon: 'lucideSettings', label: 'Settings', active: false },
+  ];
+
+  footerLinks = [
+    { label: 'Privacy Policy' },
+    { label: 'Terms of Service' },
+    { label: 'Help Center' },
+  ];
+}`;
+
 export const settingsProfileSource = `import { Component } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideUser } from '@ng-icons/lucide';
@@ -831,6 +1104,9 @@ export const blockSourceMap: Record<string, string> = {
   'shell-sidebar': shellSidebarSource,
   'shell-topnav': shellTopnavSource,
   'shell-collapsible': shellCollapsibleSource,
+  'shell-sidebar-footer': shellSidebarFooterSource,
+  'shell-topnav-footer': shellTopnavFooterSource,
+  'shell-collapsible-footer': shellCollapsibleFooterSource,
   'settings-profile': settingsProfileSource,
   'settings-notifications': settingsNotificationsSource,
   'settings-security': settingsSecuritySource,

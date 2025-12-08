@@ -33,6 +33,10 @@ const CONFIG = {
       { id: 'shell-sidebar', name: 'shellSidebarSource', filePath: 'shell/shell-sidebar-block.component.ts', templateFile: 'shell/sidebar-shell.component.ts' },
       { id: 'shell-topnav', name: 'shellTopnavSource', filePath: 'shell/shell-topnav-block.component.ts', templateFile: 'shell/topnav-shell.component.ts' },
       { id: 'shell-collapsible', name: 'shellCollapsibleSource', filePath: 'shell/shell-collapsible-block.component.ts', templateFile: 'shell/collapsible-shell.component.ts' },
+      // Shell blocks with footer
+      { id: 'shell-sidebar-footer', name: 'shellSidebarFooterSource', filePath: 'shell/shell-sidebar-footer-block.component.ts', templateFile: 'shell/sidebar-shell-footer.component.ts' },
+      { id: 'shell-topnav-footer', name: 'shellTopnavFooterSource', filePath: 'shell/shell-topnav-footer-block.component.ts', templateFile: 'shell/topnav-shell-footer.component.ts' },
+      { id: 'shell-collapsible-footer', name: 'shellCollapsibleFooterSource', filePath: 'shell/shell-collapsible-footer-block.component.ts', templateFile: 'shell/collapsible-shell-footer.component.ts' },
       // Settings blocks
       { id: 'settings-profile', name: 'settingsProfileSource', filePath: 'settings/settings-profile-block.component.ts', templateFile: 'settings/profile-settings.component.ts' },
       { id: 'settings-notifications', name: 'settingsNotificationsSource', filePath: 'settings/settings-notifications-block.component.ts', templateFile: 'settings/notification-settings.component.ts' },
@@ -174,10 +178,13 @@ function generateBlocksReadme(templatesDir) {
 
 ### App Shell
 | File | Description |
-|------|-------------|
+|------|--------------|
 | \`shell/sidebar-shell.component.ts\` | Classic sidebar navigation layout |
 | \`shell/topnav-shell.component.ts\` | Top navigation bar layout |
 | \`shell/collapsible-shell.component.ts\` | Collapsible sidebar layout |
+| \`shell/sidebar-shell-footer.component.ts\` | Sidebar layout with footer |
+| \`shell/topnav-shell-footer.component.ts\` | Top navigation layout with footer |
+| \`shell/collapsible-shell-footer.component.ts\` | Collapsible sidebar layout with footer |
 
 ### Settings
 | File | Description |

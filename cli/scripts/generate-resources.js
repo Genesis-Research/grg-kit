@@ -61,6 +61,16 @@ const BLOCK_METADATA = {
     description: 'Authentication pages layout (login, signup, forgot password)',
     tags: ['auth', 'login', 'signup', 'authentication'],
     dependencies: ['@spartan-ng/helm/button', '@spartan-ng/helm/card', '@spartan-ng/helm/form-field']
+  },
+  'shell': {
+    description: 'Application shell layouts: sidebar, topnav, collapsible - each with optional footer variant',
+    tags: ['shell', 'layout', 'sidebar', 'header', 'footer', 'navigation', 'topnav', 'collapsible'],
+    dependencies: ['@spartan-ng/helm/button', '@spartan-ng/helm/icon', '@spartan-ng/helm/dropdown-menu']
+  },
+  'settings': {
+    description: 'Settings pages: profile, notifications, security, danger zone',
+    tags: ['settings', 'preferences', 'account', 'profile', 'security'],
+    dependencies: ['@spartan-ng/helm/button', '@spartan-ng/helm/card', '@spartan-ng/helm/form-field', '@spartan-ng/helm/switch']
   }
 };
 

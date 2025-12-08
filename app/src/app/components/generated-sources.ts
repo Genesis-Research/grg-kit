@@ -399,7 +399,7 @@ export class AutocompleteAsync {
 
 export const autocompleteConfigSource = `import { Component, computed, signal } from '@angular/core';
 import { HlmAutocompleteImports } from '@spartan-ng/helm/autocomplete';
-import { provideHlmAutocompleteConfig } from 'libs/helm/autocomplete/src/lib/hlm-autocomplete.token';
+import { provideHlmAutocompleteConfig } from '@spartan-ng/helm/autocomplete';
 
 type Country = {
 	name: string;
@@ -459,7 +459,7 @@ export class AutocompleteConfig {
 
 export const autocompleteCountriesSource = `import { Component, computed, signal } from '@angular/core';
 import { HlmAutocompleteImports } from '@spartan-ng/helm/autocomplete';
-import { provideHlmAutocompleteConfig } from 'libs/helm/autocomplete/src/lib/hlm-autocomplete.token';
+import { provideHlmAutocompleteConfig } from '@spartan-ng/helm/autocomplete';
 
 type Country = {
 	name: string;
@@ -3805,7 +3805,7 @@ import { toast } from 'ngx-sonner';
 })
 export class InputOtpFormExample implements OnDestroy {
 	private readonly _formBuilder = inject(FormBuilder);
-	private _intervalId?: NodeJS.Timeout;
+	private _intervalId?: ReturnType<typeof setInterval>;
 
 	public readonly countdown = signal(60);
 	public readonly isResendDisabled = computed(() => this.countdown() > 0);

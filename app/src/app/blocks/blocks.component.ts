@@ -20,6 +20,9 @@ import { AuthForgotPasswordBlockComponent } from './auth/auth-forgot-password-bl
 import { ShellSidebarBlockComponent } from './shell/shell-sidebar-block.component';
 import { ShellTopnavBlockComponent } from './shell/shell-topnav-block.component';
 import { ShellCollapsibleBlockComponent } from './shell/shell-collapsible-block.component';
+import { ShellSidebarFooterBlockComponent } from './shell/shell-sidebar-footer-block.component';
+import { ShellTopnavFooterBlockComponent } from './shell/shell-topnav-footer-block.component';
+import { ShellCollapsibleFooterBlockComponent } from './shell/shell-collapsible-footer-block.component';
 import { SettingsProfileBlockComponent } from './settings/settings-profile-block.component';
 import { SettingsNotificationsBlockComponent } from './settings/settings-notifications-block.component';
 import { SettingsSecurityBlockComponent } from './settings/settings-security-block.component';
@@ -55,6 +58,9 @@ interface BlockCategory {
     ShellSidebarBlockComponent,
     ShellTopnavBlockComponent,
     ShellCollapsibleBlockComponent,
+    ShellSidebarFooterBlockComponent,
+    ShellTopnavFooterBlockComponent,
+    ShellCollapsibleFooterBlockComponent,
     SettingsProfileBlockComponent,
     SettingsNotificationsBlockComponent,
     SettingsSecurityBlockComponent,
@@ -185,6 +191,15 @@ interface BlockCategory {
             @case ('shell-collapsible') {
               <app-shell-collapsible-block class="block h-full" />
             }
+            @case ('shell-sidebar-footer') {
+              <app-shell-sidebar-footer-block class="block h-full" />
+            }
+            @case ('shell-topnav-footer') {
+              <app-shell-topnav-footer-block class="block h-full" />
+            }
+            @case ('shell-collapsible-footer') {
+              <app-shell-collapsible-footer-block class="block h-full" />
+            }
             @case ('settings-profile') {
               <app-settings-profile-block class="block h-full" />
             }
@@ -232,6 +247,9 @@ export class BlocksComponent {
         { id: 'shell-sidebar', title: 'Sidebar Shell', file: 'sidebar-shell.component.ts' },
         { id: 'shell-topnav', title: 'Top Navigation', file: 'topnav-shell.component.ts' },
         { id: 'shell-collapsible', title: 'Collapsible Sidebar', file: 'collapsible-shell.component.ts' },
+        { id: 'shell-sidebar-footer', title: 'Sidebar with Footer', file: 'sidebar-shell-footer.component.ts' },
+        { id: 'shell-topnav-footer', title: 'Top Nav with Footer', file: 'topnav-shell-footer.component.ts' },
+        { id: 'shell-collapsible-footer', title: 'Collapsible with Footer', file: 'collapsible-shell-footer.component.ts' },
       ],
     },
     {

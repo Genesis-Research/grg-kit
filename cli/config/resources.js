@@ -181,24 +181,44 @@ const RESOURCES = {
     {
       "name": "settings",
       "title": "Settings Block",
-      "description": "settings block",
+      "description": "Settings pages: profile, notifications, security, danger zone",
       "path": "templates/ui/blocks/settings",
       "defaultOutput": "src/app/blocks/settings",
       "tags": [
-        "settings"
+        "settings",
+        "preferences",
+        "account",
+        "profile",
+        "security"
       ],
-      "dependencies": []
+      "dependencies": [
+        "@spartan-ng/helm/button",
+        "@spartan-ng/helm/card",
+        "@spartan-ng/helm/form-field",
+        "@spartan-ng/helm/switch"
+      ]
     },
     {
       "name": "shell",
       "title": "Shell Block",
-      "description": "shell block",
+      "description": "Application shell layouts: sidebar, topnav, collapsible - each with optional footer variant",
       "path": "templates/ui/blocks/shell",
       "defaultOutput": "src/app/blocks/shell",
       "tags": [
-        "shell"
+        "shell",
+        "layout",
+        "sidebar",
+        "header",
+        "footer",
+        "navigation",
+        "topnav",
+        "collapsible"
       ],
-      "dependencies": []
+      "dependencies": [
+        "@spartan-ng/helm/button",
+        "@spartan-ng/helm/icon",
+        "@spartan-ng/helm/dropdown-menu"
+      ]
     }
   ]
 };

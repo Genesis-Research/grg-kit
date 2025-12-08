@@ -36,7 +36,7 @@ const RESOURCES: GRGResources = {
   blocks: [
     { name: 'auth', title: 'Auth Block', description: 'Authentication pages (login, signup, forgot password)', tags: ['auth', 'login', 'signup', 'authentication'] },
     { name: 'settings', title: 'Settings Block', description: 'Settings page layout with sidebar navigation', tags: ['settings', 'preferences', 'account'] },
-    { name: 'shell', title: 'App Shell Block', description: 'Application shell with sidebar, header, and content area', tags: ['shell', 'layout', 'sidebar', 'header'] },
+    { name: 'shell', title: 'App Shell Block', description: 'Application shell layouts: sidebar, topnav, collapsible - each with optional footer variant', tags: ['shell', 'layout', 'sidebar', 'header', 'footer', 'navigation'] },
   ],
 };
 
@@ -354,6 +354,15 @@ function suggestResources(requirement: string) {
       { type: 'block', name: 'shell', install: 'grg add block --shell' },
     ],
     shell: [
+      { type: 'block', name: 'shell', install: 'grg add block --shell' },
+    ],
+    footer: [
+      { type: 'block', name: 'shell', install: 'grg add block --shell' },
+    ],
+    navigation: [
+      { type: 'block', name: 'shell', install: 'grg add block --shell' },
+    ],
+    sidebar: [
       { type: 'block', name: 'shell', install: 'grg add block --shell' },
     ],
     settings: [

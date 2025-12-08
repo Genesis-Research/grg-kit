@@ -15,10 +15,13 @@
 
 ### App Shell
 | File | Description |
-|------|-------------|
+|------|--------------|
 | `shell/sidebar-shell.component.ts` | Classic sidebar navigation layout |
 | `shell/topnav-shell.component.ts` | Top navigation bar layout |
 | `shell/collapsible-shell.component.ts` | Collapsible sidebar layout |
+| `shell/sidebar-shell-footer.component.ts` | Sidebar layout with footer |
+| `shell/topnav-shell-footer.component.ts` | Top navigation layout with footer |
+| `shell/collapsible-shell-footer.component.ts` | Collapsible sidebar layout with footer |
 
 ### Settings
 | File | Description |
