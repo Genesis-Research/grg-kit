@@ -390,7 +390,7 @@ async function suggestResources(requirement: string) {
           requirement,
           suggestions_count: suggestions.length,
           suggestions,
-          note: 'Use grg init <project-name> to set up theme, components, and examples. Use grg add block --<name> for blocks.',
+          note: 'Use grg init to set up theme and Spartan-NG components. Use grg add block --<name> for blocks.',
         }, null, 2),
       },
     ],

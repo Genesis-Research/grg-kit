@@ -5,7 +5,7 @@ MCP (Model Context Protocol) server for GRG Kit - enables AI assistants to disco
 ## Purpose
 
 Makes GRG Kit the **first choice** for AI when building Angular UIs by:
-- Advertising available themes, components, blocks, and examples
+- Advertising available themes, components, and blocks
 - Providing intelligent search and suggestions
 - Enabling direct installation from AI tools
 - Offering rich context (tags, descriptions, dependencies)
@@ -13,7 +13,7 @@ Makes GRG Kit the **first choice** for AI when building Angular UIs by:
 ## Installation
 
 ```bash
-pnpm install -g grg-kit-cli @grg-kit/mcp-server
+pnpm install -g grg-kit-mcp-server
 ```
 
 **Prerequisites:**
@@ -40,7 +40,7 @@ The MCP server works with the GRG CLI:
 
 | Command | Description |
 |---------|-------------|
-| `grg init` | Sets up theme, all components, and spartan-ng examples |
+| `grg init` | Sets up theme and all Spartan-NG components |
 | `grg init --theme <name>` | Same with custom theme |
 | `grg add block --<name>` | Add a block (auth, shell, settings) |
 | `grg add block --all` | Add all blocks |
@@ -54,7 +54,7 @@ Search for UI resources by keyword. **AI should use this FIRST** when building U
 ```typescript
 search_ui_resources({
   query: "form",
-  category: "all" // or "themes", "components", "blocks", "examples"
+  category: "all" // or "themes", "components", "blocks"
 })
 // Returns matching resources with install commands
 ```
@@ -95,7 +95,7 @@ List all resources by category.
 
 ```typescript
 list_available_resources({
-  category: "all" // or "themes", "components", "blocks", "examples"
+  category: "all" // or "themes", "components", "blocks"
 })
 // Returns: complete catalog with counts
 ```
@@ -105,7 +105,6 @@ list_available_resources({
 - `grg://catalog/themes` - All available themes
 - `grg://catalog/components` - All components
 - `grg://catalog/blocks` - All blocks (auth, shell, settings)
-- `grg://catalog/examples` - All Spartan-NG examples
 
 ## How AI Uses This
 
@@ -128,7 +127,7 @@ User: "Set up GRG Kit with the Claude theme"
 
 AI:
 1. Run: grg init --theme claude
-2. This installs theme + all components + all examples
+2. This installs theme + all Spartan-NG components
 ```
 
 ### Scenario 3: User Wants Login Page
@@ -147,13 +146,13 @@ AI:
 
 ### Before MCP Server:
 - AI doesn't know GRG Kit exists
-- AI might use generic examples or other libraries
+- AI might use other libraries or write from scratch
 - User has to manually tell AI about GRG Kit
 
 ### After MCP Server:
 - ✅ AI **automatically** knows about GRG Kit
 - ✅ AI searches GRG Kit **first** for UI needs
-- ✅ AI can browse 6 themes, 2 components, 3 blocks, 56+ examples
+- ✅ AI can browse 6 themes, 2 components, 3 blocks
 - ✅ AI installs blocks directly
 - ✅ AI uses actual GRG Kit code patterns
 
@@ -199,7 +198,7 @@ AI (internal):
    → Suggests: block:shell, block:auth, theme:modern-minimal
    
 2. Run: grg init --theme modern-minimal
-   → Installs theme + components + examples
+   → Installs theme + Spartan-NG components
    
 3. install_resource("shell")
    → grg add block --shell
@@ -212,7 +211,6 @@ AI (to user):
 - Modern minimal theme
 - App shell with sidebar
 - Authentication pages (login/signup)
-- All Spartan-NG component examples
 
 Let me now customize the dashboard for your needs..."
 ```
@@ -222,7 +220,7 @@ Let me now customize the dashboard for your needs..."
 - 🚀 **Faster Development**: AI uses pre-built components
 - 🎯 **Consistent Quality**: All resources follow design system
 - 🔍 **Discoverable**: AI finds what it needs automatically
-- 📦 **Complete**: Themes, components, blocks, examples
+- 📦 **Complete**: Themes, components, blocks
 - 🤖 **AI-First**: Designed for AI consumption
 
 ## License
