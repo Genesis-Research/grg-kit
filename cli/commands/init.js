@@ -48,10 +48,12 @@ async function init(options) {
   // Step 1: Install Tailwind CSS v4
   spinner.start('Installing Tailwind CSS v4...');
   try {
-    await execAsync('npm install tailwindcss @tailwindcss/postcss postcss', { stdio: 'pipe' });
+    await execAsync('npm install tailwindcss @tailwindcss/postcss postcss');
     spinner.succeed(chalk.green('✓ Tailwind CSS v4 installed'));
   } catch (error) {
-    spinner.warn(chalk.yellow('Tailwind CSS installation skipped (may already be installed)'));
+    spinner.fail(chalk.red('Failed to install Tailwind CSS v4'));
+    console.error(chalk.gray(error.message));
+    process.exit(1);
   }
 
   // Step 3: Create .postcssrc.json
@@ -71,10 +73,12 @@ async function init(options) {
   // Step 4: Install Spartan-NG CLI
   spinner.start('Installing Spartan-NG CLI...');
   try {
-    await execAsync('npm install -D @spartan-ng/cli', { stdio: 'pipe' });
+    await execAsync('npm install -D @spartan-ng/cli');
     spinner.succeed(chalk.green('✓ Spartan-NG CLI installed'));
   } catch (error) {
-    spinner.warn(chalk.yellow('Spartan-NG CLI installation skipped'));
+    spinner.fail(chalk.red('Failed to install Spartan-NG CLI'));
+    console.error(chalk.gray(error.message));
+    process.exit(1);
   }
 
   // Step 5: Create components.json config file
@@ -97,9 +101,14 @@ async function init(options) {
     let tsconfigContent = await fs.readFile(tsconfigPath, 'utf-8');
     
     // Strip comments from tsconfig (Angular generates tsconfig with comments)
+    // Be careful not to strip // inside strings (like URLs)
     tsconfigContent = tsconfigContent
       .replace(/\/\*[\s\S]*?\*\//g, '') // Remove block comments
-      .replace(/\/\/.*/g, '');          // Remove line comments
+      .replace(/^\s*\/\/.*/gm, '');     // Remove line comments (only at start of line after whitespace)
+    
+    // Remove trailing commas (common in tsconfig files)
+    tsconfigContent = tsconfigContent
+      .replace(/,(\s*[}\]])/g, '$1');
     
     const tsconfig = JSON.parse(tsconfigContent);
     
@@ -123,9 +132,12 @@ async function init(options) {
   try {
     const { spawn } = require('child_process');
     await new Promise((resolve, reject) => {
-      const child = spawn('npx', ['ng', 'g', '@spartan-ng/cli:ui'], {
+      // Use 'ng' directly (works with global @angular/cli) instead of 'npx ng'
+      // Exit code 127 occurs when npx can't find the command
+      const child = spawn('ng', ['g', '@spartan-ng/cli:ui'], {
         stdio: ['pipe', 'pipe', 'pipe'],
-        shell: true
+        shell: true,
+        env: { ...process.env }  // Inherit PATH to find global ng
       });
 
       let output = '';
@@ -156,7 +168,9 @@ async function init(options) {
         }
       });
 
+      let stderrOutput = '';
       child.stderr.on('data', (data) => {
+        stderrOutput += data.toString();
         // Spartan CLI outputs progress to stderr
         const text = data.toString();
         if (text.includes('CREATE') || text.includes('UPDATE')) {
@@ -168,14 +182,24 @@ async function init(options) {
       child.on('close', (code) => {
         console.log(); // New line after progress dots
         if (code === 0) resolve();
-        else reject(new Error(`Process exited with code ${code}`));
+        else reject(new Error(`Process exited with code ${code}${stderrOutput ? '\n' + stderrOutput : ''}`));
       });
-      child.on('error', reject);
+      child.on('error', (err) => {
+        if (err.code === 'ENOENT') {
+          reject(new Error('Angular CLI (ng) not found. Please install it: npm install -g @angular/cli'));
+        } else {
+          reject(err);
+        }
+      });
     });
     spinner.succeed(chalk.green('✓ All Spartan-NG UI components installed'));
   } catch (error) {
     spinner.fail(chalk.red('Failed to run Spartan-NG UI generator'));
     console.error(chalk.red(error.message));
+    console.log(chalk.yellow('\nTroubleshooting:'));
+    console.log(chalk.gray('  1. Ensure Angular CLI is installed:'), chalk.cyan('npm install -g @angular/cli'));
+    console.log(chalk.gray('  2. Ensure @spartan-ng/cli is installed:'), chalk.cyan('npm install -D @spartan-ng/cli'));
+    console.log(chalk.gray('  3. Try running manually:'), chalk.cyan('ng g @spartan-ng/cli:ui'));
     process.exit(1);
   }
 
