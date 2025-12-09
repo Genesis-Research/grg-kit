@@ -1,7 +1,7 @@
 {
   "_generated": "AUTO-GENERATED FILE - DO NOT EDIT MANUALLY. Run: npm catalog",
   "version": "1.0.1",
-  "lastUpdated": "2025-12-08",
+  "lastUpdated": "2025-12-09",
   "cli": {
     "name": "grg",
     "version": "0.6.8",
@@ -20,17 +20,9 @@
           "shell"
         ]
       },
-      "addComponent": {
-        "usage": "grg add component <componentName>",
-        "description": "Add GRG components to your project",
-        "validComponents": [
-          "stepper",
-          "file-upload"
-        ]
-      },
       "list": {
         "usage": "grg list [category]",
-        "description": "List available resources (blocks, components, themes)"
+        "description": "List available resources"
       }
     }
   },
@@ -156,21 +148,6 @@
       ],
       "dependencies": [
         "@spartan-ng/helm/button"
-      ]
-    },
-    {
-      "name": "stepper",
-      "title": "Stepper",
-      "description": "Multi-step form component with progress indicator",
-      "tags": [
-        "form",
-        "wizard",
-        "multi-step",
-        "progress"
-      ],
-      "dependencies": [
-        "@spartan-ng/helm/button",
-        "@spartan-ng/helm/card"
       ]
     }
   ],

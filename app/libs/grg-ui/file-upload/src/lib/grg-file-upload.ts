@@ -5,6 +5,8 @@ import {
 	input,
 	model,
 	output,
+	Pipe,
+	PipeTransform,
 	signal,
 	viewChild,
 } from '@angular/core';
@@ -18,14 +20,43 @@ export interface FileValidationError {
 	message: string;
 }
 
-export interface GrgFileUploadConfig {
-	maxFileSize?: number; // in bytes
-	maxFiles?: number;
-	acceptedTypes?: string[]; // e.g., ['image/*', 'application/pdf']
+export type FileIconVariant = 'default' | 'image' | 'document' | 'video' | 'audio' | 'archive';
+
+/**
+ * Utility function to get file icon variant based on MIME type
+ */
+export function getFileIconVariant(mimeType: string): FileIconVariant {
+	if (mimeType.startsWith('image/')) return 'image';
+	if (mimeType.startsWith('video/')) return 'video';
+	if (mimeType.startsWith('audio/')) return 'audio';
+	if (mimeType.includes('pdf') || mimeType.includes('document') || mimeType.includes('text')) {
+		return 'document';
+	}
+	if (mimeType.includes('zip') || mimeType.includes('rar') || mimeType.includes('tar') || mimeType.includes('gzip')) {
+		return 'archive';
+	}
+	return 'default';
+}
+
+/**
+ * Pipe to format file size in human-readable format
+ */
+@Pipe({
+	name: 'fileSize',
+	standalone: true,
+})
+export class FileSizePipe implements PipeTransform {
+	transform(bytes: number | undefined): string {
+		if (bytes === undefined || bytes === 0) return '0 Bytes';
+		const k = 1024;
+		const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+		const i = Math.floor(Math.log(bytes) / Math.log(k));
+		return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+	}
 }
 
 export const fileUploadVariants = cva(
-	'relative flex flex-col items-center justify-center rounded-lg border-2 border-dashed transition-colors',
+	'relative flex flex-col items-center justify-center rounded-lg border-2 border-dashed transition-colors cursor-pointer',
 	{
 		variants: {
 			state: {

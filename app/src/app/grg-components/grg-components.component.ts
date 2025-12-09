@@ -12,8 +12,6 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
 import { CodeBlockComponent } from '../blocks/shared/code-block.component';
-import { StepperHorizontalBlockComponent } from './stepper/stepper-horizontal-block.component';
-import { StepperVerticalBlockComponent } from './stepper/stepper-vertical-block.component';
 import { FileUploadBlockComponent } from './file-upload/file-upload-block.component';
 import { blockSourceMap } from './generated-sources';
 
@@ -40,8 +38,6 @@ interface BlockCategory {
 		HlmButtonImports,
 		HlmSidebarImports,
 		CodeBlockComponent,
-		StepperHorizontalBlockComponent,
-		StepperVerticalBlockComponent,
 		FileUploadBlockComponent,
 	],
 	viewProviders: [
@@ -150,12 +146,6 @@ interface BlockCategory {
 					} @else {
 						<div class="flex items-center justify-center min-h-full">
 							@switch (activeBlock()) {
-								@case ('stepper-horizontal') {
-									<app-stepper-horizontal-block />
-								}
-								@case ('stepper-vertical') {
-									<app-stepper-vertical-block />
-								}
 								@case ('file-upload') {
 									<app-file-upload-block />
 								}
@@ -168,30 +158,12 @@ interface BlockCategory {
 	`,
 })
 export class GrgComponentsComponent {
-	activeBlock = signal('stepper-horizontal');
+	activeBlock = signal('file-upload');
 	showCode = signal(false);
 
 	sourceCodeMap = blockSourceMap;
 
 	categories: BlockCategory[] = [
-		{
-			id: 'navigation',
-			title: 'Navigation',
-			icon: 'lucideBlocks',
-			expanded: true,
-			items: [
-				{
-					id: 'stepper-horizontal',
-					title: 'Stepper (Horizontal)',
-					description: 'Multi-step wizard with horizontal layout',
-				},
-				{
-					id: 'stepper-vertical',
-					title: 'Stepper (Vertical)',
-					description: 'Multi-step wizard with vertical layout',
-				},
-			],
-		},
 		{
 			id: 'forms',
 			title: 'Forms',

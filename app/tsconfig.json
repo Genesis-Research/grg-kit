@@ -181,9 +181,6 @@
       "@spartan-ng/helm/utils": [
         "./libs/ui/utils/src/index.ts"
       ],
-      "@grg-kit/ui/stepper": [
-        "./libs/grg-ui/stepper/src/index.ts"
-      ],
       "@grg-kit/ui/file-upload": [
         "./libs/grg-ui/file-upload/src/index.ts"
       ]

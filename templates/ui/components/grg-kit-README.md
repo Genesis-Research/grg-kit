@@ -8,8 +8,7 @@
 
 | Component | Description |
 |-----------|-------------|
-| `file-upload` | 12 parts merged into single file |
-| `stepper` | 7 parts merged into single file |
+| `file-upload` | 1 parts merged into single file |
 
 
 ## Usage

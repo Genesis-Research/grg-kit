@@ -74,7 +74,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
                     properties: {
                         resource: {
                             type: 'string',
-                            description: 'Resource identifier in "type:name" format. Examples: "block:auth", "block:shell", "block:settings", "theme:claude", "theme:modern-minimal", "component:stepper"',
+                            description: 'Resource identifier in "type:name" format. Examples: "block:auth", "block:shell", "block:settings", "theme:claude", "theme:modern-minimal", "component:file-upload"',
                         },
                     },
                     required: ['resource'],
@@ -105,14 +105,13 @@ The tool will auto-detect the Angular project root by searching for angular.json
 Examples:
 - To install auth block: resource="auth" → runs: grg add block auth
 - To install shell sidebar: resource="shell", files=["sidebar"] → runs: grg add block shell sidebar
-- To install stepper component: resource="stepper" → runs: grg add component stepper
 - To install file-upload component: resource="file-upload" → runs: grg add component file-upload`,
                 inputSchema: {
                     type: 'object',
                     properties: {
                         resource: {
                             type: 'string',
-                            description: 'Block or component name to install. Blocks: "auth", "shell", "settings". Components: "stepper", "file-upload". Do NOT include "block:" or "component:" prefix - just the name.',
+                            description: 'Block or component name to install. Blocks: "auth", "shell", "settings". Components: "file-upload". Do NOT include "block:" or "component:" prefix - just the name.',
                         },
                         files: {
                             type: 'array',
@@ -358,12 +357,6 @@ async function suggestResources(requirement) {
         ],
         settings: [
             { type: 'block', name: 'settings', install: 'grg add block settings' },
-        ],
-        form: [
-            { type: 'component', name: 'stepper', install: 'grg add component stepper' },
-        ],
-        stepper: [
-            { type: 'component', name: 'stepper', install: 'grg add component stepper' },
         ],
         upload: [
             { type: 'component', name: 'file-upload', install: 'grg add component file-upload' },

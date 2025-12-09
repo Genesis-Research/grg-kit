@@ -145,23 +145,6 @@ const RESOURCES = {
       "dependencies": [
         "@spartan-ng/helm/button"
       ]
-    },
-    {
-      "name": "stepper",
-      "title": "Stepper Component",
-      "description": "Multi-step form component with progress indicator",
-      "path": "templates/ui/components/stepper",
-      "defaultOutput": "src/app/components/stepper",
-      "tags": [
-        "form",
-        "wizard",
-        "multi-step",
-        "progress"
-      ],
-      "dependencies": [
-        "@spartan-ng/helm/button",
-        "@spartan-ng/helm/card"
-      ]
     }
   ],
   "blocks": [

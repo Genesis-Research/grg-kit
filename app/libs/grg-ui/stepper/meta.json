@@ -1,5 +1,0 @@
-{
-  "description": "Multi-step form component with progress indicator",
-  "tags": ["form", "wizard", "multi-step", "progress"],
-  "dependencies": ["@spartan-ng/helm/button", "@spartan-ng/helm/card"]
-}

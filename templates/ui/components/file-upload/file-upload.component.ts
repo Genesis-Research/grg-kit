@@ -33,183 +33,33 @@ import { hlm } from '@spartan-ng/helm/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { type ClassValue } from 'clsx';
 
-export const fileIconVariants = cva(
-	'flex items-center justify-center rounded-md shrink-0',
-	{
-		variants: {
-			variant: {
-				default: 'bg-muted text-muted-foreground',
-				image: 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400',
-				document: 'bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400',
-				video: 'bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400',
-				audio: 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400',
-				archive: 'bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400',
-			},
-			size: {
-				sm: 'h-8 w-8',
-				md: 'h-10 w-10',
-				lg: 'h-12 w-12',
-			},
-		},
-		defaultVariants: {
-			variant: 'default',
-			size: 'md',
-		},
-	},
-);
+export interface FileValidationError {
+	file: File;
+	type: 'size' | 'type';
+	message: string;
+}
 
-export type FileIconVariants = VariantProps<typeof fileIconVariants>;
 export type FileIconVariant = 'default' | 'image' | 'document' | 'video' | 'audio' | 'archive';
 
-@Component({
-	selector: 'grg-file-icon',
-	standalone: true,
-	host: {
-		'[class]': '_computedClass()',
-	},
-	template: `<ng-content />`,
-})
-export class GrgFileIcon {
-	public readonly userClass = input<ClassValue>('', { alias: 'class' });
-	public readonly variant = input<FileIconVariant>('default');
-	public readonly size = input<'sm' | 'md' | 'lg'>('md');
-
-	protected readonly _computedClass = computed(() =>
-		hlm(
-			fileIconVariants({
-				variant: this.variant(),
-				size: this.size(),
-			}),
-			this.userClass(),
-		),
-	);
-
-	static getVariantFromMimeType(mimeType: string): FileIconVariant {
-		if (mimeType.startsWith('image/')) return 'image';
-		if (mimeType.startsWith('video/')) return 'video';
-		if (mimeType.startsWith('audio/')) return 'audio';
-		if (
-			mimeType.includes('pdf') ||
-			mimeType.includes('document') ||
-			mimeType.includes('text')
-		) {
-			return 'document';
-		}
-		if (
-			mimeType.includes('zip') ||
-			mimeType.includes('rar') ||
-			mimeType.includes('tar') ||
-			mimeType.includes('gzip')
-		) {
-			return 'archive';
-		}
-		return 'default';
+/**
+ * Utility function to get file icon variant based on MIME type
+ */
+export function getFileIconVariant(mimeType: string): FileIconVariant {
+	if (mimeType.startsWith('image/')) return 'image';
+	if (mimeType.startsWith('video/')) return 'video';
+	if (mimeType.startsWith('audio/')) return 'audio';
+	if (mimeType.includes('pdf') || mimeType.includes('document') || mimeType.includes('text')) {
+		return 'document';
 	}
-}
-
-@Component({
-	selector: 'grg-file-info',
-	standalone: true,
-	host: {
-		'[class]': '_computedClass()',
-	},
-	template: `<ng-content />`,
-})
-export class GrgFileInfo {
-	public readonly userClass = input<ClassValue>('', { alias: 'class' });
-
-	protected readonly _computedClass = computed(() =>
-		hlm('flex-1 min-w-0', this.userClass()),
-	);
-}
-
-@Component({
-	selector: 'grg-file-list-item',
-	standalone: true,
-	host: {
-		'[class]': '_computedClass()',
-		role: 'listitem',
-	},
-	template: `<ng-content />`,
-})
-export class GrgFileListItem {
-	public readonly userClass = input<ClassValue>('', { alias: 'class' });
-	public readonly file = input<File>();
-
-	public readonly remove = output<void>();
-
-	protected readonly _computedClass = computed(() =>
-		hlm(
-			'flex items-center gap-3 rounded-lg border bg-card p-3 text-card-foreground',
-			this.userClass(),
-		),
-	);
-
-	onRemove(): void {
-		this.remove.emit();
+	if (mimeType.includes('zip') || mimeType.includes('rar') || mimeType.includes('tar') || mimeType.includes('gzip')) {
+		return 'archive';
 	}
+	return 'default';
 }
 
-@Component({
-	selector: 'grg-file-list',
-	standalone: true,
-	host: {
-		'[class]': '_computedClass()',
-		role: 'list',
-	},
-	template: `<ng-content />`,
-})
-export class GrgFileList {
-	public readonly userClass = input<ClassValue>('', { alias: 'class' });
-
-	protected readonly _computedClass = computed(() =>
-		hlm('flex flex-col gap-2 mt-4', this.userClass()),
-	);
-}
-
-@Component({
-	selector: 'grg-file-name, [grgFileName]',
-	standalone: true,
-	host: {
-		'[class]': '_computedClass()',
-	},
-	template: `<ng-content />`,
-})
-export class GrgFileName {
-	public readonly userClass = input<ClassValue>('', { alias: 'class' });
-
-	protected readonly _computedClass = computed(() =>
-		hlm('text-sm font-medium truncate', this.userClass()),
-	);
-}
-
-@Component({
-	selector: 'button[grgFileRemove]',
-	standalone: true,
-	host: {
-		'[class]': '_computedClass()',
-		type: 'button',
-		'(click)': 'onClick($event)',
-	},
-	template: `<ng-content />`,
-})
-export class GrgFileRemove {
-	public readonly userClass = input<ClassValue>('', { alias: 'class' });
-	public readonly remove = output<void>();
-
-	protected readonly _computedClass = computed(() =>
-		hlm(
-			'shrink-0 rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors',
-			this.userClass(),
-		),
-	);
-
-	onClick(event: Event): void {
-		event.stopPropagation();
-		this.remove.emit();
-	}
-}
-
+/**
+ * Pipe to format file size in human-readable format
+ */
 @Pipe({
 	name: 'fileSize',
 	standalone: true,
@@ -224,134 +74,8 @@ export class FileSizePipe implements PipeTransform {
 	}
 }
 
-@Component({
-	selector: 'grg-file-size, [grgFileSize]',
-	standalone: true,
-	host: {
-		'[class]': '_computedClass()',
-	},
-	template: `<ng-content />`,
-})
-export class GrgFileSize {
-	public readonly userClass = input<ClassValue>('', { alias: 'class' });
-
-	protected readonly _computedClass = computed(() =>
-		hlm('text-xs text-muted-foreground', this.userClass()),
-	);
-}
-
-@Component({
-	selector: 'grg-file-upload-description, [grgFileUploadDescription]',
-	standalone: true,
-	host: {
-		'[class]': '_computedClass()',
-	},
-	template: `<ng-content />`,
-})
-export class GrgFileUploadDescription {
-	public readonly userClass = input<ClassValue>('', { alias: 'class' });
-
-	protected readonly _computedClass = computed(() =>
-		hlm('text-xs text-muted-foreground', this.userClass()),
-	);
-}
-
-export const fileUploadIconVariants = cva(
-	'flex items-center justify-center rounded-full',
-	{
-		variants: {
-			variant: {
-				default: 'bg-muted text-muted-foreground',
-				primary: 'bg-primary/10 text-primary',
-			},
-			size: {
-				sm: 'h-10 w-10',
-				md: 'h-12 w-12',
-				lg: 'h-14 w-14',
-			},
-		},
-		defaultVariants: {
-			variant: 'default',
-			size: 'md',
-		},
-	},
-);
-
-export type FileUploadIconVariants = VariantProps<typeof fileUploadIconVariants>;
-
-@Component({
-	selector: 'grg-file-upload-icon',
-	standalone: true,
-	host: {
-		'[class]': '_computedClass()',
-	},
-	template: `<ng-content />`,
-})
-export class GrgFileUploadIcon {
-	public readonly userClass = input<ClassValue>('', { alias: 'class' });
-	public readonly variant = input<'default' | 'primary'>('default');
-	public readonly size = input<'sm' | 'md' | 'lg'>('md');
-
-	protected readonly _computedClass = computed(() =>
-		hlm(
-			fileUploadIconVariants({
-				variant: this.variant(),
-				size: this.size(),
-			}),
-			this.userClass(),
-		),
-	);
-}
-
-@Component({
-	selector: 'grg-file-upload-label, [grgFileUploadLabel]',
-	standalone: true,
-	host: {
-		'[class]': '_computedClass()',
-	},
-	template: `<ng-content />`,
-})
-export class GrgFileUploadLabel {
-	public readonly userClass = input<ClassValue>('', { alias: 'class' });
-
-	protected readonly _computedClass = computed(() =>
-		hlm('text-sm font-medium text-foreground', this.userClass()),
-	);
-}
-
-@Component({
-	selector: 'grg-file-upload-trigger, [grgFileUploadTrigger]',
-	standalone: true,
-	host: {
-		'[class]': '_computedClass()',
-	},
-	template: `<ng-content />`,
-})
-export class GrgFileUploadTrigger {
-	public readonly userClass = input<ClassValue>('', { alias: 'class' });
-
-	protected readonly _computedClass = computed(() =>
-		hlm(
-			'flex flex-col items-center justify-center gap-2 text-center cursor-pointer',
-			this.userClass(),
-		),
-	);
-}
-
-export interface FileValidationError {
-	file: File;
-	type: 'size' | 'type';
-	message: string;
-}
-
-export interface GrgFileUploadConfig {
-	maxFileSize?: number; // in bytes
-	maxFiles?: number;
-	acceptedTypes?: string[]; // e.g., ['image/*', 'application/pdf']
-}
-
 export const fileUploadVariants = cva(
-	'relative flex flex-col items-center justify-center rounded-lg border-2 border-dashed transition-colors',
+	'relative flex flex-col items-center justify-center rounded-lg border-2 border-dashed transition-colors cursor-pointer',
 	{
 		variants: {
 			state: {
@@ -565,18 +289,4 @@ export class GrgFileUpload {
 	}
 }
 
-export const GrgFileUploadImports = [
-	GrgFileUpload,
-	GrgFileUploadTrigger,
-	GrgFileUploadIcon,
-	GrgFileUploadLabel,
-	GrgFileUploadDescription,
-	GrgFileList,
-	GrgFileListItem,
-	GrgFileIcon,
-	GrgFileInfo,
-	GrgFileName,
-	GrgFileSize,
-	GrgFileRemove,
-	FileSizePipe,
-] as const;
+export const GrgFileUploadImports = [GrgFileUpload, FileSizePipe] as const;
