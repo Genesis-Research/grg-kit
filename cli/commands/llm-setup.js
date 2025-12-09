@@ -1070,7 +1070,6 @@ Use MCP only for:
 - Spartan-NG components are pre-installed - just import and use
 - Follow existing patterns in the codebase
 - Use TailwindCSS v4 for styling with SEMANTIC colors only
-- Prefer signals for state management
 - NEVER use raw colors like text-green-600, bg-yellow-100, etc.
 `;
 }
