@@ -2,40 +2,40 @@
 trigger: always_on
 ---
 
-# Design System Documentation
+# GRG Kit Design System Rules
 
 ## Overview
 
-This design system is built on top of **Spartan-NG UI**, a modern Angular component library that provides a comprehensive set of reusable components following design system principles. The library is organized into two main layers:
+This project uses **GRG Kit**, a comprehensive Angular UI toolkit built on top of **Spartan-NG UI**. The design system is organized into two main layers:
 
 - **Brain (`@spartan-ng/brain`)**: Provides unstyled, accessible behavioral components
 - **Helm (`@spartan-ng/helm`)**: Provides styled visual components built on top of Brain components
+- **GRG Kit (`@grg-kit/ui`)**: Custom components with `grg-` prefix
 
-## Architecture Patterns
+## Critical Rules
 
-### Component Organization
+### 1. Always Check GRG Kit First
+**BEFORE writing any UI component, layout, or page:**
+1. Use the MCP server to search for existing resources: `search_ui_resources`
+2. Check if a component, layout, or example already exists
+3. Only write custom code if no suitable resource exists
 
-The design system follows a clear organizational structure:
+### 2. Component Organization
 
-```
-libs/
-├── ui/                    # Reusable UI components
-│   ├── button/
-│   ├── alert/
-│   ├── card/
-│   └── ...
-└── examples/              # Usage examples and patterns
-    └── components/
-        ├── (button)/
-        ├── (alert)/
-        └── ...
-```
+**Spartan-NG Components** (in `libs/ui/`):
+- Use `hlm` prefix for directives
+- Import via `HlmComponentImports`
+- Example: `HlmButtonImports`, `HlmCardImports`
 
-### Import Patterns
+**GRG Kit Components** (in `libs/grg-ui/`):
+- Use `grg-` prefix for selectors
+- Import via `GrgComponentImports`
+- Example: `GrgFileUploadImports`
+- Path alias: `@grg-kit/ui/component-name`
 
-#### Standard Import Pattern
-All components follow a consistent import pattern using `HlmComponentImports`:
+### 3. Import Patterns
 
+#### Standard Spartan-NG Import
 ```typescript
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmAlertImports } from '@spartan-ng/helm/alert';
@@ -47,9 +47,7 @@ import { HlmCardImports } from '@spartan-ng/helm/card';
 })
 ```
 
-#### Complex Components with Brain + Helm
-For interactive components, import both Brain (behavior) and Helm (styling):
-
+#### Complex Components (Brain + Helm)
 ```typescript
 import { BrnDialogImports } from '@spartan-ng/brain/dialog';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
@@ -57,6 +55,20 @@ import { HlmDialogImports } from '@spartan-ng/helm/dialog';
 @Component({
   imports: [BrnDialogImports, HlmDialogImports],
   // ...
+})
+```
+
+#### GRG Kit Components
+```typescript
+import { GrgFileUploadImports } from '@grg-kit/ui/file-upload';
+
+@Component({
+  imports: [GrgFileUploadImports],
+  template: `
+    <grg-file-upload>
+      <grg-file-upload-trigger>Drop files here</grg-file-upload-trigger>
+    </grg-file-upload>
+  `
 })
 ```
 
@@ -178,6 +190,178 @@ class="flex flex-col justify-between gap-4 py-4 sm:flex-row sm:items-center"
 [attr.data-state]="row.getIsSelected() && 'selected'"
 ```
 
+## TailwindCSS Best Practices (CRITICAL)
+
+### NEVER Use Raw Color Classes
+
+**FORBIDDEN - Do NOT use these patterns:**
+```typescript
+// ❌ WRONG - Raw Tailwind colors
+class="text-green-600 bg-green-100"     // No raw green
+class="text-red-500 bg-red-50"          // No raw red
+class="text-yellow-600 bg-yellow-100"   // No raw yellow
+class="text-blue-500 bg-blue-100"       // No raw blue
+class="border-gray-200"                 // No raw gray
+class="text-slate-700"                  // No raw slate
+```
+
+**REQUIRED - Use semantic color tokens:**
+```typescript
+// ✅ CORRECT - Semantic colors from design system
+class="text-foreground"                 // Primary text
+class="text-muted-foreground"           // Secondary/muted text
+class="bg-background"                   // Page background
+class="bg-card"                         // Card background
+class="bg-muted"                        // Muted/subtle background
+class="bg-primary text-primary-foreground"  // Primary actions
+class="bg-secondary text-secondary-foreground"  // Secondary elements
+class="bg-destructive text-destructive-foreground"  // Errors/danger
+class="bg-accent text-accent-foreground"  // Accents/highlights
+class="border-border"                   // Standard borders
+class="border-input"                    // Input borders
+```
+
+### Available Semantic Colors
+
+These are the ONLY colors you should use (defined in `styles.css` and theme files):
+
+| Token | Usage |
+|-------|-------|
+| `background` / `foreground` | Page background and primary text |
+| `card` / `card-foreground` | Card containers |
+| `popover` / `popover-foreground` | Popovers, dropdowns |
+| `primary` / `primary-foreground` | Primary buttons, links |
+| `secondary` / `secondary-foreground` | Secondary actions |
+| `muted` / `muted-foreground` | Subtle backgrounds, secondary text |
+| `accent` / `accent-foreground` | Highlights, hover states |
+| `destructive` / `destructive-foreground` | Errors, delete actions |
+| `border` | Standard borders |
+| `input` | Form input borders |
+| `ring` | Focus rings |
+| `chart-1` through `chart-5` | Chart/data visualization colors |
+| `sidebar-*` | Sidebar-specific colors |
+
+### Adding New Semantic Colors
+
+If you need a color that doesn't exist (e.g., success, warning, info):
+
+**Step 1: Add CSS variables to `src/styles.css`:**
+```css
+:root {
+  /* Existing variables... */
+  
+  /* Add new semantic color with BOTH light and dark values */
+  --success: oklch(0.72 0.19 142);           /* Green for light mode */
+  --success-foreground: oklch(1 0 0);        /* White text */
+  
+  --warning: oklch(0.75 0.18 85);            /* Amber for light mode */
+  --warning-foreground: oklch(0.2 0 0);      /* Dark text */
+  
+  --info: oklch(0.65 0.15 250);              /* Blue for light mode */
+  --info-foreground: oklch(1 0 0);           /* White text */
+}
+
+.dark {
+  /* Dark mode equivalents */
+  --success: oklch(0.65 0.17 142);
+  --success-foreground: oklch(1 0 0);
+  
+  --warning: oklch(0.70 0.16 85);
+  --warning-foreground: oklch(0.15 0 0);
+  
+  --info: oklch(0.60 0.14 250);
+  --info-foreground: oklch(1 0 0);
+}
+```
+
+**Step 2: Register in `@theme inline` block (in theme file):**
+```css
+@theme inline {
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+}
+```
+
+**Step 3: Now use in templates:**
+```typescript
+class="bg-success text-success-foreground"  // Success states
+class="bg-warning text-warning-foreground"  // Warning states
+class="bg-info text-info-foreground"        // Info states
+```
+
+### Typography Best Practices
+
+**NEVER use arbitrary font sizes:**
+```typescript
+// ❌ WRONG - Arbitrary sizes
+class="text-[13px]"     // No arbitrary values
+class="text-[1.1rem]"   // No arbitrary values
+```
+
+**USE the Tailwind typography scale:**
+```typescript
+// ✅ CORRECT - Standard typography scale
+class="text-xs"    // 0.75rem (12px)
+class="text-sm"    // 0.875rem (14px)
+class="text-base"  // 1rem (16px) - default body
+class="text-lg"    // 1.125rem (18px)
+class="text-xl"    // 1.25rem (20px)
+class="text-2xl"   // 1.5rem (24px)
+class="text-3xl"   // 1.875rem (30px)
+class="text-4xl"   // 2.25rem (36px)
+```
+
+**Font weights:**
+```typescript
+class="font-normal"    // 400
+class="font-medium"    // 500
+class="font-semibold"  // 600
+class="font-bold"      // 700
+```
+
+**Font families (from theme):**
+```typescript
+class="font-sans"   // System UI font stack
+class="font-mono"   // Monospace for code
+class="font-serif"  // Serif for special cases
+```
+
+### Spacing Best Practices
+
+**USE the standard spacing scale:**
+```typescript
+// ✅ CORRECT - Standard spacing
+class="p-4"      // 1rem
+class="gap-2"    // 0.5rem
+class="mt-6"     // 1.5rem
+class="space-y-4" // 1rem between children
+```
+
+**AVOID arbitrary spacing unless absolutely necessary:**
+```typescript
+// ❌ AVOID - Arbitrary spacing
+class="p-[13px]"  // Use p-3 or p-4 instead
+```
+
+### Dark Mode Support
+
+All semantic colors automatically support dark mode. The theme system handles this via:
+- `:root` for light mode values
+- `.dark` or `[data-theme="theme-name"].dark` for dark mode values
+
+**You do NOT need to add `dark:` prefixes** when using semantic colors:
+```typescript
+// ✅ CORRECT - Semantic colors auto-adapt
+class="bg-background text-foreground"  // Works in both light and dark
+
+// ❌ WRONG - Manual dark mode with raw colors
+class="bg-white dark:bg-gray-900"  // Don't do this
+```
+
 ### Component Variants
 Components support multiple variants through the `variant` attribute:
 
@@ -269,36 +453,6 @@ export class FormComponent {
 }
 ```
 
-## File Organization Patterns
-
-### Example Structure
-Each component example follows this structure:
-
-```
-(component-name)/
-├── component-name.preview.ts           # Main preview component
-├── component-name.page.ts              # Page wrapper (if needed)
-├── component-name--variant.example.ts  # Variant examples
-└── component-name--feature.example.ts  # Feature-specific examples
-```
-
-### Preview Component Pattern
-Every preview component exports:
-
-```typescript
-export class ComponentPreview {
-  // Component implementation
-}
-
-export const defaultImports = `
-import { HlmComponentImports } from '@spartan-ng/helm/component';
-`;
-
-export const defaultSkeleton = `
-<component-template />
-`;
-```
-
 ## Best Practices
 
 ### Component Composition
@@ -314,12 +468,12 @@ export const defaultSkeleton = `
 4. **State Management**: Use Angular signals for reactive state management
 
 ### Code Organization
-1. **Reusable Components**: Add new reusable components to `libs/ui/`
+1. **Reusable Components**: Add new reusable components to `libs/ui/` (Spartan) or `libs/grg-ui/` (GRG Kit)
 2. **Example Components**: Keep examples in `libs/examples/` for documentation
 3. **Import Grouping**: Group imports by source (Angular, third-party, internal)
 4. **Type Safety**: Use TypeScript interfaces for component props and data structures
 
-## Component Catalog
+## Available Resources
 
 ### Basic Components
 - **Button**: Interactive buttons with multiple variants and sizes
@@ -367,5 +521,15 @@ export const defaultSkeleton = `
 - **Calendar**: Date selection interfaces
 - **Date Picker**: Date input controls
 - **Slider**: Range input controls
+
+### GRG Kit Custom Components
+- **File Upload**: Drag and drop file upload component
+
+## Package Manager
+
+Use npm for package management operations:
+- `npm install` for installing dependencies
+- `npm install <package>` for adding packages
+- `npm uninstall` for removing packages
 
 This design system provides a comprehensive foundation for building consistent, accessible, and maintainable Angular applications using modern UI patterns and best practices.

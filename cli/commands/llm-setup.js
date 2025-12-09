@@ -343,6 +343,178 @@ class="flex flex-col justify-between gap-4 py-4 sm:flex-row sm:items-center"
 [attr.data-state]="row.getIsSelected() && 'selected'"
 \`\`\`
 
+## TailwindCSS Best Practices (CRITICAL)
+
+### NEVER Use Raw Color Classes
+
+**FORBIDDEN - Do NOT use these patterns:**
+\`\`\`typescript
+// ❌ WRONG - Raw Tailwind colors
+class="text-green-600 bg-green-100"     // No raw green
+class="text-red-500 bg-red-50"          // No raw red
+class="text-yellow-600 bg-yellow-100"   // No raw yellow
+class="text-blue-500 bg-blue-100"       // No raw blue
+class="border-gray-200"                 // No raw gray
+class="text-slate-700"                  // No raw slate
+\`\`\`
+
+**REQUIRED - Use semantic color tokens:**
+\`\`\`typescript
+// ✅ CORRECT - Semantic colors from design system
+class="text-foreground"                 // Primary text
+class="text-muted-foreground"           // Secondary/muted text
+class="bg-background"                   // Page background
+class="bg-card"                         // Card background
+class="bg-muted"                        // Muted/subtle background
+class="bg-primary text-primary-foreground"  // Primary actions
+class="bg-secondary text-secondary-foreground"  // Secondary elements
+class="bg-destructive text-destructive-foreground"  // Errors/danger
+class="bg-accent text-accent-foreground"  // Accents/highlights
+class="border-border"                   // Standard borders
+class="border-input"                    // Input borders
+\`\`\`
+
+### Available Semantic Colors
+
+These are the ONLY colors you should use (defined in \`styles.css\` and theme files):
+
+| Token | Usage |
+|-------|-------|
+| \`background\` / \`foreground\` | Page background and primary text |
+| \`card\` / \`card-foreground\` | Card containers |
+| \`popover\` / \`popover-foreground\` | Popovers, dropdowns |
+| \`primary\` / \`primary-foreground\` | Primary buttons, links |
+| \`secondary\` / \`secondary-foreground\` | Secondary actions |
+| \`muted\` / \`muted-foreground\` | Subtle backgrounds, secondary text |
+| \`accent\` / \`accent-foreground\` | Highlights, hover states |
+| \`destructive\` / \`destructive-foreground\` | Errors, delete actions |
+| \`border\` | Standard borders |
+| \`input\` | Form input borders |
+| \`ring\` | Focus rings |
+| \`chart-1\` through \`chart-5\` | Chart/data visualization colors |
+| \`sidebar-*\` | Sidebar-specific colors |
+
+### Adding New Semantic Colors
+
+If you need a color that doesn't exist (e.g., success, warning, info):
+
+**Step 1: Add CSS variables to \`src/styles.css\`:**
+\`\`\`css
+:root {
+  /* Existing variables... */
+  
+  /* Add new semantic color with BOTH light and dark values */
+  --success: oklch(0.72 0.19 142);           /* Green for light mode */
+  --success-foreground: oklch(1 0 0);        /* White text */
+  
+  --warning: oklch(0.75 0.18 85);            /* Amber for light mode */
+  --warning-foreground: oklch(0.2 0 0);      /* Dark text */
+  
+  --info: oklch(0.65 0.15 250);              /* Blue for light mode */
+  --info-foreground: oklch(1 0 0);           /* White text */
+}
+
+.dark {
+  /* Dark mode equivalents */
+  --success: oklch(0.65 0.17 142);
+  --success-foreground: oklch(1 0 0);
+  
+  --warning: oklch(0.70 0.16 85);
+  --warning-foreground: oklch(0.15 0 0);
+  
+  --info: oklch(0.60 0.14 250);
+  --info-foreground: oklch(1 0 0);
+}
+\`\`\`
+
+**Step 2: Register in \`@theme inline\` block (in theme file):**
+\`\`\`css
+@theme inline {
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+}
+\`\`\`
+
+**Step 3: Now use in templates:**
+\`\`\`typescript
+class="bg-success text-success-foreground"  // Success states
+class="bg-warning text-warning-foreground"  // Warning states
+class="bg-info text-info-foreground"        // Info states
+\`\`\`
+
+### Typography Best Practices
+
+**NEVER use arbitrary font sizes:**
+\`\`\`typescript
+// ❌ WRONG - Arbitrary sizes
+class="text-[13px]"     // No arbitrary values
+class="text-[1.1rem]"   // No arbitrary values
+\`\`\`
+
+**USE the Tailwind typography scale:**
+\`\`\`typescript
+// ✅ CORRECT - Standard typography scale
+class="text-xs"    // 0.75rem (12px)
+class="text-sm"    // 0.875rem (14px)
+class="text-base"  // 1rem (16px) - default body
+class="text-lg"    // 1.125rem (18px)
+class="text-xl"    // 1.25rem (20px)
+class="text-2xl"   // 1.5rem (24px)
+class="text-3xl"   // 1.875rem (30px)
+class="text-4xl"   // 2.25rem (36px)
+\`\`\`
+
+**Font weights:**
+\`\`\`typescript
+class="font-normal"    // 400
+class="font-medium"    // 500
+class="font-semibold"  // 600
+class="font-bold"      // 700
+\`\`\`
+
+**Font families (from theme):**
+\`\`\`typescript
+class="font-sans"   // System UI font stack
+class="font-mono"   // Monospace for code
+class="font-serif"  // Serif for special cases
+\`\`\`
+
+### Spacing Best Practices
+
+**USE the standard spacing scale:**
+\`\`\`typescript
+// ✅ CORRECT - Standard spacing
+class="p-4"      // 1rem
+class="gap-2"    // 0.5rem
+class="mt-6"     // 1.5rem
+class="space-y-4" // 1rem between children
+\`\`\`
+
+**AVOID arbitrary spacing unless absolutely necessary:**
+\`\`\`typescript
+// ❌ AVOID - Arbitrary spacing
+class="p-[13px]"  // Use p-3 or p-4 instead
+\`\`\`
+
+### Dark Mode Support
+
+All semantic colors automatically support dark mode. The theme system handles this via:
+- \`:root\` for light mode values
+- \`.dark\` or \`[data-theme="theme-name"].dark\` for dark mode values
+
+**You do NOT need to add \`dark:\` prefixes** when using semantic colors:
+\`\`\`typescript
+// ✅ CORRECT - Semantic colors auto-adapt
+class="bg-background text-foreground"  // Works in both light and dark
+
+// ❌ WRONG - Manual dark mode with raw colors
+class="bg-white dark:bg-gray-900"  // Don't do this
+\`\`\`
+
 ### Component Variants
 Components support multiple variants through the \`variant\` attribute:
 
@@ -853,11 +1025,53 @@ Use MCP only for:
 
 **Do NOT use MCP for Spartan-NG components** - they are already installed!
 
+## TailwindCSS Rules (CRITICAL)
+
+### NEVER use raw Tailwind colors:
+\`\`\`html
+<!-- ❌ FORBIDDEN -->
+<div class="text-green-600 bg-green-100">Success</div>
+<div class="text-red-500">Error</div>
+<div class="bg-yellow-50 border-yellow-200">Warning</div>
+\`\`\`
+
+### ALWAYS use semantic color tokens:
+\`\`\`html
+<!-- ✅ CORRECT -->
+<div class="bg-primary text-primary-foreground">Primary</div>
+<div class="bg-destructive text-destructive-foreground">Error</div>
+<div class="text-muted-foreground">Secondary text</div>
+<div class="bg-muted">Subtle background</div>
+<div class="border-border">Standard border</div>
+\`\`\`
+
+### Available semantic colors:
+\`background\`, \`foreground\`, \`card\`, \`card-foreground\`, \`popover\`, \`popover-foreground\`,
+\`primary\`, \`primary-foreground\`, \`secondary\`, \`secondary-foreground\`, \`muted\`, \`muted-foreground\`,
+\`accent\`, \`accent-foreground\`, \`destructive\`, \`destructive-foreground\`, \`border\`, \`input\`, \`ring\`
+
+### Need a new color (e.g., success, warning)?
+1. Add CSS variable to \`src/styles.css\` with light AND dark mode values
+2. Register in \`@theme inline\` block
+3. Then use: \`bg-success text-success-foreground\`
+
+### Typography - use standard scale:
+\`\`\`html
+<!-- ✅ CORRECT -->
+<p class="text-sm">Small</p>
+<p class="text-base">Body</p>
+<h2 class="text-xl font-semibold">Heading</h2>
+
+<!-- ❌ WRONG - arbitrary sizes -->
+<p class="text-[13px]">Don't do this</p>
+\`\`\`
+
 ## Remember
 - Spartan-NG components are pre-installed - just import and use
 - Follow existing patterns in the codebase
-- Use TailwindCSS v4 for styling
+- Use TailwindCSS v4 for styling with SEMANTIC colors only
 - Prefer signals for state management
+- NEVER use raw colors like text-green-600, bg-yellow-100, etc.
 `;
 }
 
@@ -991,6 +1205,91 @@ Use npm for package management.
 ## Styling
 
 Use TailwindCSS v4 for all styling. Prefer signals for state management.
+
+## TailwindCSS Best Practices (CRITICAL)
+
+### NEVER use raw Tailwind colors:
+\`\`\`html
+<!-- ❌ FORBIDDEN - These break theming and dark mode -->
+<div class="text-green-600 bg-green-100">Success</div>
+<div class="text-red-500">Error</div>
+<div class="bg-yellow-50">Warning</div>
+<div class="border-gray-200">Border</div>
+\`\`\`
+
+### ALWAYS use semantic color tokens:
+\`\`\`html
+<!-- ✅ CORRECT - These respect theming and dark mode -->
+<div class="bg-primary text-primary-foreground">Primary action</div>
+<div class="bg-destructive text-destructive-foreground">Error/Delete</div>
+<div class="text-muted-foreground">Secondary text</div>
+<div class="bg-muted">Subtle background</div>
+<div class="bg-accent text-accent-foreground">Highlighted</div>
+<div class="border-border">Standard border</div>
+\`\`\`
+
+### Available semantic colors:
+| Token | Usage |
+|-------|-------|
+| \`background\` / \`foreground\` | Page background, primary text |
+| \`card\` / \`card-foreground\` | Card containers |
+| \`primary\` / \`primary-foreground\` | Primary buttons, CTAs |
+| \`secondary\` / \`secondary-foreground\` | Secondary actions |
+| \`muted\` / \`muted-foreground\` | Subtle backgrounds, secondary text |
+| \`accent\` / \`accent-foreground\` | Highlights, hover states |
+| \`destructive\` / \`destructive-foreground\` | Errors, delete actions |
+| \`border\` | Standard borders |
+| \`input\` | Form input borders |
+
+### Adding new semantic colors (e.g., success, warning, info):
+
+**Step 1:** Add to \`src/styles.css\` with BOTH light and dark values:
+\`\`\`css
+:root {
+  --success: oklch(0.72 0.19 142);
+  --success-foreground: oklch(1 0 0);
+}
+.dark {
+  --success: oklch(0.65 0.17 142);
+  --success-foreground: oklch(1 0 0);
+}
+\`\`\`
+
+**Step 2:** Register in \`@theme inline\` block in theme file:
+\`\`\`css
+@theme inline {
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+}
+\`\`\`
+
+**Step 3:** Use in templates:
+\`\`\`html
+<div class="bg-success text-success-foreground">Success!</div>
+\`\`\`
+
+### Typography - use standard scale only:
+\`\`\`html
+<!-- ✅ CORRECT -->
+<p class="text-sm">Small (14px)</p>
+<p class="text-base">Body (16px)</p>
+<h2 class="text-xl font-semibold">Heading</h2>
+
+<!-- ❌ WRONG - arbitrary sizes -->
+<p class="text-[13px]">Avoid arbitrary values</p>
+\`\`\`
+
+Standard scale: \`text-xs\` (12px), \`text-sm\` (14px), \`text-base\` (16px), \`text-lg\` (18px), \`text-xl\` (20px), \`text-2xl\` (24px), \`text-3xl\` (30px), \`text-4xl\` (36px)
+
+### Dark mode is automatic:
+Semantic colors automatically adapt to dark mode. Do NOT use \`dark:\` prefix with raw colors.
+\`\`\`html
+<!-- ✅ Auto-adapts to dark mode -->
+<div class="bg-background text-foreground">Content</div>
+
+<!-- ❌ Don't do this -->
+<div class="bg-white dark:bg-gray-900">Content</div>
+\`\`\`
 `;
 }
 
