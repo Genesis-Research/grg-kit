@@ -4,7 +4,7 @@
   "lastUpdated": "2025-12-08",
   "cli": {
     "name": "grg",
-    "version": "0.6.7",
+    "version": "0.6.8",
     "commands": {
       "init": {
         "usage": "grg init [--theme <name>]",
@@ -20,9 +20,17 @@
           "shell"
         ]
       },
+      "addComponent": {
+        "usage": "grg add component <componentName>",
+        "description": "Add GRG components to your project",
+        "validComponents": [
+          "stepper",
+          "file-upload"
+        ]
+      },
       "list": {
         "usage": "grg list [category]",
-        "description": "List available resources"
+        "description": "List available resources (blocks, components, themes)"
       }
     }
   },

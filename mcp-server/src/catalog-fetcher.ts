@@ -32,6 +32,7 @@ export interface CLICommand {
   description: string;
   themeFlag?: string;
   validBlocks?: string[];
+  validComponents?: string[];
 }
 
 export interface CLIMetadata {
@@ -40,6 +41,7 @@ export interface CLIMetadata {
   commands: {
     init: CLICommand;
     addBlock: CLICommand;
+    addComponent?: CLICommand;
     list: CLICommand;
   };
 }
@@ -58,7 +60,7 @@ let memoryCacheTime = 0;
 // Inline fallback CLI metadata
 const FALLBACK_CLI: CLIMetadata = {
   name: 'grg',
-  version: '0.6.2',
+  version: '0.6.8',
   commands: {
     init: {
       usage: 'grg init [--theme <name>]',
@@ -70,9 +72,14 @@ const FALLBACK_CLI: CLIMetadata = {
       description: 'Add blocks to your project',
       validBlocks: ['auth', 'shell', 'settings']
     },
+    addComponent: {
+      usage: 'grg add component <componentName>',
+      description: 'Add GRG components to your project',
+      validComponents: ['stepper', 'file-upload']
+    },
     list: {
       usage: 'grg list [category]',
-      description: 'List available resources'
+      description: 'List available resources (blocks, components, themes)'
     }
   }
 };

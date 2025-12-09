@@ -21,7 +21,7 @@ program
   .option('-t, --theme <name>', 'Theme to install (grg-theme, claude, clean-slate, modern-minimal, amber-minimal, mocks)', 'grg-theme')
   .action(init);
 
-// Add command with block subcommand
+// Add command with block and component subcommands
 const addCommand = program.command('add').description('Add resources to your project');
 
 addCommand
@@ -30,6 +30,16 @@ addCommand
   .option('--all', 'Add all blocks')
   .option('-o, --output <path>', 'Custom output directory')
   .action(add);
+
+addCommand
+  .command('component [componentName]')
+  .description('Add GRG components to your project (e.g., grg add component stepper)')
+  .option('--all', 'Add all components')
+  .option('-o, --output <path>', 'Custom output directory')
+  .action(async (componentName, options) => {
+    const { addComponent } = require('../commands/add');
+    await addComponent(componentName, options);
+  });
 
 // List command
 program

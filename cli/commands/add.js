@@ -196,4 +196,102 @@ function showUsage(RESOURCES) {
   console.log(chalk.gray('\nRun'), chalk.cyan('grg list blocks'), chalk.gray('for more details'));
 }
 
-module.exports = { add };
+/**
+ * Add component command - downloads GRG components
+ * Format: grg add component <componentName>
+ * Examples:
+ *   grg add component stepper          # Download stepper component
+ *   grg add component file-upload      # Download file-upload component
+ *   grg add component --all            # All components
+ */
+async function addComponent(componentName, options) {
+  // Fetch catalog dynamically (with caching)
+  const spinner = ora('Fetching catalog...').start();
+  const RESOURCES = await fetchCatalog({ silent: true });
+  spinner.stop();
+
+  // Handle --all flag (download all components)
+  if (options.all) {
+    console.log(chalk.bold.cyan(`\n📦 Adding all components\n`));
+    
+    for (const component of RESOURCES.components) {
+      await downloadComponent(component, options.output);
+    }
+    
+    console.log(chalk.bold.green('✨ Done!'));
+    return;
+  }
+
+  // Validate component name
+  if (!componentName) {
+    showComponentUsage(RESOURCES);
+    process.exit(1);
+  }
+
+  const component = RESOURCES.components.find(c => c.name === componentName);
+  if (!component) {
+    console.error(chalk.red(`\nError: Component "${componentName}" not found`));
+    console.log(chalk.yellow('\nAvailable components:'));
+    RESOURCES.components.forEach(c => {
+      console.log(chalk.cyan(`  ${c.name}`), chalk.gray(`- ${c.description}`));
+    });
+    process.exit(1);
+  }
+
+  await downloadComponent(component, options.output);
+  console.log(chalk.bold.green('✨ Done!'));
+}
+
+/**
+ * Download a component
+ */
+async function downloadComponent(component, customOutput) {
+  const downloadSpinner = ora();
+  const outputPath = customOutput 
+    ? `${customOutput}/${component.name}` 
+    : component.defaultOutput;
+
+  downloadSpinner.start(`Downloading ${component.title}...`);
+
+  try {
+    const emitter = degit(`${REPO}/${component.path}`, {
+      cache: false,
+      force: true,
+      verbose: false,
+    });
+
+    await emitter.clone(outputPath);
+
+    downloadSpinner.succeed(chalk.green(`✓ ${component.title} added`));
+    console.log(chalk.gray(`  Location: ${outputPath}`));
+    
+    if (component.dependencies && component.dependencies.length > 0) {
+      console.log(chalk.gray(`  Dependencies: ${component.dependencies.join(', ')}`));
+    }
+    console.log();
+
+  } catch (error) {
+    downloadSpinner.fail(chalk.red(`Failed to download ${component.title}`));
+    console.error(chalk.red(error.message));
+  }
+}
+
+/**
+ * Show component usage help
+ */
+function showComponentUsage(RESOURCES) {
+  console.log(chalk.yellow('\nUsage: grg add component <componentName>\n'));
+  console.log(chalk.bold('Examples:'));
+  console.log(chalk.cyan('  grg add component stepper'), chalk.gray('      # Download stepper'));
+  console.log(chalk.cyan('  grg add component file-upload'), chalk.gray('  # Download file-upload'));
+  console.log(chalk.cyan('  grg add component --all'), chalk.gray('        # All components'));
+  
+  console.log(chalk.bold('\nAvailable components:'));
+  RESOURCES.components.forEach(c => {
+    console.log(chalk.cyan(`  ${c.name}`), chalk.gray(`- ${c.description}`));
+  });
+  
+  console.log(chalk.gray('\nRun'), chalk.cyan('grg list components'), chalk.gray('for more details'));
+}
+
+module.exports = { add, addComponent };

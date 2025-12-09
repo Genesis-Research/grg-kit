@@ -23,6 +23,9 @@ function getThemeInstallCommand(cli, themeName) {
 function getValidBlocks(cli) {
     return cli?.commands.addBlock.validBlocks || ['auth', 'shell', 'settings'];
 }
+function getComponentInstallCommand(componentName) {
+    return `grg add component ${componentName}`;
+}
 // Get resources - uses cache or fetches dynamically
 async function getResources() {
     return await fetchCatalog();
@@ -93,27 +96,28 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             },
             {
                 name: 'install_resource',
-                description: `Install a GRG Kit block into the project. Returns installation status and next steps. Executes: grg add block <name>
+                description: `Install a GRG Kit block or component into the project. Returns installation status and next steps.
 
-IMPORTANT: The 'resource' parameter should be JUST the block name (e.g., "auth", "shell", "settings") - NOT prefixed with "block:" or any other prefix.
+IMPORTANT: The 'resource' parameter should be JUST the name (e.g., "auth", "stepper") - NOT prefixed with "block:" or "component:".
 
 The tool will auto-detect the Angular project root by searching for angular.json from the current working directory.
 
 Examples:
 - To install auth block: resource="auth" → runs: grg add block auth
 - To install shell sidebar: resource="shell", files=["sidebar"] → runs: grg add block shell sidebar
-- To install settings: resource="settings" → runs: grg add block settings`,
+- To install stepper component: resource="stepper" → runs: grg add component stepper
+- To install file-upload component: resource="file-upload" → runs: grg add component file-upload`,
                 inputSchema: {
                     type: 'object',
                     properties: {
                         resource: {
                             type: 'string',
-                            description: 'Block name to install. Must be one of: "auth", "shell", "settings". Do NOT include "block:" prefix - just the name.',
+                            description: 'Block or component name to install. Blocks: "auth", "shell", "settings". Components: "stepper", "file-upload". Do NOT include "block:" or "component:" prefix - just the name.',
                         },
                         files: {
                             type: 'array',
                             items: { type: 'string' },
-                            description: 'Optional specific file IDs to install. For auth: ["login", "register", "forgot-password"]. For shell: ["sidebar", "sidebar-footer", "topnav", "topnav-footer", "collapsible", "collapsible-footer"]. If omitted, installs all files.',
+                            description: 'Optional specific file IDs to install (only for blocks). For auth: ["login", "register", "forgot-password"]. For shell: ["sidebar", "sidebar-footer", "topnav", "topnav-footer", "collapsible", "collapsible-footer"]. If omitted, installs all files.',
                         },
                         output: {
                             type: 'string',
@@ -252,6 +256,8 @@ async function searchResources(query, category = 'all') {
             return getBlockInstallCommand(res.cli, name);
         if (type === 'theme')
             return getThemeInstallCommand(res.cli, name);
+        if (type === 'component')
+            return getComponentInstallCommand(name);
         return 'Included automatically with grg init';
     };
     return {
@@ -287,7 +293,7 @@ async function getResourceDetails(resource) {
             break;
         case 'component':
             details = res.components.find((c) => c.name === name);
-            installCmd = 'Included automatically with grg init';
+            installCmd = getComponentInstallCommand(name);
             break;
         case 'block':
             details = res.blocks.find((b) => b.name === name);
@@ -354,7 +360,16 @@ async function suggestResources(requirement) {
             { type: 'block', name: 'settings', install: 'grg add block settings' },
         ],
         form: [
-            { type: 'component', name: 'stepper', install: 'Included automatically with grg init' },
+            { type: 'component', name: 'stepper', install: 'grg add component stepper' },
+        ],
+        stepper: [
+            { type: 'component', name: 'stepper', install: 'grg add component stepper' },
+        ],
+        upload: [
+            { type: 'component', name: 'file-upload', install: 'grg add component file-upload' },
+        ],
+        file: [
+            { type: 'component', name: 'file-upload', install: 'grg add component file-upload' },
         ],
         theme: [
             { type: 'theme', name: 'grg-theme', install: 'grg init --theme grg-theme' },
@@ -402,18 +417,45 @@ async function suggestResources(requirement) {
 }
 async function installResource(resource, files, output) {
     const res = await getResources();
-    // Strip "block:" prefix if provided (common LLM mistake)
-    let blockName = resource;
+    // Strip prefixes if provided (common LLM mistake)
+    let resourceName = resource;
+    let resourceType = null;
     if (resource.startsWith('block:')) {
-        blockName = resource.replace('block:', '');
+        resourceName = resource.replace('block:', '');
+        resourceType = 'block';
     }
-    // Validate block name using CLI metadata
+    else if (resource.startsWith('component:')) {
+        resourceName = resource.replace('component:', '');
+        resourceType = 'component';
+    }
+    // Auto-detect resource type if not specified
     const validBlocks = getValidBlocks(res.cli);
-    if (!validBlocks.includes(blockName)) {
-        throw new Error(`Invalid block name: "${blockName}". Valid blocks are: ${validBlocks.join(', ')}`);
+    const validComponents = res.components.map((c) => c.name);
+    if (!resourceType) {
+        if (validBlocks.includes(resourceName)) {
+            resourceType = 'block';
+        }
+        else if (validComponents.includes(resourceName)) {
+            resourceType = 'component';
+        }
     }
-    // Build command using CLI metadata
-    const command = getBlockInstallCommand(res.cli, blockName, files) + (output ? ` -o ${output}` : '');
+    // Validate resource
+    if (!resourceType) {
+        throw new Error(`Invalid resource: "${resourceName}". Valid blocks: ${validBlocks.join(', ')}. Valid components: ${validComponents.join(', ')}`);
+    }
+    let command;
+    if (resourceType === 'block') {
+        if (!validBlocks.includes(resourceName)) {
+            throw new Error(`Invalid block name: "${resourceName}". Valid blocks are: ${validBlocks.join(', ')}`);
+        }
+        command = getBlockInstallCommand(res.cli, resourceName, files) + (output ? ` -o ${output}` : '');
+    }
+    else {
+        if (!validComponents.includes(resourceName)) {
+            throw new Error(`Invalid component name: "${resourceName}". Valid components are: ${validComponents.join(', ')}`);
+        }
+        command = getComponentInstallCommand(resourceName) + (output ? ` -o ${output}` : '');
+    }
     // Return the command for the AI to execute via run_command tool
     // MCP servers run in a separate process and don't have access to the user's project directory
     return {
@@ -422,7 +464,8 @@ async function installResource(resource, files, output) {
                 type: 'text',
                 text: JSON.stringify({
                     success: true,
-                    resource: blockName,
+                    resource: resourceName,
+                    type: resourceType,
                     command,
                     instruction: 'Run this command in the Angular project root directory using the run_command tool.',
                     note: 'The MCP server cannot execute commands directly. Use your run_command tool to execute the command above.',
@@ -454,11 +497,12 @@ async function listResources(category = 'all') {
     if (category === 'all' || category === 'components') {
         result.resources.components = {
             count: res.components.length,
-            note: 'Components are included automatically via: grg init',
+            note: 'Components are added via: grg add component <componentName>',
             items: res.components.map((c) => ({
                 name: c.name,
                 title: c.title,
                 description: c.description,
+                install: getComponentInstallCommand(c.name),
             })),
         };
     }
