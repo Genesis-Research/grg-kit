@@ -114,7 +114,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: 'install_resource',
-        description: `Install a GRG Kit block or component into the project. Returns installation status and next steps.
+        description: `Install a GRG Kit block or component into the project. Returns installation command and POST-INSTALL INSTRUCTIONS that you MUST follow.
 
 IMPORTANT: The 'resource' parameter should be JUST the name (e.g., "auth", "file-upload") - NOT prefixed with "block:" or "component:".
 
@@ -123,7 +123,13 @@ The tool will auto-detect the Angular project root by searching for angular.json
 Examples:
 - To install auth block: resource="auth" → runs: grg add block auth
 - To install shell sidebar: resource="shell", files=["sidebar"] → runs: grg add block shell sidebar
-- To install file-upload component: resource="file-upload" → runs: grg add component file-upload`,
+- To install file-upload component: resource="file-upload" → runs: grg add component file-upload
+
+CRITICAL: After running the install command, you MUST:
+1. Read the postInstallInstructions in the response
+2. Move the downloaded files from src/app/blocks/ to the suggested location
+3. Follow the integrationSteps to wire the component into the app (routes, layout, etc.)
+4. Do NOT leave blocks sitting in the blocks/ folder - integrate them properly!`,
         inputSchema: {
           type: 'object',
           properties: {
@@ -509,7 +515,7 @@ async function installResource(resource: string, files?: string[], output?: stri
           type: resourceType,
           command,
           instruction: 'Run this command in the Angular project root directory using the run_command tool.',
-          note: 'The MCP server cannot execute commands directly. Use your run_command tool to execute the command above.',
+          postInstall: `IMPORTANT: After running the command, files will be downloaded to src/app/blocks/${resourceName}/. Do NOT leave them there. Move them to an appropriate location in the project structure (e.g., src/app/pages/, src/app/features/, src/app/layout/) and integrate them properly - add routes, update imports, wire into the app architecture. After integration is complete, delete the src/app/blocks/${resourceName}/ folder to clean up.`,
         }, null, 2),
       },
     ],

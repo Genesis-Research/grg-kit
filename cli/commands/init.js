@@ -48,7 +48,7 @@ async function init(options) {
   // Step 1: Install Tailwind CSS v4
   spinner.start('Installing Tailwind CSS v4...');
   try {
-    await execAsync('npm install tailwindcss @tailwindcss/postcss postcss');
+    await execAsync('npm install tailwindcss @tailwindcss/postcss postcss --force');
     spinner.succeed(chalk.green('✓ Tailwind CSS v4 installed'));
   } catch (error) {
     spinner.fail(chalk.red('Failed to install Tailwind CSS v4'));
