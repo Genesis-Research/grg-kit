@@ -2,28 +2,28 @@ import { Component } from '@angular/core';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmAlertImports } from '@spartan-ng/helm/alert';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideTerminal, lucidePackage, lucideDownload, lucideBrain, lucideZap } from '@ng-icons/lucide';
+import { lucideTerminal, lucidePackage, lucideDownload, lucideBrain, lucideZap, lucideBot } from '@ng-icons/lucide';
 import { HlmIcon } from '@spartan-ng/helm/icon';
 
 @Component({
   selector: 'app-getting-started',
   imports: [HlmCardImports, HlmAlertImports, NgIcon, HlmIcon],
-  providers: [provideIcons({ lucideTerminal, lucidePackage, lucideDownload, lucideBrain, lucideZap })],
+  providers: [provideIcons({ lucideTerminal, lucidePackage, lucideDownload, lucideBrain, lucideZap, lucideBot })],
   template: `
     <div class="max-w-4xl mx-auto space-y-8">
       <div class="space-y-2">
         <h1 class="text-4xl font-bold tracking-tight">Getting Started</h1>
         <p class="text-lg text-muted-foreground">
-          Set up your Angular project with GRG Kit components and resources
+          Set up your Angular project with GRG Kit using AI assistants
         </p>
       </div>
 
-      <!-- Prerequisites Alert -->
+      <!-- MCP-First Alert -->
       <div hlmAlert>
-        <ng-icon hlm hlmAlertIcon name="lucideTerminal" />
-        <h4 hlmAlertTitle>Prerequisites</h4>
+        <ng-icon hlm hlmAlertIcon name="lucideBot" />
+        <h4 hlmAlertTitle>AI-First Workflow</h4>
         <p hlmAlertDescription>
-          Before using GRG Kit resources, you'll need to set up your Angular project with the required dependencies.
+          GRG Kit is designed to work with AI assistants via MCP. After initial setup, your AI assistant will handle adding themes, blocks, and components for you.
         </p>
       </div>
 
@@ -46,14 +46,14 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
           <div class="mt-4 p-4 bg-muted/50 rounded-md">
             <p class="text-sm font-medium mb-2">💡 What gets installed:</p>
             <ul class="text-sm text-muted-foreground space-y-1">
-              <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg</code> - CLI for initializing projects and adding blocks</li>
+              <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg</code> - CLI for initializing projects</li>
               <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg-mcp-server</code> - MCP server for AI assistant integration</li>
             </ul>
           </div>
         </div>
       </section>
 
-      <!-- GRG Kit Init Section -->
+      <!-- Step 2: Initialize GRG Kit -->
       <section hlmCard class="mt-6">
         <div hlmCardHeader>
           <div class="flex items-center gap-2">
@@ -66,62 +66,40 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
         </div>
         <div hlmCardContent class="space-y-4">
           <div class="space-y-2">
-            <p class="text-sm font-medium">Create an Angular project (if you don't have one) and initialize:</p>
+            <p class="text-sm font-medium">Create an Angular project and initialize:</p>
             <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>ng new my-app --style=css
 cd my-app
 grg init</code></pre>
-          </div>
-
-          <div class="space-y-2">
-            <p class="text-sm font-medium">Or choose a specific theme:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg init --theme claude</code></pre>
           </div>
 
           <div class="mt-4 p-4 bg-muted/50 rounded-md">
             <p class="text-sm font-medium mb-2">💡 What <code class="text-xs bg-muted px-1 py-0.5 rounded">grg init</code> does:</p>
             <ul class="text-sm text-muted-foreground space-y-1">
               <li>• Installs Tailwind CSS v4 with PostCSS</li>
-              <li>• Creates <code class="text-xs bg-muted px-1 py-0.5 rounded">.postcssrc.json</code> configuration</li>
               <li>• Installs and configures Spartan-NG CLI</li>
               <li>• Runs <code class="text-xs bg-muted px-1 py-0.5 rounded">ng g @spartan-ng/cli:ui all</code> to install all UI components</li>
               <li>• Downloads 56+ Spartan-NG examples to <code class="text-xs bg-muted px-1 py-0.5 rounded">libs/examples</code></li>
-              <li>• Downloads the selected theme to <code class="text-xs bg-muted px-1 py-0.5 rounded">src/themes</code></li>
-              <li>• Updates <code class="text-xs bg-muted px-1 py-0.5 rounded">src/styles.css</code> with theme import</li>
+              <li>• Downloads the default theme</li>
             </ul>
-          </div>
-
-          <div class="mt-4 p-4 bg-accent/50 rounded-md">
-            <p class="text-sm font-medium mb-2">📋 Available Themes</p>
-            <ul class="text-sm text-muted-foreground space-y-1">
-              <li><strong>grg-theme</strong> - Default theme with purple/orange accents</li>
-              <li><strong>claude</strong> - Claude-inspired warm tones</li>
-              <li><strong>clean-slate</strong> - Minimal grayscale palette</li>
-              <li><strong>modern-minimal</strong> - Contemporary minimal design</li>
-              <li><strong>amber-minimal</strong> - Warm amber accents</li>
-              <li><strong>mocks</strong> - Theme for mockups and prototypes</li>
-            </ul>
-            <p class="text-sm text-muted-foreground mt-2">
-              Browse the <strong>Colors</strong> tab to preview each theme's palette.
-            </p>
           </div>
         </div>
       </section>
 
-      <!-- LLM Setup Section -->
+      <!-- Step 3: Configure MCP Server -->
       <section hlmCard class="mt-6">
         <div hlmCardHeader>
           <div class="flex items-center gap-2">
             <ng-icon hlm name="lucideBrain" size="lg" />
-            <h3 hlmCardTitle>3. Setup AI Assistant (Optional)</h3>
+            <h3 hlmCardTitle>3. Configure MCP Server</h3>
           </div>
           <p hlmCardDescription>
-            Configure MCP server and generate rules for AI assistants
+            Connect your AI assistant to GRG Kit resources
           </p>
         </div>
         <div hlmCardContent class="space-y-4">
           <div class="space-y-2">
-            <p class="text-sm font-medium">Generate AI rules and configure MCP:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code># For Windsurf (default)
+            <p class="text-sm font-medium">Generate AI rules:</p>
+            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code># For Windsurf
 grg llm-setup
 
 # For Claude Code
@@ -129,7 +107,7 @@ grg llm-setup --output .claude</code></pre>
           </div>
 
           <div class="mt-4 p-4 bg-muted/50 rounded-md">
-            <p class="text-sm font-medium mb-2">🔧 Configure MCP Server in your IDE:</p>
+            <p class="text-sm font-medium mb-2">🔧 Add MCP Server to your IDE:</p>
             <div class="space-y-3 text-sm text-muted-foreground">
               <div>
                 <p class="font-medium text-foreground">Windsurf:</p>
@@ -152,91 +130,96 @@ grg llm-setup --output .claude</code></pre>
 {{ '}' }}</code></pre>
             </div>
           </div>
-
-          <div class="mt-4 p-4 bg-accent/50 rounded-md">
-            <p class="text-sm font-medium mb-2">✅ What This Enables:</p>
-            <ul class="text-sm text-muted-foreground space-y-1">
-              <li>• AI automatically searches GRG Kit before writing custom code</li>
-              <li>• AI knows about themes, components, blocks, and 56+ examples</li>
-              <li>• AI can install blocks directly via MCP tools</li>
-            </ul>
-          </div>
         </div>
       </section>
 
-      <!-- Add Blocks Section -->
+      <!-- Step 4: Use AI to Add Resources -->
       <section hlmCard class="mt-6">
         <div hlmCardHeader>
           <div class="flex items-center gap-2">
-            <ng-icon hlm name="lucideDownload" size="lg" />
-            <h3 hlmCardTitle>4. Add Blocks</h3>
+            <ng-icon hlm name="lucideBot" size="lg" />
+            <h3 hlmCardTitle>4. Ask Your AI Assistant</h3>
           </div>
           <p hlmCardDescription>
-            Add pre-built page blocks to your project
+            Your AI will use MCP to add themes, blocks, and components
           </p>
         </div>
         <div hlmCardContent class="space-y-4">
-          <div class="space-y-2">
-            <p class="text-sm font-medium">Add entire block (all files):</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg add block auth      # All auth files
-grg add block shell     # All shell layouts
-grg add block settings  # All settings pages</code></pre>
-          </div>
-          <div class="space-y-2">
-            <p class="text-sm font-medium">Add specific files only:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg add block auth login              # Just login
-grg add block auth login register     # Login and register
-grg add block shell sidebar           # Just sidebar shell
-grg add block shell topnav topnav-footer  # Topnav variants</code></pre>
-          </div>
-          <div class="space-y-2">
-            <p class="text-sm font-medium">Add all blocks:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg add block --all</code></pre>
-          </div>
           <div class="mt-4 p-4 bg-accent/50 rounded-md">
-            <p class="text-sm font-medium mb-2">📦 Available Blocks & Files</p>
+            <p class="text-sm font-medium mb-3">💬 Example Prompts:</p>
+            <ul class="text-sm text-muted-foreground space-y-3">
+              <li class="p-2 bg-muted rounded-md">
+                <span class="font-medium text-foreground">"Add a login page"</span>
+                <p class="text-xs mt-1">→ AI installs auth block with login component</p>
+              </li>
+              <li class="p-2 bg-muted rounded-md">
+                <span class="font-medium text-foreground">"Create a dashboard with sidebar"</span>
+                <p class="text-xs mt-1">→ AI installs shell block with sidebar layout</p>
+              </li>
+              <li class="p-2 bg-muted rounded-md">
+                <span class="font-medium text-foreground">"Switch to the claude theme"</span>
+                <p class="text-xs mt-1">→ AI downloads and applies the claude theme</p>
+              </li>
+              <li class="p-2 bg-muted rounded-md">
+                <span class="font-medium text-foreground">"Add a file upload component"</span>
+                <p class="text-xs mt-1">→ AI installs the grg-file-upload component</p>
+              </li>
+              <li class="p-2 bg-muted rounded-md">
+                <span class="font-medium text-foreground">"Add settings pages"</span>
+                <p class="text-xs mt-1">→ AI installs settings block with profile, security, notifications</p>
+              </li>
+            </ul>
+          </div>
+
+          <div class="mt-4 p-4 bg-muted/50 rounded-md">
+            <p class="text-sm font-medium mb-2">📦 Available Resources:</p>
             <ul class="text-sm text-muted-foreground space-y-2">
-              <li><strong>auth</strong> - <code class="text-xs bg-muted px-1 py-0.5 rounded">login</code>, <code class="text-xs bg-muted px-1 py-0.5 rounded">register</code>, <code class="text-xs bg-muted px-1 py-0.5 rounded">forgot-password</code></li>
-              <li><strong>shell</strong> - <code class="text-xs bg-muted px-1 py-0.5 rounded">sidebar</code>, <code class="text-xs bg-muted px-1 py-0.5 rounded">sidebar-footer</code>, <code class="text-xs bg-muted px-1 py-0.5 rounded">topnav</code>, <code class="text-xs bg-muted px-1 py-0.5 rounded">topnav-footer</code>, <code class="text-xs bg-muted px-1 py-0.5 rounded">collapsible</code>, <code class="text-xs bg-muted px-1 py-0.5 rounded">collapsible-footer</code></li>
-              <li><strong>settings</strong> - <code class="text-xs bg-muted px-1 py-0.5 rounded">profile</code>, <code class="text-xs bg-muted px-1 py-0.5 rounded">security</code>, <code class="text-xs bg-muted px-1 py-0.5 rounded">notification</code>, <code class="text-xs bg-muted px-1 py-0.5 rounded">danger-zone</code></li>
+              <li><strong>Themes:</strong> grg-theme, claude, clean-slate, modern-minimal, amber-minimal, mocks</li>
+              <li><strong>Blocks:</strong> auth (login, register, forgot-password), shell (sidebar, topnav, collapsible), settings (profile, security, notification, danger-zone)</li>
+              <li><strong>Components:</strong> file-upload</li>
             </ul>
           </div>
         </div>
       </section>
 
-      <!-- List Resources Section -->
+      <!-- What AI Can Do -->
       <section hlmCard class="mt-6">
         <div hlmCardHeader>
           <div class="flex items-center gap-2">
-            <ng-icon hlm name="lucideDownload" size="lg" />
-            <h3 hlmCardTitle>5. List Available Resources</h3>
+            <ng-icon hlm name="lucideZap" size="lg" />
+            <h3 hlmCardTitle>What Your AI Assistant Can Do</h3>
           </div>
           <p hlmCardDescription>
-            Browse what's available in GRG Kit
+            With MCP configured, your AI has full access to GRG Kit
           </p>
         </div>
-        <div hlmCardContent class="space-y-4">
-          <div class="space-y-2">
-            <p class="text-sm font-medium">List all resources:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg list</code></pre>
-          </div>
-          <div class="space-y-2">
-            <p class="text-sm font-medium">List specific categories:</p>
-            <pre class="bg-muted p-4 rounded-md overflow-x-auto"><code>grg list blocks
-grg list themes</code></pre>
-          </div>
-          <div class="mt-4 p-4 bg-accent/50 rounded-md">
-            <p class="text-sm font-medium mb-2">💡 Quick Reference</p>
-            <ul class="text-sm text-muted-foreground space-y-1">
-              <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg init</code> - Initialize GRG Kit in current Angular project</li>
-              <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg llm-setup</code> - Generate AI assistant rules</li>
-              <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg add block auth</code> - Add all auth files</li>
-              <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg add block auth login</code> - Add just login</li>
-              <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg add block shell sidebar</code> - Add just sidebar shell</li>
-              <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg add block --all</code> - Add all blocks</li>
-              <li>• <code class="text-xs bg-muted px-1 py-0.5 rounded">grg list</code> - See all available resources</li>
-            </ul>
-          </div>
+        <div hlmCardContent>
+          <ul class="space-y-2 text-sm">
+            <li class="flex items-start gap-2">
+              <span class="text-primary">✓</span>
+              <span><strong>Search resources</strong> - Find themes, blocks, and components</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-primary">✓</span>
+              <span><strong>Install blocks</strong> - Add auth, shell, settings pages</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-primary">✓</span>
+              <span><strong>Switch themes</strong> - Change the color palette instantly</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-primary">✓</span>
+              <span><strong>Add components</strong> - Install GRG Kit components</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-primary">✓</span>
+              <span><strong>Follow design system</strong> - Use Spartan-NG patterns correctly</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-primary">✓</span>
+              <span><strong>Use semantic colors</strong> - Never use raw Tailwind colors</span>
+            </li>
+          </ul>
         </div>
       </section>
 
@@ -258,15 +241,11 @@ grg list themes</code></pre>
             </li>
             <li class="flex items-start gap-2">
               <span class="text-primary">→</span>
-              <span>Explore <strong>GRG Components</strong> for custom components with the <code class="text-xs bg-muted px-1 py-0.5 rounded">grg-</code> prefix</span>
+              <span>Explore <strong>GRG Components</strong> for custom components</span>
             </li>
             <li class="flex items-start gap-2">
               <span class="text-primary">→</span>
               <span>View <strong>Colors</strong> to see the theme color palette</span>
-            </li>
-            <li class="flex items-start gap-2">
-              <span class="text-primary">→</span>
-              <span>Review <strong>Typography</strong> for text styling examples</span>
             </li>
           </ul>
         </div>
