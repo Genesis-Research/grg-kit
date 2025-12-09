@@ -11,7 +11,7 @@
  */
 import { Component, signal } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideHome, lucideUsers, lucideSettings, lucideFileText, lucideBarChart3, lucideBell, lucideMenu } from '@ng-icons/lucide';
+import { lucideHome, lucideUsers, lucideSettings, lucideFileText, lucideBarChart3, lucideBell, lucideMenu, lucideSun, lucideMoon } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmIcon } from '@spartan-ng/helm/icon';
 
@@ -19,7 +19,7 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
   selector: 'app-collapsible',
   standalone: true,
   imports: [NgIcon, HlmIcon, HlmButtonImports],
-  viewProviders: [provideIcons({ lucideHome, lucideUsers, lucideSettings, lucideFileText, lucideBarChart3, lucideBell, lucideMenu })],
+  viewProviders: [provideIcons({ lucideHome, lucideUsers, lucideSettings, lucideFileText, lucideBarChart3, lucideBell, lucideMenu, lucideSun, lucideMoon })],
   template: `
     <div class="flex h-full">
       <aside class="border-r bg-card flex flex-col transition-all duration-300" [class]="collapsed() ? 'w-16' : 'w-64'">
@@ -53,7 +53,12 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
       <div class="flex-1 flex flex-col">
         <header class="h-14 border-b px-6 flex items-center justify-between">
           <h1 class="text-lg font-semibold">Dashboard</h1>
-          <button hlmBtn variant="ghost" size="icon"><ng-icon hlm name="lucideBell" size="sm" /></button>
+          <div class="flex items-center gap-2">
+            <button hlmBtn variant="ghost" size="icon" (click)="toggleTheme()">
+              <ng-icon hlm [name]="isDark() ? 'lucideSun' : 'lucideMoon'" size="sm" />
+            </button>
+            <button hlmBtn variant="ghost" size="icon"><ng-icon hlm name="lucideBell" size="sm" /></button>
+          </div>
         </header>
         <main class="flex-1 p-6 bg-muted/30 overflow-auto">
           <p class="text-muted-foreground mb-4">Click "Collapse" in the sidebar to toggle between expanded and collapsed states.</p>
@@ -69,6 +74,12 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
 })
 export class CollapsibleComponent {
   collapsed = signal(false);
+  isDark = signal(typeof document !== 'undefined' && document.documentElement.classList.contains('dark'));
+
+  toggleTheme() {
+    document.documentElement.classList.toggle('dark');
+    this.isDark.set(document.documentElement.classList.contains('dark'));
+  }
   navItems = [
     { icon: 'lucideHome', label: 'Dashboard', active: true },
     { icon: 'lucideUsers', label: 'Users', active: false },

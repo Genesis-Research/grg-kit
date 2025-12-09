@@ -187,7 +187,6 @@ grg-kit/
 │   │       ├── meta.json               ← All themes metadata
 │   │       └── *.css
 │   ├── libs/grg-ui/
-│   │   ├── stepper/meta.json
 │   │   └── file-upload/meta.json
 │   └── scripts/
 │       └── generate-sources.js         ← Stage 1
@@ -216,8 +215,7 @@ grg-kit/
         │   ├── meta.json               ← Copied from app
         │   └── *.css
         └── components/
-            ├── stepper/meta.json       ← Copied from app
-            └── file-upload/meta.json
+            └── file-upload/meta.json   ← Copied from app
 ```
 
 ---

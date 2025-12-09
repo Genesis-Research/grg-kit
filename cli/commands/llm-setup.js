@@ -183,7 +183,7 @@ This project uses **GRG Kit**, a comprehensive Angular UI toolkit built on top o
 **GRG Kit Components** (in \`libs/grg-ui/\`):
 - Use \`grg-\` prefix for selectors
 - Import via \`GrgComponentImports\`
-- Example: \`GrgStepperImports\`
+- Example: \`GrgFileUploadImports\`
 - Path alias: \`@grg-kit/ui/component-name\`
 
 ### 3. Import Patterns
@@ -213,14 +213,14 @@ import { HlmDialogImports } from '@spartan-ng/helm/dialog';
 
 #### GRG Kit Components
 \`\`\`typescript
-import { GrgStepperImports } from '@grg-kit/ui/stepper';
+import { GrgFileUploadImports } from '@grg-kit/ui/file-upload';
 
 @Component({
-  imports: [GrgStepperImports],
+  imports: [GrgFileUploadImports],
   template: \`
-    <grg-stepper>
-      <grg-step>...</grg-step>
-    </grg-stepper>
+    <grg-file-upload>
+      <grg-file-upload-trigger>Drop files here</grg-file-upload-trigger>
+    </grg-file-upload>
   \`
 })
 \`\`\`
@@ -504,7 +504,7 @@ export class FormComponent {
 - **Slider**: Range input controls
 
 ### GRG Kit Custom Components
-- **Stepper**: Multi-step form wizard component
+- **File Upload**: Drag and drop file upload component
 
 ## Package Manager
 
@@ -568,7 +568,7 @@ After adding, restart your IDE for the MCP server to be available.
 Use the MCP server for:
 1. **Themes** - Install different color themes
 2. **Blocks** - Pre-built page layouts (auth, shell, settings)
-3. **GRG Kit Components** - Custom components like stepper, file-upload
+3. **GRG Kit Components** - Custom components like file-upload
 
 **Do NOT use MCP for:**
 - Spartan-NG components (button, card, dialog, etc.) - already installed
@@ -592,7 +592,7 @@ mcp2_search_ui_resources({
 **When to use:**
 - User needs a page layout or block
 - Looking for a theme
-- Need a GRG Kit component (stepper, file-upload)
+- Need a GRG Kit component (file-upload)
 
 ### 2. mcp2_suggest_resources
 
@@ -698,14 +698,14 @@ AI Workflow:
 ### Example 4: User Wants a Form Component
 
 \`\`\`
-User: "I need a multi-step form"
+User: "I need a file upload"
 
 AI Workflow:
-1. mcp2_search_ui_resources({ query: "stepper form" })
-   → Finds: component:stepper
+1. mcp2_search_ui_resources({ query: "file upload" })
+   → Finds: component:file-upload
    
 2. Components are included automatically with grg init
-   → Just import and use: import { GrgStepperImports } from '@grg-kit/ui/stepper';
+   → Just import and use: import { GrgFileUploadImports } from '@grg-kit/ui/file-upload';
    
 3. Use with Spartan-NG form components (from design-system.md)
 \`\`\`
@@ -735,7 +735,7 @@ User request:
 ├─ Need a theme?
 │  └─ Use MCP: mcp2_list_available_resources({ category: "themes" })
 │
-└─ Need stepper, file-upload, or other GRG Kit component?
+└─ Need file-upload or other GRG Kit component?
    └─ Use MCP: mcp2_search_ui_resources({ query: "..." })
 \`\`\`
 
@@ -789,7 +789,7 @@ import { HlmDialogImports } from '@spartan-ng/helm/dialog';
 
 **GRG Kit (grg- prefix):**
 \`\`\`typescript
-import { GrgStepperImports } from '@grg-kit/ui/stepper';
+import { GrgFileUploadImports } from '@grg-kit/ui/file-upload';
 \`\`\`
 
 ### Common Patterns
@@ -849,7 +849,7 @@ import { lucideCheck, lucideX } from '@ng-icons/lucide';
 Use MCP only for:
 - **Blocks** (auth, shell, settings) - \`mcp2_search_ui_resources({ query: "auth" })\`
 - **Themes** - \`mcp2_list_available_resources({ category: "themes" })\`
-- **GRG Kit components** (stepper, file-upload) - \`mcp2_search_ui_resources({ query: "stepper" })\`
+- **GRG Kit components** (file-upload) - \`mcp2_search_ui_resources({ query: "file-upload" })\`
 
 **Do NOT use MCP for Spartan-NG components** - they are already installed!
 
@@ -900,7 +900,7 @@ import { HlmDialogImports } from '@spartan-ng/helm/dialog';
 
 **GRG Kit:**
 \`\`\`typescript
-import { GrgStepperImports } from '@grg-kit/ui/stepper';
+import { GrgFileUploadImports } from '@grg-kit/ui/file-upload';
 \`\`\`
 
 ## Common Components
@@ -982,7 +982,7 @@ ${blocksList}
 - Need button, card, dialog, form field, table? → Use Spartan-NG (already installed)
 - Need page layout (dashboard, auth, settings)? → Use MCP: \`mcp2_search_ui_resources\`
 - Need theme? → Use MCP: \`mcp2_list_available_resources({ category: "themes" })\`
-- Need stepper, file-upload? → Use MCP: \`mcp2_search_ui_resources\`
+- Need file-upload? → Use MCP: \`mcp2_search_ui_resources\`
 
 ## Package Manager
 

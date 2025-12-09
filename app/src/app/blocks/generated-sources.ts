@@ -320,9 +320,9 @@ export class AuthForgotPasswordBlockComponent {
   form = new FormGroup({ email: new FormControl('', [Validators.required, Validators.email]) });
 }`;
 
-export const shellSidebarSource = `import { Component } from '@angular/core';
+export const shellSidebarSource = `import { Component, signal } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideHome, lucideUsers, lucideSettings, lucideFileText, lucideBarChart3, lucideBell, lucideUser } from '@ng-icons/lucide';
+import { lucideHome, lucideUsers, lucideSettings, lucideFileText, lucideBarChart3, lucideBell, lucideUser, lucideSun, lucideMoon } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmIcon } from '@spartan-ng/helm/icon';
 
@@ -330,7 +330,7 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
   selector: 'app-shell-sidebar-block',
   standalone: true,
   imports: [NgIcon, HlmIcon, HlmButtonImports],
-  viewProviders: [provideIcons({ lucideHome, lucideUsers, lucideSettings, lucideFileText, lucideBarChart3, lucideBell, lucideUser })],
+  viewProviders: [provideIcons({ lucideHome, lucideUsers, lucideSettings, lucideFileText, lucideBarChart3, lucideBell, lucideUser, lucideSun, lucideMoon })],
   template: \`
     <div class="flex h-full">
       <aside class="w-64 border-r bg-card flex flex-col">
@@ -368,6 +368,9 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
           <h1 class="text-lg font-semibold">Dashboard</h1>
           <div class="flex items-center gap-2">
             <button hlmBtn variant="ghost" size="icon"><ng-icon hlm name="lucideBell" size="sm" /></button>
+            <button hlmBtn variant="ghost" size="icon" (click)="toggleTheme()">
+              <ng-icon hlm [name]="isDark() ? 'lucideSun' : 'lucideMoon'" size="sm" />
+            </button>
             <button hlmBtn variant="ghost" size="icon"><ng-icon hlm name="lucideSettings" size="sm" /></button>
           </div>
         </header>
@@ -383,6 +386,13 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
   \`,
 })
 export class ShellSidebarBlockComponent {
+  isDark = signal(typeof document !== 'undefined' && document.documentElement.classList.contains('dark'));
+
+  toggleTheme() {
+    document.documentElement.classList.toggle('dark');
+    this.isDark.set(document.documentElement.classList.contains('dark'));
+  }
+
   navItems = [
     { icon: 'lucideHome', label: 'Dashboard', active: true },
     { icon: 'lucideUsers', label: 'Users', active: false },
@@ -392,9 +402,9 @@ export class ShellSidebarBlockComponent {
   ];
 }`;
 
-export const shellTopnavSource = `import { Component } from '@angular/core';
+export const shellTopnavSource = `import { Component, signal } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideBell, lucideSearch, lucideChevronDown, lucideLogOut, lucideUser, lucideSettings } from '@ng-icons/lucide';
+import { lucideBell, lucideSearch, lucideChevronDown, lucideLogOut, lucideUser, lucideSettings, lucideSun, lucideMoon } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmIcon } from '@spartan-ng/helm/icon';
@@ -404,7 +414,7 @@ import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
   selector: 'app-shell-topnav-block',
   standalone: true,
   imports: [NgIcon, HlmIcon, HlmButtonImports, HlmInputImports, HlmDropdownMenuImports],
-  viewProviders: [provideIcons({ lucideBell, lucideSearch, lucideChevronDown, lucideLogOut, lucideUser, lucideSettings })],
+  viewProviders: [provideIcons({ lucideBell, lucideSearch, lucideChevronDown, lucideLogOut, lucideUser, lucideSettings, lucideSun, lucideMoon })],
   template: \`
     <div class="flex flex-col h-full">
       <header class="border-b bg-card">
@@ -429,6 +439,9 @@ import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
               <ng-icon hlm name="lucideSearch" size="sm" class="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
               <input hlmInput type="search" placeholder="Search..." class="pl-9 w-64" />
             </div>
+            <button hlmBtn variant="ghost" size="icon" (click)="toggleTheme()">
+              <ng-icon hlm [name]="isDark() ? 'lucideSun' : 'lucideMoon'" size="sm" />
+            </button>
             <button hlmBtn variant="ghost" size="icon"><ng-icon hlm name="lucideBell" size="sm" /></button>
             <button hlmBtn variant="ghost" size="sm" [hlmDropdownMenuTrigger]="userMenu">
               <div class="flex h-6 w-6 items-center justify-center rounded-full bg-muted"><ng-icon hlm name="lucideUser" size="xs" /></div>
@@ -462,6 +475,13 @@ import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
   \`,
 })
 export class ShellTopnavBlockComponent {
+  isDark = signal(typeof document !== 'undefined' && document.documentElement.classList.contains('dark'));
+
+  toggleTheme() {
+    document.documentElement.classList.toggle('dark');
+    this.isDark.set(document.documentElement.classList.contains('dark'));
+  }
+
   navItems = [
     { label: 'Dashboard', active: true },
     { label: 'Projects', active: false },
@@ -472,7 +492,7 @@ export class ShellTopnavBlockComponent {
 
 export const shellCollapsibleSource = `import { Component, signal } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideHome, lucideUsers, lucideSettings, lucideFileText, lucideBarChart3, lucideBell, lucideMenu } from '@ng-icons/lucide';
+import { lucideHome, lucideUsers, lucideSettings, lucideFileText, lucideBarChart3, lucideBell, lucideMenu, lucideSun, lucideMoon } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmIcon } from '@spartan-ng/helm/icon';
 
@@ -480,7 +500,7 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
   selector: 'app-shell-collapsible-block',
   standalone: true,
   imports: [NgIcon, HlmIcon, HlmButtonImports],
-  viewProviders: [provideIcons({ lucideHome, lucideUsers, lucideSettings, lucideFileText, lucideBarChart3, lucideBell, lucideMenu })],
+  viewProviders: [provideIcons({ lucideHome, lucideUsers, lucideSettings, lucideFileText, lucideBarChart3, lucideBell, lucideMenu, lucideSun, lucideMoon })],
   template: \`
     <div class="flex h-full">
       <aside class="border-r bg-card flex flex-col transition-all duration-300" [class]="collapsed() ? 'w-16' : 'w-64'">
@@ -514,7 +534,12 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
       <div class="flex-1 flex flex-col">
         <header class="h-14 border-b px-6 flex items-center justify-between">
           <h1 class="text-lg font-semibold">Dashboard</h1>
-          <button hlmBtn variant="ghost" size="icon"><ng-icon hlm name="lucideBell" size="sm" /></button>
+          <div class="flex items-center gap-2">
+            <button hlmBtn variant="ghost" size="icon" (click)="toggleTheme()">
+              <ng-icon hlm [name]="isDark() ? 'lucideSun' : 'lucideMoon'" size="sm" />
+            </button>
+            <button hlmBtn variant="ghost" size="icon"><ng-icon hlm name="lucideBell" size="sm" /></button>
+          </div>
         </header>
         <main class="flex-1 p-6 bg-muted/30 overflow-auto">
           <p class="text-muted-foreground mb-4">Click "Collapse" in the sidebar to toggle between expanded and collapsed states.</p>
@@ -530,6 +555,12 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
 })
 export class ShellCollapsibleBlockComponent {
   collapsed = signal(false);
+  isDark = signal(typeof document !== 'undefined' && document.documentElement.classList.contains('dark'));
+
+  toggleTheme() {
+    document.documentElement.classList.toggle('dark');
+    this.isDark.set(document.documentElement.classList.contains('dark'));
+  }
   navItems = [
     { icon: 'lucideHome', label: 'Dashboard', active: true },
     { icon: 'lucideUsers', label: 'Users', active: false },
@@ -539,9 +570,9 @@ export class ShellCollapsibleBlockComponent {
   ];
 }`;
 
-export const shellSidebarFooterSource = `import { Component } from '@angular/core';
+export const shellSidebarFooterSource = `import { Component, signal } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideHome, lucideUsers, lucideSettings, lucideFileText, lucideBarChart3, lucideBell, lucideUser } from '@ng-icons/lucide';
+import { lucideHome, lucideUsers, lucideSettings, lucideFileText, lucideBarChart3, lucideBell, lucideUser, lucideSun, lucideMoon } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmIcon } from '@spartan-ng/helm/icon';
 
@@ -549,7 +580,7 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
   selector: 'app-shell-sidebar-footer-block',
   standalone: true,
   imports: [NgIcon, HlmIcon, HlmButtonImports],
-  viewProviders: [provideIcons({ lucideHome, lucideUsers, lucideSettings, lucideFileText, lucideBarChart3, lucideBell, lucideUser })],
+  viewProviders: [provideIcons({ lucideHome, lucideUsers, lucideSettings, lucideFileText, lucideBarChart3, lucideBell, lucideUser, lucideSun, lucideMoon })],
   template: \`
     <div class="flex h-full">
       <aside class="w-64 border-r bg-card flex flex-col">
@@ -587,6 +618,9 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
           <h1 class="text-lg font-semibold">Dashboard</h1>
           <div class="flex items-center gap-2">
             <button hlmBtn variant="ghost" size="icon"><ng-icon hlm name="lucideBell" size="sm" /></button>
+            <button hlmBtn variant="ghost" size="icon" (click)="toggleTheme()">
+              <ng-icon hlm [name]="isDark() ? 'lucideSun' : 'lucideMoon'" size="sm" />
+            </button>
             <button hlmBtn variant="ghost" size="icon"><ng-icon hlm name="lucideSettings" size="sm" /></button>
           </div>
         </header>
@@ -613,6 +647,12 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
 })
 export class ShellSidebarFooterBlockComponent {
   currentYear = new Date().getFullYear();
+  isDark = signal(typeof document !== 'undefined' && document.documentElement.classList.contains('dark'));
+
+  toggleTheme() {
+    document.documentElement.classList.toggle('dark');
+    this.isDark.set(document.documentElement.classList.contains('dark'));
+  }
 
   navItems = [
     { icon: 'lucideHome', label: 'Dashboard', active: true },
@@ -629,9 +669,9 @@ export class ShellSidebarFooterBlockComponent {
   ];
 }`;
 
-export const shellTopnavFooterSource = `import { Component } from '@angular/core';
+export const shellTopnavFooterSource = `import { Component, signal } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideBell, lucideSearch, lucideChevronDown, lucideLogOut, lucideUser, lucideSettings } from '@ng-icons/lucide';
+import { lucideBell, lucideSearch, lucideChevronDown, lucideLogOut, lucideUser, lucideSettings, lucideSun, lucideMoon } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmIcon } from '@spartan-ng/helm/icon';
@@ -641,7 +681,7 @@ import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
   selector: 'app-shell-topnav-footer-block',
   standalone: true,
   imports: [NgIcon, HlmIcon, HlmButtonImports, HlmInputImports, HlmDropdownMenuImports],
-  viewProviders: [provideIcons({ lucideBell, lucideSearch, lucideChevronDown, lucideLogOut, lucideUser, lucideSettings })],
+  viewProviders: [provideIcons({ lucideBell, lucideSearch, lucideChevronDown, lucideLogOut, lucideUser, lucideSettings, lucideSun, lucideMoon })],
   template: \`
     <div class="flex flex-col h-full">
       <header class="border-b bg-card">
@@ -666,6 +706,9 @@ import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
               <ng-icon hlm name="lucideSearch" size="sm" class="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
               <input hlmInput type="search" placeholder="Search..." class="pl-9 w-64" />
             </div>
+            <button hlmBtn variant="ghost" size="icon" (click)="toggleTheme()">
+              <ng-icon hlm [name]="isDark() ? 'lucideSun' : 'lucideMoon'" size="sm" />
+            </button>
             <button hlmBtn variant="ghost" size="icon"><ng-icon hlm name="lucideBell" size="sm" /></button>
             <button hlmBtn variant="ghost" size="sm" [hlmDropdownMenuTrigger]="userMenu">
               <div class="flex h-6 w-6 items-center justify-center rounded-full bg-muted"><ng-icon hlm name="lucideUser" size="xs" /></div>
@@ -710,6 +753,12 @@ import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 })
 export class ShellTopnavFooterBlockComponent {
   currentYear = new Date().getFullYear();
+  isDark = signal(typeof document !== 'undefined' && document.documentElement.classList.contains('dark'));
+
+  toggleTheme() {
+    document.documentElement.classList.toggle('dark');
+    this.isDark.set(document.documentElement.classList.contains('dark'));
+  }
 
   navItems = [
     { label: 'Dashboard', active: true },
@@ -727,7 +776,7 @@ export class ShellTopnavFooterBlockComponent {
 
 export const shellCollapsibleFooterSource = `import { Component, signal } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideHome, lucideUsers, lucideSettings, lucideFileText, lucideBarChart3, lucideBell, lucideMenu } from '@ng-icons/lucide';
+import { lucideHome, lucideUsers, lucideSettings, lucideFileText, lucideBarChart3, lucideBell, lucideMenu, lucideSun, lucideMoon } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmIcon } from '@spartan-ng/helm/icon';
 
@@ -735,7 +784,7 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
   selector: 'app-shell-collapsible-footer-block',
   standalone: true,
   imports: [NgIcon, HlmIcon, HlmButtonImports],
-  viewProviders: [provideIcons({ lucideHome, lucideUsers, lucideSettings, lucideFileText, lucideBarChart3, lucideBell, lucideMenu })],
+  viewProviders: [provideIcons({ lucideHome, lucideUsers, lucideSettings, lucideFileText, lucideBarChart3, lucideBell, lucideMenu, lucideSun, lucideMoon })],
   template: \`
     <div class="flex h-full">
       <aside class="border-r bg-card flex flex-col transition-all duration-300" [class]="collapsed() ? 'w-16' : 'w-64'">
@@ -769,7 +818,12 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
       <div class="flex-1 flex flex-col">
         <header class="h-14 border-b px-6 flex items-center justify-between">
           <h1 class="text-lg font-semibold">Dashboard</h1>
-          <button hlmBtn variant="ghost" size="icon"><ng-icon hlm name="lucideBell" size="sm" /></button>
+          <div class="flex items-center gap-2">
+            <button hlmBtn variant="ghost" size="icon" (click)="toggleTheme()">
+              <ng-icon hlm [name]="isDark() ? 'lucideSun' : 'lucideMoon'" size="sm" />
+            </button>
+            <button hlmBtn variant="ghost" size="icon"><ng-icon hlm name="lucideBell" size="sm" /></button>
+          </div>
         </header>
         <main class="flex-1 p-6 bg-muted/30 overflow-auto">
           <p class="text-muted-foreground mb-4">Click "Collapse" in the sidebar to toggle between expanded and collapsed states.</p>
@@ -796,6 +850,12 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
 export class ShellCollapsibleFooterBlockComponent {
   collapsed = signal(false);
   currentYear = new Date().getFullYear();
+  isDark = signal(typeof document !== 'undefined' && document.documentElement.classList.contains('dark'));
+
+  toggleTheme() {
+    document.documentElement.classList.toggle('dark');
+    this.isDark.set(document.documentElement.classList.contains('dark'));
+  }
 
   navItems = [
     { icon: 'lucideHome', label: 'Dashboard', active: true },

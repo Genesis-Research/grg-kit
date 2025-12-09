@@ -107,7 +107,7 @@ grg add block --all
 ### Components & Examples
 
 Components and spartan-ng examples are installed automatically via `grg init`:
-- **2 GRG components** (stepper, file-upload)
+- **2 GRG components** (file-upload)
 - **56+ spartan-ng examples** (accordion, alert, button, card, dialog, form-field, table, etc.)
 
 ## MCP Server Integration

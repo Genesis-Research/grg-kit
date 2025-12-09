@@ -9,9 +9,9 @@
  * - @ng-icons/lucide (icons)
  * - @angular/forms (if using forms)
  */
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideBell, lucideSearch, lucideChevronDown, lucideLogOut, lucideUser, lucideSettings } from '@ng-icons/lucide';
+import { lucideBell, lucideSearch, lucideChevronDown, lucideLogOut, lucideUser, lucideSettings, lucideSun, lucideMoon } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmIcon } from '@spartan-ng/helm/icon';
@@ -21,7 +21,7 @@ import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
   selector: 'app-topnav-footer',
   standalone: true,
   imports: [NgIcon, HlmIcon, HlmButtonImports, HlmInputImports, HlmDropdownMenuImports],
-  viewProviders: [provideIcons({ lucideBell, lucideSearch, lucideChevronDown, lucideLogOut, lucideUser, lucideSettings })],
+  viewProviders: [provideIcons({ lucideBell, lucideSearch, lucideChevronDown, lucideLogOut, lucideUser, lucideSettings, lucideSun, lucideMoon })],
   template: `
     <div class="flex flex-col h-full">
       <header class="border-b bg-card">
@@ -46,6 +46,9 @@ import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
               <ng-icon hlm name="lucideSearch" size="sm" class="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
               <input hlmInput type="search" placeholder="Search..." class="pl-9 w-64" />
             </div>
+            <button hlmBtn variant="ghost" size="icon" (click)="toggleTheme()">
+              <ng-icon hlm [name]="isDark() ? 'lucideSun' : 'lucideMoon'" size="sm" />
+            </button>
             <button hlmBtn variant="ghost" size="icon"><ng-icon hlm name="lucideBell" size="sm" /></button>
             <button hlmBtn variant="ghost" size="sm" [hlmDropdownMenuTrigger]="userMenu">
               <div class="flex h-6 w-6 items-center justify-center rounded-full bg-muted"><ng-icon hlm name="lucideUser" size="xs" /></div>
@@ -90,6 +93,12 @@ import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 })
 export class TopnavFooterComponent {
   currentYear = new Date().getFullYear();
+  isDark = signal(typeof document !== 'undefined' && document.documentElement.classList.contains('dark'));
+
+  toggleTheme() {
+    document.documentElement.classList.toggle('dark');
+    this.isDark.set(document.documentElement.classList.contains('dark'));
+  }
 
   navItems = [
     { label: 'Dashboard', active: true },

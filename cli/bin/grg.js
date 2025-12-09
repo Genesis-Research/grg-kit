@@ -33,7 +33,7 @@ addCommand
 
 addCommand
   .command('component [componentName]')
-  .description('Add GRG components to your project (e.g., grg add component stepper)')
+  .description('Add GRG components to your project (e.g., grg add component file-upload)')
   .option('--all', 'Add all components')
   .option('-o, --output <path>', 'Custom output directory')
   .action(async (componentName, options) => {

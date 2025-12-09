@@ -9,9 +9,9 @@
  * - @ng-icons/lucide (icons)
  * - @angular/forms (if using forms)
  */
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideHome, lucideUsers, lucideSettings, lucideFileText, lucideBarChart3, lucideBell, lucideUser } from '@ng-icons/lucide';
+import { lucideHome, lucideUsers, lucideSettings, lucideFileText, lucideBarChart3, lucideBell, lucideUser, lucideSun, lucideMoon } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmIcon } from '@spartan-ng/helm/icon';
 
@@ -19,7 +19,7 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
   selector: 'app-sidebar',
   standalone: true,
   imports: [NgIcon, HlmIcon, HlmButtonImports],
-  viewProviders: [provideIcons({ lucideHome, lucideUsers, lucideSettings, lucideFileText, lucideBarChart3, lucideBell, lucideUser })],
+  viewProviders: [provideIcons({ lucideHome, lucideUsers, lucideSettings, lucideFileText, lucideBarChart3, lucideBell, lucideUser, lucideSun, lucideMoon })],
   template: `
     <div class="flex h-full">
       <aside class="w-64 border-r bg-card flex flex-col">
@@ -57,6 +57,9 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
           <h1 class="text-lg font-semibold">Dashboard</h1>
           <div class="flex items-center gap-2">
             <button hlmBtn variant="ghost" size="icon"><ng-icon hlm name="lucideBell" size="sm" /></button>
+            <button hlmBtn variant="ghost" size="icon" (click)="toggleTheme()">
+              <ng-icon hlm [name]="isDark() ? 'lucideSun' : 'lucideMoon'" size="sm" />
+            </button>
             <button hlmBtn variant="ghost" size="icon"><ng-icon hlm name="lucideSettings" size="sm" /></button>
           </div>
         </header>
@@ -72,6 +75,13 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
   `,
 })
 export class SidebarComponent {
+  isDark = signal(typeof document !== 'undefined' && document.documentElement.classList.contains('dark'));
+
+  toggleTheme() {
+    document.documentElement.classList.toggle('dark');
+    this.isDark.set(document.documentElement.classList.contains('dark'));
+  }
+
   navItems = [
     { icon: 'lucideHome', label: 'Dashboard', active: true },
     { icon: 'lucideUsers', label: 'Users', active: false },

@@ -75,7 +75,7 @@ const FALLBACK_CLI: CLIMetadata = {
     addComponent: {
       usage: 'grg add component <componentName>',
       description: 'Add GRG components to your project',
-      validComponents: ['stepper', 'file-upload']
+      validComponents: ['file-upload']
     },
     list: {
       usage: 'grg list [category]',
@@ -96,7 +96,6 @@ const FALLBACK_RESOURCES: GRGResources = {
   ],
   components: [
     { name: 'file-upload', title: 'File Upload', description: 'Drag and drop file upload component', tags: ['file', 'upload', 'form', 'drag-drop'] },
-    { name: 'stepper', title: 'Stepper', description: 'Multi-step form component with progress indicator', tags: ['form', 'wizard', 'multi-step', 'progress'] },
   ],
   blocks: [
     { name: 'auth', title: 'Auth Block', description: 'Authentication pages (login, signup, forgot password)', tags: ['auth', 'login', 'signup', 'authentication'] },

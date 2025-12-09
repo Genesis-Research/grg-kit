@@ -200,7 +200,6 @@ function showUsage(RESOURCES) {
  * Add component command - downloads GRG components
  * Format: grg add component <componentName>
  * Examples:
- *   grg add component stepper          # Download stepper component
  *   grg add component file-upload      # Download file-upload component
  *   grg add component --all            # All components
  */
@@ -282,7 +281,6 @@ async function downloadComponent(component, customOutput) {
 function showComponentUsage(RESOURCES) {
   console.log(chalk.yellow('\nUsage: grg add component <componentName>\n'));
   console.log(chalk.bold('Examples:'));
-  console.log(chalk.cyan('  grg add component stepper'), chalk.gray('      # Download stepper'));
   console.log(chalk.cyan('  grg add component file-upload'), chalk.gray('  # Download file-upload'));
   console.log(chalk.cyan('  grg add component --all'), chalk.gray('        # All components'));
   

@@ -116,7 +116,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         name: 'install_resource',
         description: `Install a GRG Kit block or component into the project. Returns installation status and next steps.
 
-IMPORTANT: The 'resource' parameter should be JUST the name (e.g., "auth", "stepper") - NOT prefixed with "block:" or "component:".
+IMPORTANT: The 'resource' parameter should be JUST the name (e.g., "auth", "file-upload") - NOT prefixed with "block:" or "component:".
 
 The tool will auto-detect the Angular project root by searching for angular.json from the current working directory.
 

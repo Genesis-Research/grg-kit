@@ -28,7 +28,7 @@ Build artifacts are stored in `dist/app/`.
 
 - **Getting Started** - Setup instructions for CLI and MCP server
 - **Spartan Components** - 56+ spartan-ng component examples
-- **GRG Components** - Custom components (stepper, file-upload)
+- **GRG Components** - Custom components (file-upload)
 - **Blocks** - Page blocks (auth, shell, settings)
 - **Colors** - Theme color palettes
 - **Typography** - Text styling examples
@@ -39,4 +39,7 @@ Build artifacts are stored in `dist/app/`.
 |--------|-------------|
 | `npm run start` | Start dev server |
 | `npm run build` | Build for production |
-| `npm run generate:sources` | Generate source code for examples |
+| `npm run codegen` | Generate all source code (blocks, components, grg) |
+| `npm run codegen:blocks` | Generate block source code only |
+| `npm run codegen:components` | Generate component source code only |
+| `npm run codegen:grg` | Generate GRG component source code only |
