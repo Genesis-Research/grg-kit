@@ -17,8 +17,7 @@ function getBlockInstallCommand(cli, blockName, fileIds = []) {
     return `grg add block ${blockName}${files}`;
 }
 function getThemeInstallCommand(cli, themeName) {
-    const flag = cli?.commands.init.themeFlag || '--theme';
-    return `grg init ${flag} ${themeName}`;
+    return `grg add theme ${themeName}`;
 }
 function getValidBlocks(cli) {
     return cli?.commands.addBlock.validBlocks || ['auth', 'shell', 'settings'];
@@ -96,9 +95,9 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             },
             {
                 name: 'install_resource',
-                description: `Install a GRG Kit block or component into the project. Returns installation command and POST-INSTALL INSTRUCTIONS that you MUST follow.
+                description: `Install a GRG Kit block, component, or theme into the project. Returns installation command and POST-INSTALL INSTRUCTIONS that you MUST follow.
 
-IMPORTANT: The 'resource' parameter should be JUST the name (e.g., "auth", "file-upload") - NOT prefixed with "block:" or "component:".
+IMPORTANT: The 'resource' parameter should be JUST the name (e.g., "auth", "file-upload", "claude") - NOT prefixed with "block:", "component:", or "theme:".
 
 The tool will auto-detect the Angular project root by searching for angular.json from the current working directory.
 
@@ -106,10 +105,11 @@ Examples:
 - To install auth block: resource="auth" → runs: grg add block auth
 - To install shell sidebar: resource="shell", files=["sidebar"] → runs: grg add block shell sidebar
 - To install file-upload component: resource="file-upload" → runs: grg add component file-upload
+- To install claude theme: resource="claude" → runs: grg add theme claude
 
 CRITICAL: After running the install command, you MUST:
 1. Read the postInstallInstructions in the response
-2. Move the downloaded files from src/app/blocks/ to the suggested location
+2. Move the downloaded files from src/app/blocks/ to the suggested location (for blocks)
 3. Follow the integrationSteps to wire the component into the app (routes, layout, etc.)
 4. Do NOT leave blocks sitting in the blocks/ folder - integrate them properly!`,
                 inputSchema: {
@@ -117,7 +117,7 @@ CRITICAL: After running the install command, you MUST:
                     properties: {
                         resource: {
                             type: 'string',
-                            description: 'Block or component name to install. Blocks: "auth", "shell", "settings". Components: "file-upload". Do NOT include "block:" or "component:" prefix - just the name.',
+                            description: 'Block, component, or theme name to install. Blocks: "auth", "shell", "settings". Components: "file-upload". Themes: "claude", "modern-minimal", "grg-theme", etc. Do NOT include "block:", "component:", or "theme:" prefix - just the name.',
                         },
                         files: {
                             type: 'array',
@@ -371,9 +371,9 @@ async function suggestResources(requirement) {
             { type: 'component', name: 'file-upload', install: 'grg add component file-upload' },
         ],
         theme: [
-            { type: 'theme', name: 'grg-theme', install: 'grg init --theme grg-theme' },
-            { type: 'theme', name: 'claude', install: 'grg init --theme claude' },
-            { type: 'theme', name: 'modern-minimal', install: 'grg init --theme modern-minimal' },
+            { type: 'theme', name: 'grg-theme', install: 'grg add theme grg-theme' },
+            { type: 'theme', name: 'claude', install: 'grg add theme claude' },
+            { type: 'theme', name: 'modern-minimal', install: 'grg add theme modern-minimal' },
         ],
     };
     // Find matching keywords
@@ -408,7 +408,7 @@ async function suggestResources(requirement) {
                     requirement,
                     suggestions_count: suggestions.length,
                     suggestions,
-                    note: 'Run grg init in an Angular project to set up theme and Spartan-NG components. Use grg add block <name> [files...] for blocks.',
+                    note: 'Run grg init in an Angular project to set up Spartan-NG components. Use grg add theme <name> for themes, grg add block <name> [files...] for blocks.',
                 }, null, 2),
             },
         ],
@@ -427,9 +427,14 @@ async function installResource(resource, files, output) {
         resourceName = resource.replace('component:', '');
         resourceType = 'component';
     }
+    else if (resource.startsWith('theme:')) {
+        resourceName = resource.replace('theme:', '');
+        resourceType = 'theme';
+    }
     // Auto-detect resource type if not specified
     const validBlocks = getValidBlocks(res.cli);
     const validComponents = res.components.map((c) => c.name);
+    const validThemes = res.themes.map((t) => t.name);
     if (!resourceType) {
         if (validBlocks.includes(resourceName)) {
             resourceType = 'block';
@@ -437,23 +442,37 @@ async function installResource(resource, files, output) {
         else if (validComponents.includes(resourceName)) {
             resourceType = 'component';
         }
+        else if (validThemes.includes(resourceName)) {
+            resourceType = 'theme';
+        }
     }
     // Validate resource
     if (!resourceType) {
-        throw new Error(`Invalid resource: "${resourceName}". Valid blocks: ${validBlocks.join(', ')}. Valid components: ${validComponents.join(', ')}`);
+        throw new Error(`Invalid resource: "${resourceName}". Valid blocks: ${validBlocks.join(', ')}. Valid components: ${validComponents.join(', ')}. Valid themes: ${validThemes.join(', ')}`);
     }
     let command;
+    let postInstall;
     if (resourceType === 'block') {
         if (!validBlocks.includes(resourceName)) {
             throw new Error(`Invalid block name: "${resourceName}". Valid blocks are: ${validBlocks.join(', ')}`);
         }
         command = getBlockInstallCommand(res.cli, resourceName, files) + (output ? ` -o ${output}` : '');
+        postInstall = `IMPORTANT: After running the command, files will be downloaded to src/app/blocks/${resourceName}/. Do NOT leave them there. Move them to an appropriate location in the project structure (e.g., src/app/pages/, src/app/features/, src/app/layout/) and integrate them properly - add routes, update imports, wire into the app architecture. After integration is complete, delete the src/app/blocks/${resourceName}/ folder to clean up.`;
     }
-    else {
+    else if (resourceType === 'component') {
         if (!validComponents.includes(resourceName)) {
             throw new Error(`Invalid component name: "${resourceName}". Valid components are: ${validComponents.join(', ')}`);
         }
         command = getComponentInstallCommand(resourceName) + (output ? ` -o ${output}` : '');
+        postInstall = `Component downloaded. Import it in your module/component and use it in your templates.`;
+    }
+    else {
+        // theme
+        if (!validThemes.includes(resourceName)) {
+            throw new Error(`Invalid theme name: "${resourceName}". Valid themes are: ${validThemes.join(', ')}`);
+        }
+        command = getThemeInstallCommand(res.cli, resourceName) + (output ? ` -o ${output}` : '');
+        postInstall = `Theme downloaded to src/themes/ and styles.css has been updated. The theme is now active.`;
     }
     // Return the command for the AI to execute via run_command tool
     // MCP servers run in a separate process and don't have access to the user's project directory
@@ -467,7 +486,7 @@ async function installResource(resource, files, output) {
                     type: resourceType,
                     command,
                     instruction: 'Run this command in the Angular project root directory using the run_command tool.',
-                    postInstall: `IMPORTANT: After running the command, files will be downloaded to src/app/blocks/${resourceName}/. Do NOT leave them there. Move them to an appropriate location in the project structure (e.g., src/app/pages/, src/app/features/, src/app/layout/) and integrate them properly - add routes, update imports, wire into the app architecture. After integration is complete, delete the src/app/blocks/${resourceName}/ folder to clean up.`,
+                    postInstall,
                 }, null, 2),
             },
         ],
@@ -484,7 +503,7 @@ async function listResources(category = 'all') {
     if (category === 'all' || category === 'themes') {
         result.resources.themes = {
             count: res.themes.length,
-            note: `Themes are set via: ${cli?.commands.init.usage || 'grg init [--theme <name>]'}`,
+            note: 'Themes are added via: grg add theme <themeName>',
             items: res.themes.map((t) => ({
                 name: t.name,
                 title: t.title,

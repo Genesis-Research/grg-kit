@@ -25,7 +25,7 @@ async function list(category) {
     console.log(chalk.gray('  Run: grg list components\n'));
     
     console.log(chalk.bold('Themes') + chalk.gray(` (${RESOURCES.themes.length} available)`));
-    console.log(chalk.gray('  Set with: grg init --theme <name>'));
+    console.log(chalk.gray('  Add with: grg add theme <name>'));
     console.log(chalk.gray('  Run: grg list themes\n'));
     
     return;
@@ -67,11 +67,11 @@ async function list(category) {
 
     case 'themes':
       console.log(chalk.bold.cyan('\n🎨 Available Themes\n'));
-      console.log(chalk.gray('  Use with: grg init --theme <name>\n'));
+      console.log(chalk.gray('  Use with: grg add theme <name>\n'));
       RESOURCES.themes.forEach(theme => {
         console.log(chalk.bold(`  ${theme.name}`));
         console.log(chalk.gray(`    ${theme.description}`));
-        console.log(chalk.yellow(`    grg init --theme ${theme.name}`));
+        console.log(chalk.yellow(`    grg add theme ${theme.name}`));
         if (theme.tags && theme.tags.length > 0) {
           console.log(chalk.gray(`    Tags: ${theme.tags.join(', ')}`));
         }

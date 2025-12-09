@@ -2,12 +2,35 @@ const fs = require('fs').promises;
 const path = require('path');
 const { exec } = require('child_process');
 const { promisify } = require('util');
+const https = require('https');
 const degit = require('degit');
 const chalk = require('chalk');
 const ora = require('ora');
 const { RESOURCES, REPO } = require('../config/resources');
 
 const execAsync = promisify(exec);
+
+/**
+ * Download a file from a URL
+ */
+function downloadFile(url) {
+  return new Promise((resolve, reject) => {
+    https.get(url, (res) => {
+      if (res.statusCode === 301 || res.statusCode === 302) {
+        // Follow redirect
+        return downloadFile(res.headers.location).then(resolve).catch(reject);
+      }
+      if (res.statusCode !== 200) {
+        reject(new Error(`HTTP ${res.statusCode}`));
+        return;
+      }
+
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => resolve(data));
+    }).on('error', reject);
+  });
+}
 
 /**
  * Init command - initializes GRG Kit in an existing Angular project
@@ -227,15 +250,12 @@ async function init(options) {
     spinner.warn(chalk.yellow('Themes directory may already exist'));
   }
 
-  // Step 10: Download theme
+  // Step 10: Download theme file
   spinner.start(`Downloading ${theme.title} theme...`);
   try {
-    const emitter = degit(`${REPO}/${theme.path}`, {
-      cache: false,
-      force: true,
-      verbose: false,
-    });
-    await emitter.clone(theme.defaultOutput);
+    const themeUrl = `https://raw.githubusercontent.com/${REPO}/main/${theme.path}`;
+    const themeContent = await downloadFile(themeUrl);
+    await fs.writeFile(theme.defaultOutput, themeContent);
     spinner.succeed(chalk.green(`✓ Downloaded ${theme.title} theme`));
   } catch (error) {
     spinner.fail(chalk.red('Failed to download theme'));

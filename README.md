@@ -38,6 +38,9 @@ grg init
 # Or with a specific theme
 grg init --theme claude
 
+# Add or switch theme
+grg add theme claude
+
 # Add blocks (all files)
 grg add block auth
 grg add block shell
@@ -45,6 +48,9 @@ grg add block shell
 # Add specific files from a block
 grg add block auth login
 grg add block shell sidebar
+
+# Add components
+grg add component file-upload
 
 # List available resources
 grg list
@@ -56,12 +62,15 @@ grg list
 |---------|-------------|
 | `grg init` | Installs Tailwind v4, Spartan-NG, theme, components, and examples in current Angular project |
 | `grg init --theme <name>` | Same with custom theme |
+| `grg add theme <name>` | Add or switch theme in existing project |
 | `grg add block <name>` | Add all files from a block (auth, shell, settings) |
 | `grg add block <name> <files...>` | Add specific files from a block |
 | `grg add block --all` | Add all blocks |
-| `grg list` | List available blocks and themes |
+| `grg add component <name>` | Add GRG Kit component (file-upload) |
+| `grg list` | List available blocks, themes, and components |
 | `grg list blocks` | List available blocks |
 | `grg list themes` | List available themes |
+| `grg list components` | List available components |
 
 ## Available Resources
 

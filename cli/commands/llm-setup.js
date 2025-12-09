@@ -861,10 +861,11 @@ AI Workflow:
 1. mcp2_list_available_resources({ category: "themes" })
    → Show: claude, amber-minimal, etc.
    
-2. Themes are set via: grg init --theme <name>
-   → Run: grg init --theme claude
+2. mcp2_install_resource({ resource: "claude" })
+   → Returns command: "grg add theme claude"
    
-3. Update src/styles.css import if needed
+3. Run the command via run_command tool
+   → Theme is downloaded and styles.css is updated automatically
 \`\`\`
 
 ### Example 4: User Wants a Form Component

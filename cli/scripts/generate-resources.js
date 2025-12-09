@@ -314,10 +314,20 @@ module.exports = { RESOURCES, REPO };
           description: 'Initialize GRG Kit in current Angular project',
           themeFlag: '--theme'
         },
+        addTheme: {
+          usage: 'grg add theme <themeName>',
+          description: 'Add or switch theme in existing project',
+          validThemes: catalogThemes.map(t => t.name)
+        },
         addBlock: {
           usage: 'grg add block <blockName> [fileIds...]',
           description: 'Add blocks to your project',
           validBlocks: catalogBlocks.map(b => b.name)
+        },
+        addComponent: {
+          usage: 'grg add component <componentName>',
+          description: 'Add GRG components to your project',
+          validComponents: catalogComponents.map(c => c.name)
         },
         list: {
           usage: 'grg list [category]',

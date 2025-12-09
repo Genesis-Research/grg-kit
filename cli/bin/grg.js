@@ -41,6 +41,15 @@ addCommand
     await addComponent(componentName, options);
   });
 
+addCommand
+  .command('theme [themeName]')
+  .description('Add or switch theme (e.g., grg add theme claude)')
+  .option('-o, --output <path>', 'Custom themes directory', 'src/themes')
+  .action(async (themeName, options) => {
+    const { addTheme } = require('../commands/add');
+    await addTheme(themeName, options);
+  });
+
 // List command
 program
   .command('list [category]')

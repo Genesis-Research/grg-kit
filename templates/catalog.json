@@ -11,6 +11,18 @@
         "description": "Initialize GRG Kit in current Angular project",
         "themeFlag": "--theme"
       },
+      "addTheme": {
+        "usage": "grg add theme <themeName>",
+        "description": "Add or switch theme in existing project",
+        "validThemes": [
+          "amber-minimal",
+          "claude",
+          "clean-slate",
+          "grg-theme",
+          "mocks",
+          "modern-minimal"
+        ]
+      },
       "addBlock": {
         "usage": "grg add block <blockName> [fileIds...]",
         "description": "Add blocks to your project",
@@ -18,6 +30,13 @@
           "auth",
           "settings",
           "shell"
+        ]
+      },
+      "addComponent": {
+        "usage": "grg add component <componentName>",
+        "description": "Add GRG components to your project",
+        "validComponents": [
+          "file-upload"
         ]
       },
       "list": {

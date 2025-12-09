@@ -21,6 +21,10 @@ grg init
 # Or with a specific theme
 grg init --theme claude
 
+# Add or switch theme
+grg add theme claude
+grg add theme modern-minimal
+
 # Add blocks (all files)
 grg add block auth
 grg add block shell
@@ -32,10 +36,14 @@ grg add block shell sidebar
 # Add all blocks
 grg add block --all
 
+# Add components
+grg add component file-upload
+
 # List available resources
 grg list
 grg list blocks
 grg list themes
+grg list components
 ```
 
 ## Commands
@@ -77,6 +85,25 @@ Examples:
 - `amber-minimal` - Warm amber accents
 - `mocks` - Theme for mockups and prototypes
 
+### `grg add theme`
+
+Add or switch theme in an existing project.
+
+```bash
+grg add theme <themeName>
+
+Options:
+  -o, --output <path>    Custom themes directory (default: "src/themes")
+
+Examples:
+  grg add theme claude           # Download and set claude theme
+  grg add theme modern-minimal   # Download and set modern-minimal
+```
+
+**What it does:**
+- Downloads the theme CSS file to `src/themes/`
+- Updates `src/styles.css` to import the new theme (replaces existing theme import)
+
 ### `grg add block`
 
 Add blocks or specific block files to your project.
@@ -95,6 +122,22 @@ Examples:
   grg add block shell sidebar           # Only sidebar shell
   grg add block shell topnav topnav-footer  # Topnav variants
   grg add block --all                   # All blocks
+```
+
+### `grg add component`
+
+Add GRG Kit components to your project.
+
+```bash
+grg add component <componentName>
+
+Options:
+  --all                  Add all components
+  -o, --output <path>    Custom output directory
+
+Examples:
+  grg add component file-upload    # Download file-upload component
+  grg add component --all          # All components
 ```
 
 **Available blocks and files:**
@@ -195,6 +238,10 @@ cd my-app
 grg init                        # Default theme
 grg init --theme claude         # Custom theme
 
+# Add/switch theme
+grg add theme claude            # Switch to claude theme
+grg add theme modern-minimal    # Switch to modern-minimal
+
 # Add blocks (all files)
 grg add block auth              # All auth files
 grg add block shell             # All shell layouts
@@ -205,10 +252,14 @@ grg add block auth login        # Just login
 grg add block shell sidebar     # Just sidebar shell
 grg add block --all             # All blocks
 
+# Add components
+grg add component file-upload   # File upload component
+
 # List resources
 grg list                        # Overview
 grg list blocks                 # Available blocks
 grg list themes                 # Available themes
+grg list components             # Available components
 
 # AI setup
 grg llm-setup                   # Generate AI rules
