@@ -129,13 +129,40 @@ Components and spartan-ng examples are installed automatically via `grg init`:
 
 ## AI Assistant Integration
 
-Generate design system rules for AI assistants (Windsurf, Cursor, Claude Code):
+### MCP Server (Recommended)
+
+Install the MCP server for automatic AI discovery:
+
+```bash
+npm install -g grg-kit-mcp-server
+```
+
+Add to your IDE's MCP settings:
+
+```json
+{
+  "mcpServers": {
+    "grg-kit": {
+      "command": "grg-mcp-server"
+    }
+  }
+}
+```
+
+Now AI can search and install GRG Kit resources automatically:
+- `catalog({ query: "dashboard" })` → finds shell layouts
+- `catalog({ query: "signin" })` → finds auth pages
+- `catalog({ query: "hospital" })` → finds medical themes
+
+### Design System Rules
+
+Generate design system rules for AI assistants:
 
 ```bash
 grg llm-setup
 ```
 
-This creates `design-system.md` and `angular-components.md` rules that help AI follow GRG Kit patterns.
+This creates `design-system.md` rules that help AI follow GRG Kit patterns.
 
 ## License
 

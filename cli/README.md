@@ -151,6 +151,14 @@ Examples:
 | `shell` | `sidebar`, `sidebar-footer`, `topnav`, `topnav-footer`, `collapsible`, `collapsible-footer` |
 | `settings` | `profile`, `security`, `notification`, `danger-zone` |
 
+**Search tags** (for MCP server discoverability):
+
+| Block | Search Terms |
+|-------|--------------|
+| `auth` | signin, sign-in, signup, register, password, credentials, onboarding |
+| `shell` | dashboard, admin, navbar, menu, left-nav, top-bar, wrapper |
+| `settings` | user-settings, my-account, configuration, notifications, privacy |
+
 ### `grg list [category]`
 
 List available blocks and themes.
