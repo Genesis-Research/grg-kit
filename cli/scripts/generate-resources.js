@@ -156,7 +156,7 @@ function scanBlockFiles(blockDir, blockName) {
     .sort((a, b) => a.file.localeCompare(b.file));
 }
 
-function generateBlocks(includeFiles = false) {
+function generateBlocks() {
   const blocksDir = path.join(TEMPLATES_DIR, 'ui/blocks');
   const dirs = scanDirectory(blocksDir);
   
@@ -166,22 +166,16 @@ function generateBlocks(includeFiles = false) {
       const blockDir = path.join(blocksDir, dir.name);
       const metadata = readMeta(blockDir) || defaultBlockMeta(dir.name);
       
-      const block = {
+      return {
         name: dir.name,
         title: dir.name.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
         description: metadata.description,
         path: `templates/ui/blocks/${dir.name}`,
         defaultOutput: `src/app/blocks/${dir.name}`,
         tags: metadata.tags || [],
-        dependencies: metadata.dependencies || []
+        dependencies: metadata.dependencies || [],
+        files: scanBlockFiles(blockDir, dir.name)  // Always include files
       };
-      
-      // Include file-level details for catalog
-      if (includeFiles) {
-        block.files = scanBlockFiles(blockDir, dir.name);
-      }
-      
-      return block;
     });
 }
 

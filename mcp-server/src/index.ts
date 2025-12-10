@@ -11,7 +11,7 @@ import {
 import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
-import { fetchCatalog, getResourcesSync, type GRGResources, type CLIMetadata } from './catalog-fetcher.js';
+import { fetchCatalog, type GRGResources, type CLIMetadata } from './catalog-fetcher.js';
 
 // Read version from package.json
 const __filename = fileURLToPath(import.meta.url);
@@ -42,10 +42,6 @@ async function getResources(): Promise<GRGResources> {
   return await fetchCatalog();
 }
 
-// Sync version for non-async contexts
-function getResourcesSync_(): GRGResources {
-  return getResourcesSync();
-}
 
 const server = new Server(
   {
@@ -65,14 +61,24 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
   return {
     tools: [
       {
-        name: 'search_ui_resources',
-        description: 'Search for Angular UI components, themes, or blocks in GRG Kit. Use this FIRST when building UI. Returns matching resources with descriptions, tags, and usage info.',
+        name: 'catalog',
+        description: `Search, list, or get details for GRG Kit resources (themes, components, blocks). Each result includes the install command.
+
+Usage:
+- No params: List all resources
+- query="login": Search for resources matching "login"
+- name="auth": Get details for a specific resource
+- category="blocks": Filter by category`,
         inputSchema: {
           type: 'object',
           properties: {
             query: {
               type: 'string',
-              description: 'Search query (e.g., "form", "dashboard", "theme", "button")',
+              description: 'Search query (e.g., "form", "dashboard", "sidebar")',
+            },
+            name: {
+              type: 'string',
+              description: 'Get details for a specific resource by name (e.g., "auth", "claude")',
             },
             category: {
               type: 'string',
@@ -80,88 +86,30 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
               description: 'Filter by category (default: all)',
             },
           },
-          required: ['query'],
         },
       },
       {
-        name: 'get_resource_details',
-        description: 'Get detailed information about a specific GRG Kit resource including dependencies, tags, and installation command. Use format "type:name" (e.g., "block:auth", "theme:claude").',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            resource: {
-              type: 'string',
-              description: 'Resource identifier in "type:name" format. Examples: "block:auth", "block:shell", "block:settings", "theme:claude", "theme:modern-minimal", "component:file-upload"',
-            },
-          },
-          required: ['resource'],
-        },
-      },
-      {
-        name: 'suggest_resources',
-        description: 'Get AI-powered suggestions for GRG Kit resources based on user requirements. Use this to recommend themes, components, or blocks.',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            requirement: {
-              type: 'string',
-              description: 'User requirement (e.g., "I need a login page", "build a dashboard", "form with validation")',
-            },
-          },
-          required: ['requirement'],
-        },
-      },
-      {
-        name: 'install_resource',
-        description: `Install a GRG Kit block, component, or theme into the project. Returns installation command and POST-INSTALL INSTRUCTIONS that you MUST follow.
-
-IMPORTANT: The 'resource' parameter should be JUST the name (e.g., "auth", "file-upload", "claude") - NOT prefixed with "block:", "component:", or "theme:".
-
-The tool will auto-detect the Angular project root by searching for angular.json from the current working directory.
+        name: 'install',
+        description: `Get CLI command to install a GRG Kit resource. Returns command and post-install instructions.
 
 Examples:
-- To install auth block: resource="auth" → runs: grg add block auth
-- To install shell sidebar: resource="shell", files=["sidebar"] → runs: grg add block shell sidebar
-- To install file-upload component: resource="file-upload" → runs: grg add component file-upload
-- To install claude theme: resource="claude" → runs: grg add theme claude
-
-CRITICAL: After running the install command, you MUST:
-1. Read the postInstallInstructions in the response
-2. Move the downloaded files from src/app/blocks/ to the suggested location (for blocks)
-3. Follow the integrationSteps to wire the component into the app (routes, layout, etc.)
-4. Do NOT leave blocks sitting in the blocks/ folder - integrate them properly!`,
+- name="auth" → grg add block auth
+- name="shell", files=["sidebar"] → grg add block shell sidebar  
+- name="claude" → grg add theme claude`,
         inputSchema: {
           type: 'object',
           properties: {
-            resource: {
+            name: {
               type: 'string',
-              description: 'Block, component, or theme name to install. Blocks: "auth", "shell", "settings". Components: "file-upload". Themes: "claude", "modern-minimal", "grg-theme", etc. Do NOT include "block:", "component:", or "theme:" prefix - just the name.',
+              description: 'Resource name (e.g., "auth", "file-upload", "claude")',
             },
             files: {
               type: 'array',
               items: { type: 'string' },
-              description: 'Optional specific file IDs to install (only for blocks). For auth: ["login", "register", "forgot-password"]. For shell: ["sidebar", "sidebar-footer", "topnav", "topnav-footer", "collapsible", "collapsible-footer"]. If omitted, installs all files.',
-            },
-            output: {
-              type: 'string',
-              description: 'Optional custom output directory (relative to project root)',
+              description: 'Optional file IDs for blocks (e.g., ["login", "sidebar"])',
             },
           },
-          required: ['resource'],
-        },
-      },
-      {
-        name: 'list_available_resources',
-        description: 'List all available GRG Kit resources by category. Shows counts, descriptions, and CLI install commands. Use this to discover what blocks, themes, and components are available.',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            category: {
-              type: 'string',
-              enum: ['all', 'themes', 'components', 'blocks'],
-              description: 'Category to list (default: all). Use "blocks" to see installable page blocks like auth, shell, settings.',
-            },
-          },
+          required: ['name'],
         },
       },
     ],
@@ -238,20 +186,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   
   try {
     switch (name) {
-      case 'search_ui_resources':
-        return await searchResources(args.query as string, args.category as string);
+      case 'catalog':
+        return await catalog(args.query as string | undefined, args.name as string | undefined, args.category as string | undefined);
         
-      case 'get_resource_details':
-        return await getResourceDetails(args.resource as string);
-        
-      case 'suggest_resources':
-        return await suggestResources(args.requirement as string);
-        
-      case 'install_resource':
-        return await installResource(args.resource as string, args.files as string[] | undefined, args.output as string | undefined);
-        
-      case 'list_available_resources':
-        return await listResources(args.category as string | undefined);
+      case 'install':
+        return await install(args.name as string, args.files as string[] | undefined);
         
       default:
         throw new Error(`Unknown tool: ${name}`);
@@ -269,335 +208,230 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   }
 });
 
-async function searchResources(query: string, category: string = 'all') {
+// Unified catalog tool: search, list, or get details
+// All resources use consistent format: type/name (e.g., theme/claude, component/file-upload, block/shell/sidebar)
+async function catalog(query?: string, name?: string, category: string = 'all') {
   const res = await getResources();
-  const lowerQuery = query.toLowerCase();
-  const results: any[] = [];
   
-  const searchIn = (items: any[], type: string) => {
-    return items.filter((item) => {
-      const searchText = `${item.name} ${item.title} ${item.description} ${item.tags?.join(' ')}`.toLowerCase();
-      return searchText.includes(lowerQuery);
-    }).map((item) => ({ ...item, type }));
-  };
+  let items: any[] = [];
   
   if (category === 'all' || category === 'themes') {
-    results.push(...searchIn(res.themes, 'theme'));
+    items.push(...res.themes.map((t: any) => ({
+      type: 'theme',
+      name: `theme/${t.name}`,
+      id: t.name,
+      title: t.title || t.name,
+      description: t.description,
+      tags: t.tags || [],
+      install: getThemeInstallCommand(res.cli, t.name),
+    })));
   }
+  
   if (category === 'all' || category === 'components') {
-    results.push(...searchIn(res.components, 'component'));
+    items.push(...res.components.map((c: any) => ({
+      type: 'component',
+      name: `component/${c.name}`,
+      id: c.name,
+      title: c.title || c.name,
+      description: c.description,
+      tags: c.tags || [],
+      install: getComponentInstallCommand(c.name),
+    })));
   }
+  
   if (category === 'all' || category === 'blocks') {
-    results.push(...searchIn(res.blocks, 'block'));
-  }
-  
-  // Generate install commands based on type (using CLI metadata)
-  const getInstallCommand = (type: string, name: string) => {
-    if (type === 'block') return getBlockInstallCommand(res.cli, name);
-    if (type === 'theme') return getThemeInstallCommand(res.cli, name);
-    if (type === 'component') return getComponentInstallCommand(name);
-    return 'Included automatically with grg init';
-  };
-  
-  return {
-    content: [
-      {
-        type: 'text',
-        text: JSON.stringify({
-          query,
-          category,
-          count: results.length,
-          results: results.map((r) => ({
-            type: r.type,
-            name: r.name,
-            title: r.title,
-            description: r.description,
-            tags: r.tags,
-            install: getInstallCommand(r.type, r.name),
-          })),
-        }, null, 2),
-      },
-    ],
-  };
-}
-
-async function getResourceDetails(resource: string) {
-  const res = await getResources();
-  const [category, name] = resource.split(':');
-  
-  let details: any;
-  let installCmd: string;
-  
-  switch (category) {
-    case 'theme':
-      details = res.themes.find((t: any) => t.name === name);
-      installCmd = getThemeInstallCommand(res.cli, name);
-      break;
-    case 'component':
-      details = res.components.find((c: any) => c.name === name);
-      installCmd = getComponentInstallCommand(name);
-      break;
-    case 'block':
-      details = res.blocks.find((b: any) => b.name === name);
-      installCmd = getBlockInstallCommand(res.cli, name);
-      break;
-  }
-  
-  if (!details) {
-    throw new Error(`Resource not found: ${resource}`);
-  }
-  
-  return {
-    content: [
-      {
-        type: 'text',
-        text: JSON.stringify({
-          resource,
-          ...details,
-          install: installCmd!,
-          cli_available: true,
-        }, null, 2),
-      },
-    ],
-  };
-}
-
-async function suggestResources(requirement: string) {
-  const res = await getResources();
-  const lowerReq = requirement.toLowerCase();
-  const suggestions: any[] = [];
-  
-  // Simple keyword matching for suggestions
-  const keywords: Record<string, { type: string; name: string; install: string }[]> = {
-    login: [
-      { type: 'block', name: 'auth', install: 'grg add block auth login' },
-    ],
-    signup: [
-      { type: 'block', name: 'auth', install: 'grg add block auth register' },
-    ],
-    register: [
-      { type: 'block', name: 'auth', install: 'grg add block auth register' },
-    ],
-    auth: [
-      { type: 'block', name: 'auth', install: 'grg add block auth' },
-    ],
-    dashboard: [
-      { type: 'block', name: 'shell', install: 'grg add block shell' },
-    ],
-    shell: [
-      { type: 'block', name: 'shell', install: 'grg add block shell' },
-    ],
-    footer: [
-      { type: 'block', name: 'shell', install: 'grg add block shell sidebar-footer' },
-    ],
-    navigation: [
-      { type: 'block', name: 'shell', install: 'grg add block shell' },
-    ],
-    sidebar: [
-      { type: 'block', name: 'shell', install: 'grg add block shell sidebar' },
-    ],
-    topnav: [
-      { type: 'block', name: 'shell', install: 'grg add block shell topnav' },
-    ],
-    collapsible: [
-      { type: 'block', name: 'shell', install: 'grg add block shell collapsible' },
-    ],
-    settings: [
-      { type: 'block', name: 'settings', install: 'grg add block settings' },
-    ],
-    upload: [
-      { type: 'component', name: 'file-upload', install: 'grg add component file-upload' },
-    ],
-    file: [
-      { type: 'component', name: 'file-upload', install: 'grg add component file-upload' },
-    ],
-    theme: [
-      { type: 'theme', name: 'grg-theme', install: 'grg add theme grg-theme' },
-      { type: 'theme', name: 'claude', install: 'grg add theme claude' },
-      { type: 'theme', name: 'modern-minimal', install: 'grg add theme modern-minimal' },
-    ],
-  };
-  
-  // Find matching keywords
-  for (const [keyword, items] of Object.entries(keywords)) {
-    if (lowerReq.includes(keyword)) {
-      for (const item of items) {
-        let details: any;
-        
-        if (item.type === 'theme') details = res.themes.find((t: any) => t.name === item.name);
-        else if (item.type === 'component') details = res.components.find((c: any) => c.name === item.name);
-        else if (item.type === 'block') details = res.blocks.find((b: any) => b.name === item.name);
-        
-        if (details && !suggestions.find((s) => s.name === item.name)) {
-          suggestions.push({
-            type: item.type,
-            name: item.name,
-            title: details.title,
-            description: details.description,
-            reason: `Matches "${keyword}" in your requirement`,
-            install: item.install,
+    for (const block of res.blocks) {
+      if (block.files && block.files.length > 0) {
+        for (const file of block.files) {
+          items.push({
+            type: 'block',
+            name: `block/${block.name}/${file.id}`,
+            id: file.id,
+            block: block.name,
+            title: file.title,
+            description: file.description || file.title,
+            tags: [...(block.tags || []), file.id, ...(file.id.includes('-') ? file.id.split('-') : [])],
+            install: getBlockInstallCommand(res.cli, block.name, [file.id]),
           });
         }
       }
     }
   }
   
+  // Get details for a specific resource by name (supports multiple formats)
+  if (name) {
+    // Normalize: "claude" -> "theme/claude", "shell/sidebar" -> "block/shell/sidebar"
+    let searchName = name;
+    if (!name.startsWith('theme/') && !name.startsWith('component/') && !name.startsWith('block/')) {
+      // Try to find by id or partial name
+      const item = items.find((i) => i.id === name || i.name.endsWith(`/${name}`));
+      if (item) {
+        return { content: [{ type: 'text', text: JSON.stringify(item, null, 2) }] };
+      }
+    } else {
+      const item = items.find((i) => i.name === searchName);
+      if (item) {
+        return { content: [{ type: 'text', text: JSON.stringify(item, null, 2) }] };
+      }
+    }
+    throw new Error(`Resource "${name}" not found. Use catalog() to see all available resources.`);
+  }
+  
+  // Filter by search query
+  if (query) {
+    const lowerQuery = query.toLowerCase();
+    items = items.filter((item) => {
+      const searchText = `${item.name} ${item.title} ${item.description} ${item.tags?.join(' ')}`.toLowerCase();
+      return searchText.includes(lowerQuery);
+    });
+  }
+  
   return {
-    content: [
-      {
-        type: 'text',
-        text: JSON.stringify({
-          requirement,
-          suggestions_count: suggestions.length,
-          suggestions,
-          note: 'Run grg init in an Angular project to set up Spartan-NG components. Use grg add theme <name> for themes, grg add block <name> [files...] for blocks.',
-        }, null, 2),
-      },
-    ],
+    content: [{
+      type: 'text',
+      text: JSON.stringify({ count: items.length, items }, null, 2),
+    }],
   };
 }
 
-async function installResource(resource: string, files?: string[], output?: string) {
+async function install(resource: string, files?: string[]) {
   const res = await getResources();
   
-  // Strip prefixes if provided (common LLM mistake)
-  let resourceName = resource;
-  let resourceType: 'block' | 'component' | 'theme' | null = null;
+  // Handle formats: "theme/claude", "component/file-upload", "block/shell/sidebar", or just "claude"
+  let name = resource;
   
-  if (resource.startsWith('block:')) {
-    resourceName = resource.replace('block:', '');
-    resourceType = 'block';
-  } else if (resource.startsWith('component:')) {
-    resourceName = resource.replace('component:', '');
-    resourceType = 'component';
-  } else if (resource.startsWith('theme:')) {
-    resourceName = resource.replace('theme:', '');
-    resourceType = 'theme';
-  }
-  
-  // Auto-detect resource type if not specified
-  const validBlocks = getValidBlocks(res.cli);
-  const validComponents = res.components.map((c: any) => c.name);
-  const validThemes = res.themes.map((t: any) => t.name);
-  
-  if (!resourceType) {
-    if (validBlocks.includes(resourceName)) {
-      resourceType = 'block';
-    } else if (validComponents.includes(resourceName)) {
-      resourceType = 'component';
-    } else if (validThemes.includes(resourceName)) {
-      resourceType = 'theme';
+  // Parse type/name format
+  if (name.startsWith('theme/')) {
+    const themeName = name.replace('theme/', '');
+    const theme = res.themes.find((t: any) => t.name === themeName);
+    if (theme) {
+      return {
+        content: [{
+          type: 'text',
+          text: JSON.stringify({
+            name: `theme/${themeName}`,
+            type: 'theme',
+            command: getThemeInstallCommand(res.cli, themeName),
+            postInstall: `Theme applied to styles.css.`,
+          }, null, 2),
+        }],
+      };
     }
   }
   
-  // Validate resource
-  if (!resourceType) {
-    throw new Error(`Invalid resource: "${resourceName}". Valid blocks: ${validBlocks.join(', ')}. Valid components: ${validComponents.join(', ')}. Valid themes: ${validThemes.join(', ')}`);
+  if (name.startsWith('component/')) {
+    const componentName = name.replace('component/', '');
+    const component = res.components.find((c: any) => c.name === componentName);
+    if (component) {
+      return {
+        content: [{
+          type: 'text',
+          text: JSON.stringify({
+            name: `component/${componentName}`,
+            type: 'component',
+            command: getComponentInstallCommand(componentName),
+            postInstall: `Component downloaded. Import and use in your templates.`,
+          }, null, 2),
+        }],
+      };
+    }
   }
   
-  let command: string;
-  let postInstall: string;
-  
-  if (resourceType === 'block') {
-    if (!validBlocks.includes(resourceName)) {
-      throw new Error(`Invalid block name: "${resourceName}". Valid blocks are: ${validBlocks.join(', ')}`);
+  if (name.startsWith('block/')) {
+    const parts = name.replace('block/', '').split('/');
+    const blockName = parts[0];
+    const fileId = parts[1];
+    const block = res.blocks.find((b: any) => b.name === blockName);
+    if (block) {
+      const command = fileId 
+        ? getBlockInstallCommand(res.cli, blockName, [fileId])
+        : getBlockInstallCommand(res.cli, blockName);
+      return {
+        content: [{
+          type: 'text',
+          text: JSON.stringify({
+            name: fileId ? `block/${blockName}/${fileId}` : `block/${blockName}`,
+            type: 'block',
+            command,
+            postInstall: `Files downloaded to src/app/blocks/${blockName}/. Move to appropriate location and integrate.`,
+          }, null, 2),
+        }],
+      };
     }
-    command = getBlockInstallCommand(res.cli, resourceName, files) + (output ? ` -o ${output}` : '');
-    postInstall = `IMPORTANT: After running the command, files will be downloaded to src/app/blocks/${resourceName}/. Do NOT leave them there. Move them to an appropriate location in the project structure (e.g., src/app/pages/, src/app/features/, src/app/layout/) and integrate them properly - add routes, update imports, wire into the app architecture. After integration is complete, delete the src/app/blocks/${resourceName}/ folder to clean up.`;
-  } else if (resourceType === 'component') {
-    if (!validComponents.includes(resourceName)) {
-      throw new Error(`Invalid component name: "${resourceName}". Valid components are: ${validComponents.join(', ')}`);
-    }
-    command = getComponentInstallCommand(resourceName) + (output ? ` -o ${output}` : '');
-    postInstall = `Component downloaded. Import it in your module/component and use it in your templates.`;
-  } else {
-    // theme
-    if (!validThemes.includes(resourceName)) {
-      throw new Error(`Invalid theme name: "${resourceName}". Valid themes are: ${validThemes.join(', ')}`);
-    }
-    command = getThemeInstallCommand(res.cli, resourceName) + (output ? ` -o ${output}` : '');
-    postInstall = `Theme downloaded to src/themes/ and styles.css has been updated. The theme is now active.`;
   }
   
-  // Return the command for the AI to execute via run_command tool
-  // MCP servers run in a separate process and don't have access to the user's project directory
-  return {
-    content: [
-      {
+  // Legacy format support: "shell/sidebar-footer" (without block/ prefix)
+  if (name.includes('/')) {
+    const [blockName, fileId] = name.split('/');
+    const block = res.blocks.find((b: any) => b.name === blockName);
+    if (block) {
+      const command = getBlockInstallCommand(res.cli, blockName, [fileId]);
+      return {
+        content: [{
+          type: 'text',
+          text: JSON.stringify({
+            name: `${blockName}/${fileId}`,
+            type: 'block',
+            command,
+            postInstall: `Files downloaded to src/app/blocks/${blockName}/. Move to appropriate location and integrate.`,
+          }, null, 2),
+        }],
+      };
+    }
+  }
+  
+  // Auto-detect by short name (legacy support)
+  const theme = res.themes.find((t: any) => t.name === name);
+  if (theme) {
+    return {
+      content: [{
         type: 'text',
         text: JSON.stringify({
-          success: true,
-          resource: resourceName,
-          type: resourceType,
+          name: `theme/${name}`,
+          type: 'theme',
+          command: getThemeInstallCommand(res.cli, name),
+          postInstall: `Theme applied to styles.css.`,
+        }, null, 2),
+      }],
+    };
+  }
+  
+  const component = res.components.find((c: any) => c.name === name);
+  if (component) {
+    return {
+      content: [{
+        type: 'text',
+        text: JSON.stringify({
+          name: `component/${name}`,
+          type: 'component',
+          command: getComponentInstallCommand(name),
+          postInstall: `Component downloaded. Import and use in your templates.`,
+        }, null, 2),
+      }],
+    };
+  }
+  
+  const block = res.blocks.find((b: any) => b.name === name);
+  if (block) {
+    const command = files && files.length > 0
+      ? getBlockInstallCommand(res.cli, name, files)
+      : getBlockInstallCommand(res.cli, name);
+    return {
+      content: [{
+        type: 'text',
+        text: JSON.stringify({
+          name: `block/${name}`,
+          type: 'block',
           command,
-          instruction: 'Run this command in the Angular project root directory using the run_command tool.',
-          postInstall,
+          postInstall: `Files downloaded to src/app/blocks/${name}/. Move to appropriate location and integrate.`,
         }, null, 2),
-      },
-    ],
-  };
+      }],
+    };
+  }
+  
+  throw new Error(`Resource "${name}" not found. Use catalog() to see available resources.`);
 }
 
-async function listResources(category: string = 'all') {
-  const res = await getResources();
-  const cli = res.cli;
-  
-  const result: any = {
-    category,
-    resources: {},
-    cli_usage: cli?.commands,
-  };
-  
-  if (category === 'all' || category === 'themes') {
-    result.resources.themes = {
-      count: res.themes.length,
-      note: 'Themes are added via: grg add theme <themeName>',
-      items: res.themes.map((t: any) => ({
-        name: t.name,
-        title: t.title,
-        description: t.description,
-        install: getThemeInstallCommand(cli, t.name),
-      })),
-    };
-  }
-  
-  if (category === 'all' || category === 'components') {
-    result.resources.components = {
-      count: res.components.length,
-      note: 'Components are added via: grg add component <componentName>',
-      items: res.components.map((c: any) => ({
-        name: c.name,
-        title: c.title,
-        description: c.description,
-        install: getComponentInstallCommand(c.name),
-      })),
-    };
-  }
-  
-  if (category === 'all' || category === 'blocks') {
-    result.resources.blocks = {
-      count: res.blocks.length,
-      note: `Blocks are added via: ${cli?.commands.addBlock.usage || 'grg add block <blockName> [fileIds...]'}`,
-      items: res.blocks.map((b: any) => ({
-        name: b.name,
-        title: b.title,
-        description: b.description,
-        files: b.files?.map((f: any) => f.id) || [],
-        install: getBlockInstallCommand(cli, b.name),
-        install_specific: b.files?.length > 0 ? getBlockInstallCommand(cli, b.name, ['<fileId>']) : undefined,
-      })),
-    };
-  }
-  
-  return {
-    content: [
-      {
-        type: 'text',
-        text: JSON.stringify(result, null, 2),
-      },
-    ],
-  };
-}
 
 // Start the server
 const transport = new StdioServerTransport();

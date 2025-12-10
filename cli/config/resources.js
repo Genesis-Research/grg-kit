@@ -226,6 +226,26 @@ const RESOURCES = {
         "@spartan-ng/helm/button",
         "@spartan-ng/helm/card",
         "@spartan-ng/helm/form-field"
+      ],
+      "files": [
+        {
+          "id": "forgot-password",
+          "file": "forgot-password.component.ts",
+          "title": "Forgot Password",
+          "description": "Forgot Password"
+        },
+        {
+          "id": "login",
+          "file": "login.component.ts",
+          "title": "Login",
+          "description": "Login"
+        },
+        {
+          "id": "register",
+          "file": "register.component.ts",
+          "title": "Register",
+          "description": "Register"
+        }
       ]
     },
     {
@@ -246,6 +266,32 @@ const RESOURCES = {
         "@spartan-ng/helm/card",
         "@spartan-ng/helm/form-field",
         "@spartan-ng/helm/switch"
+      ],
+      "files": [
+        {
+          "id": "danger-zone",
+          "file": "danger-zone.component.ts",
+          "title": "Danger Zone",
+          "description": "Danger Zone"
+        },
+        {
+          "id": "notification",
+          "file": "notification-settings.component.ts",
+          "title": "Notification Settings",
+          "description": "Notification Settings"
+        },
+        {
+          "id": "profile",
+          "file": "profile-settings.component.ts",
+          "title": "Profile Settings",
+          "description": "Profile Settings"
+        },
+        {
+          "id": "security",
+          "file": "security-settings.component.ts",
+          "title": "Security Settings",
+          "description": "Security Settings"
+        }
       ]
     },
     {
@@ -268,6 +314,44 @@ const RESOURCES = {
         "@spartan-ng/helm/button",
         "@spartan-ng/helm/icon",
         "@spartan-ng/helm/dropdown-menu"
+      ],
+      "files": [
+        {
+          "id": "collapsible-footer",
+          "file": "collapsible-shell-footer.component.ts",
+          "title": "Collapsible Shell Footer",
+          "description": "Collapsible Shell Footer"
+        },
+        {
+          "id": "collapsible",
+          "file": "collapsible-shell.component.ts",
+          "title": "Collapsible Shell",
+          "description": "Collapsible Shell"
+        },
+        {
+          "id": "sidebar-footer",
+          "file": "sidebar-shell-footer.component.ts",
+          "title": "Sidebar Shell Footer",
+          "description": "Sidebar Shell Footer"
+        },
+        {
+          "id": "sidebar",
+          "file": "sidebar-shell.component.ts",
+          "title": "Sidebar Shell",
+          "description": "Sidebar Shell"
+        },
+        {
+          "id": "topnav-footer",
+          "file": "topnav-shell-footer.component.ts",
+          "title": "Topnav Shell Footer",
+          "description": "Topnav Shell Footer"
+        },
+        {
+          "id": "topnav",
+          "file": "topnav-shell.component.ts",
+          "title": "Topnav Shell",
+          "description": "Topnav Shell"
+        }
       ]
     }
   ]

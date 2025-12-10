@@ -105,36 +105,3 @@ export async function fetchCatalog(): Promise<GRGResources> {
   }
 }
 
-/**
- * Get resources synchronously
- */
-export function getResourcesSync(): GRGResources {
-  if (memoryCache && Date.now() - memoryCacheTime < CACHE_TTL_MS) {
-    return memoryCache;
-  }
-
-  try {
-    const output = execSync('grg list --json', {
-      encoding: 'utf-8',
-      timeout: 10000,
-      stdio: ['pipe', 'pipe', 'pipe'],
-    });
-
-    const data = JSON.parse(output);
-    
-    memoryCache = {
-      themes: data.themes || [],
-      components: data.components || [],
-      blocks: data.blocks || [],
-      cli: data.cli,
-    };
-    memoryCacheTime = Date.now();
-
-    return memoryCache;
-  } catch (error) {
-    if (memoryCache) {
-      return memoryCache;
-    }
-    return { themes: [], components: [], blocks: [] };
-  }
-}
