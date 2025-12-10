@@ -1,5 +1,9 @@
 {
   "description": "Authentication pages (login, signup, forgot password)",
-  "tags": ["auth", "login", "signup", "authentication", "form"],
+  "tags": [
+    "auth", "login", "signup", "authentication", "form",
+    "sign-in", "signin", "sign-up", "register", "password",
+    "user-login", "account", "credentials", "onboarding"
+  ],
   "dependencies": ["@spartan-ng/helm/button", "@spartan-ng/helm/card", "@spartan-ng/helm/form-field"]
 }

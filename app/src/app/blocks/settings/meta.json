@@ -1,5 +1,9 @@
 {
   "description": "Settings pages: profile, notifications, security, danger zone",
-  "tags": ["settings", "preferences", "account", "profile", "security"],
+  "tags": [
+    "settings", "preferences", "account", "profile", "security",
+    "user-settings", "my-account", "configuration", "options",
+    "notifications", "privacy", "delete-account", "password-change"
+  ],
   "dependencies": ["@spartan-ng/helm/button", "@spartan-ng/helm/card", "@spartan-ng/helm/form-field", "@spartan-ng/helm/switch"]
 }

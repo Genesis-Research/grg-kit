@@ -1,5 +1,9 @@
 {
   "description": "Drag and drop file upload component",
-  "tags": ["file", "upload", "form", "drag-drop"],
+  "tags": [
+    "file", "upload", "form", "drag-drop",
+    "dropzone", "attachment", "file-picker", "document",
+    "image-upload", "file-input", "browse", "select-file"
+  ],
   "dependencies": ["@spartan-ng/helm/button"]
 }

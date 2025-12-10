@@ -1,38 +1,38 @@
 {
   "grg-theme.css": {
     "description": "Default theme with blue accents",
-    "tags": ["default", "blue", "minimal", "professional"]
+    "tags": ["default", "blue", "minimal", "professional", "corporate", "business", "standard"]
   },
   "claude.css": {
     "description": "Claude-inspired warm tones",
-    "tags": ["warm", "orange", "brown", "claude"]
+    "tags": ["warm", "orange", "brown", "claude", "ai", "anthropic", "earthy", "cozy"]
   },
   "clean-slate.css": {
     "description": "Minimal grayscale palette",
-    "tags": ["minimal", "grayscale", "neutral", "clean"]
+    "tags": ["minimal", "grayscale", "neutral", "clean", "monochrome", "simple", "light"]
   },
   "modern-minimal.css": {
     "description": "Contemporary minimal design",
-    "tags": ["minimal", "modern", "contemporary", "clean"]
+    "tags": ["minimal", "modern", "contemporary", "clean", "sleek", "elegant", "simple"]
   },
   "amber-minimal.css": {
     "description": "Warm amber accents",
-    "tags": ["minimal", "warm", "amber", "orange"]
+    "tags": ["minimal", "warm", "amber", "orange", "golden", "autumn", "cozy"]
   },
   "chroma-clinic.css": {
     "description": "Professional blue theme with Open Sans",
-    "tags": ["medical", "professional", "blue", "healthcare"]
+    "tags": ["medical", "professional", "blue", "healthcare", "hospital", "clinic", "doctor", "patient", "health"]
   },
   "bio-lab.css": {
     "description": "Fresh green theme for life sciences",
-    "tags": ["medical", "green", "life-sciences", "biotech"]
+    "tags": ["medical", "green", "life-sciences", "biotech", "laboratory", "research", "science", "nature"]
   },
   "pharma-teal.css": {
     "description": "Calming teal for pharmaceutical applications",
-    "tags": ["medical", "teal", "pharmaceutical", "healthcare"]
+    "tags": ["medical", "teal", "pharmaceutical", "healthcare", "pharmacy", "drug", "medicine", "calm"]
   },
   "helix-purple.css": {
     "description": "DNA-inspired purple for genomics",
-    "tags": ["medical", "purple", "genomics", "biotech"]
+    "tags": ["medical", "purple", "genomics", "biotech", "dna", "genetics", "research", "science"]
   }
 }

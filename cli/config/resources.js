@@ -20,7 +20,10 @@ const RESOURCES = {
         "minimal",
         "warm",
         "amber",
-        "orange"
+        "orange",
+        "golden",
+        "autumn",
+        "cozy"
       ],
       "features": [
         "dark-mode",
@@ -40,7 +43,11 @@ const RESOURCES = {
         "medical",
         "green",
         "life-sciences",
-        "biotech"
+        "biotech",
+        "laboratory",
+        "research",
+        "science",
+        "nature"
       ],
       "features": [
         "dark-mode",
@@ -60,7 +67,12 @@ const RESOURCES = {
         "medical",
         "professional",
         "blue",
-        "healthcare"
+        "healthcare",
+        "hospital",
+        "clinic",
+        "doctor",
+        "patient",
+        "health"
       ],
       "features": [
         "dark-mode",
@@ -80,7 +92,11 @@ const RESOURCES = {
         "warm",
         "orange",
         "brown",
-        "claude"
+        "claude",
+        "ai",
+        "anthropic",
+        "earthy",
+        "cozy"
       ],
       "features": [
         "dark-mode",
@@ -100,7 +116,10 @@ const RESOURCES = {
         "minimal",
         "grayscale",
         "neutral",
-        "clean"
+        "clean",
+        "monochrome",
+        "simple",
+        "light"
       ],
       "features": [
         "dark-mode",
@@ -120,7 +139,10 @@ const RESOURCES = {
         "default",
         "blue",
         "minimal",
-        "professional"
+        "professional",
+        "corporate",
+        "business",
+        "standard"
       ],
       "features": [
         "dark-mode",
@@ -140,7 +162,11 @@ const RESOURCES = {
         "medical",
         "purple",
         "genomics",
-        "biotech"
+        "biotech",
+        "dna",
+        "genetics",
+        "research",
+        "science"
       ],
       "features": [
         "dark-mode",
@@ -160,7 +186,10 @@ const RESOURCES = {
         "minimal",
         "modern",
         "contemporary",
-        "clean"
+        "clean",
+        "sleek",
+        "elegant",
+        "simple"
       ],
       "features": [
         "dark-mode",
@@ -180,7 +209,11 @@ const RESOURCES = {
         "medical",
         "teal",
         "pharmaceutical",
-        "healthcare"
+        "healthcare",
+        "pharmacy",
+        "drug",
+        "medicine",
+        "calm"
       ],
       "features": [
         "dark-mode",
@@ -201,7 +234,15 @@ const RESOURCES = {
         "file",
         "upload",
         "form",
-        "drag-drop"
+        "drag-drop",
+        "dropzone",
+        "attachment",
+        "file-picker",
+        "document",
+        "image-upload",
+        "file-input",
+        "browse",
+        "select-file"
       ],
       "dependencies": [
         "@spartan-ng/helm/button"
@@ -220,7 +261,16 @@ const RESOURCES = {
         "login",
         "signup",
         "authentication",
-        "form"
+        "form",
+        "sign-in",
+        "signin",
+        "sign-up",
+        "register",
+        "password",
+        "user-login",
+        "account",
+        "credentials",
+        "onboarding"
       ],
       "dependencies": [
         "@spartan-ng/helm/button",
@@ -259,7 +309,15 @@ const RESOURCES = {
         "preferences",
         "account",
         "profile",
-        "security"
+        "security",
+        "user-settings",
+        "my-account",
+        "configuration",
+        "options",
+        "notifications",
+        "privacy",
+        "delete-account",
+        "password-change"
       ],
       "dependencies": [
         "@spartan-ng/helm/button",
@@ -308,7 +366,18 @@ const RESOURCES = {
         "footer",
         "navigation",
         "topnav",
-        "collapsible"
+        "collapsible",
+        "app-shell",
+        "dashboard",
+        "admin",
+        "main-layout",
+        "navbar",
+        "menu",
+        "left-nav",
+        "top-bar",
+        "horizontal-nav",
+        "vertical-nav",
+        "wrapper"
       ],
       "dependencies": [
         "@spartan-ng/helm/button",
