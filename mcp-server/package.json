@@ -1,6 +1,6 @@
 {
   "name": "grg-kit-mcp-server",
-  "version": "0.4.7",
+  "version": "0.5.0",
   "description": "MCP server for GRG Kit - enables AI to discover and use Angular UI components",
   "main": "dist/index.js",
   "type": "module",
