@@ -1,6 +1,6 @@
 {
   "name": "grg-kit-cli",
-  "version": "0.6.14",
+  "version": "0.6.15",
   "description": "CLI tool for pulling GRG Kit resources into your Angular project",
   "main": "index.js",
   "bin": {
