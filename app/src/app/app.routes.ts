@@ -6,6 +6,7 @@ import { BlocksComponent } from './blocks/blocks.component';
 import { ComponentsComponent } from './components/components.component';
 import { GrgComponentsComponent } from './grg-components/grg-components.component';
 import { GettingStartedComponent } from './getting-started/getting-started.component';
+import { FaqComponent } from './faq/faq.component';
 
 export const routes: Routes = [
   { path: '', component: GettingStartedComponent },
@@ -15,4 +16,5 @@ export const routes: Routes = [
   { path: 'data-table', component: DataTableComponent },
   { path: 'blocks', component: BlocksComponent },
   { path: 'grg-components', component: GrgComponentsComponent },
+  { path: 'faq', component: FaqComponent },
 ];
