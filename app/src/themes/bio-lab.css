@@ -1,3 +1,5 @@
+/* Theme: bio-lab */
+
 :root[data-theme="bio-lab"] {
   --background: oklch(0.9935 0.0040 145.0000);
   --foreground: oklch(0.2200 0.0450 155.0000);
@@ -53,7 +55,9 @@
   --spacing: 0.25rem;
 }
 
-.dark[data-theme="bio-lab"] {
+.dark,
+[data-theme="bio-lab"].dark,
+[data-theme="bio-lab-dark"] {
   --background: oklch(0.2000 0.0400 155.0000);
   --foreground: oklch(0.9850 0.0080 145.0000);
   --card: oklch(0.2600 0.0350 155.0000);

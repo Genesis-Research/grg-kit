@@ -1,3 +1,5 @@
+/* Theme: chroma-clinic */
+
 :root[data-theme="chroma-clinic"] {
   --background: oklch(0.9843 0.0017 247.8393);
   --foreground: oklch(0.2079 0.0399 265.7275);
@@ -53,7 +55,9 @@
   --spacing: 0.25rem;
 }
 
-.dark[data-theme="chroma-clinic"] {
+.dark,
+[data-theme="chroma-clinic"].dark,
+[data-theme="chroma-clinic-dark"] {
   --background: oklch(0.2079 0.0399 265.7275);
   --foreground: oklch(0.9843 0.0017 247.8393);
   --card: oklch(0.2800 0.0369 259.9740);

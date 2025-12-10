@@ -1,3 +1,5 @@
+/* Theme: pharma-teal */
+
 :root[data-theme="pharma-teal"] {
   --background: oklch(0.9880 0.0060 195.0000);
   --foreground: oklch(0.2100 0.0380 200.0000);
@@ -53,7 +55,9 @@
   --spacing: 0.25rem;
 }
 
-.dark[data-theme="pharma-teal"] {
+.dark,
+[data-theme="pharma-teal"].dark,
+[data-theme="pharma-teal-dark"] {
   --background: oklch(0.1900 0.0350 200.0000);
   --foreground: oklch(0.9880 0.0060 195.0000);
   --card: oklch(0.2500 0.0320 200.0000);
