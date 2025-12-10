@@ -4,7 +4,7 @@ const ora = require('ora');
 const fs = require('fs').promises;
 const path = require('path');
 const https = require('https');
-const { fetchCatalog, REPO } = require('../config/catalog-fetcher');
+const { RESOURCES, REPO } = require('../config/resources');
 
 /**
  * Add command - downloads blocks or specific block files
@@ -16,10 +16,6 @@ const { fetchCatalog, REPO } = require('../config/catalog-fetcher');
  *   grg add block --all                   # All blocks with all files
  */
 async function add(blockName, fileIds, options) {
-  // Fetch catalog dynamically (with caching)
-  const spinner = ora('Fetching catalog...').start();
-  const RESOURCES = await fetchCatalog({ silent: true });
-  spinner.stop();
 
   // Handle --all flag (download everything)
   if (options.all) {

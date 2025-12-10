@@ -1,6 +1,5 @@
 const chalk = require('chalk');
-const ora = require('ora');
-const { fetchCatalog } = require('../config/catalog-fetcher');
+const { RESOURCES } = require('../config/resources');
 const { version } = require('../package.json');
 
 /**
@@ -8,10 +7,6 @@ const { version } = require('../package.json');
  * Usage: grg list [category] [--json]
  */
 async function list(category, options = {}) {
-  // Fetch catalog dynamically
-  const spinner = options.json ? null : ora('Fetching catalog...').start();
-  const RESOURCES = await fetchCatalog({ silent: true });
-  if (spinner) spinner.stop();
 
   // JSON output for MCP server integration
   if (options.json) {
