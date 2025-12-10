@@ -18,6 +18,26 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
         </p>
       </div>
 
+      <!-- Prerequisites -->
+      <section hlmCard>
+        <div hlmCardHeader>
+          <h3 hlmCardTitle>Prerequisites</h3>
+          <p hlmCardDescription>Required versions for GRG Kit</p>
+        </div>
+        <div hlmCardContent>
+          <ul class="space-y-2 text-sm">
+            <li class="flex items-center gap-2">
+              <span class="font-medium">Node.js:</span>
+              <code class="bg-muted px-2 py-0.5 rounded">v20.19+</code> or <code class="bg-muted px-2 py-0.5 rounded">v22.12+</code>
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="font-medium">Angular:</span>
+              <code class="bg-muted px-2 py-0.5 rounded">v21+</code>
+            </li>
+          </ul>
+        </div>
+      </section>
+
       <!-- MCP-First Alert -->
       <div hlmAlert>
         <ng-icon hlm hlmAlertIcon name="lucideBot" />

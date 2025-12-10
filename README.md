@@ -2,7 +2,12 @@
 
 A shared resource library for Angular UI applications with themes, components, blocks, and spartan-ng examples.
 
-## Prerequisites & Setup
+## Prerequisites
+
+- **Node.js**: v20.19+ or v22.12+
+- **Angular**: v21+
+
+## Setup
 
 ### 1. Install GRG CLI
 

@@ -68,7 +68,18 @@ async function init(options) {
   console.log(chalk.bold.cyan('\n🚀 Initializing GRG Kit\n'));
   console.log(chalk.gray(`  Theme: ${theme.title}\n`));
 
-  // Step 1: Install Tailwind CSS v4
+  // Step 1: Fresh install of packages
+  spinner.start('Cleaning node_modules and reinstalling packages...');
+  try {
+    await execAsync('rm -rf node_modules && npm install');
+    spinner.succeed(chalk.green('✓ Fresh package install complete'));
+  } catch (error) {
+    spinner.fail(chalk.red('Failed to reinstall packages'));
+    console.error(chalk.gray(error.message));
+    process.exit(1);
+  }
+
+  // Step 2: Install Tailwind CSS v4
   spinner.start('Installing Tailwind CSS v4...');
   try {
     await execAsync('npm install tailwindcss @tailwindcss/postcss postcss --force');
