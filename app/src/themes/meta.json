@@ -1,7 +1,7 @@
 {
   "grg-theme.css": {
-    "description": "Default theme with purple/orange accents",
-    "tags": ["default", "purple", "orange", "colorful"]
+    "description": "Default theme with blue accents",
+    "tags": ["default", "blue", "minimal", "professional"]
   },
   "claude.css": {
     "description": "Claude-inspired warm tones",
@@ -19,8 +19,20 @@
     "description": "Warm amber accents",
     "tags": ["minimal", "warm", "amber", "orange"]
   },
-  "mocks.css": {
-    "description": "Theme for mockups and prototypes",
-    "tags": ["mockup", "prototype", "design"]
+  "chroma-clinic.css": {
+    "description": "Professional blue theme with Open Sans",
+    "tags": ["medical", "professional", "blue", "healthcare"]
+  },
+  "bio-lab.css": {
+    "description": "Fresh green theme for life sciences",
+    "tags": ["medical", "green", "life-sciences", "biotech"]
+  },
+  "pharma-teal.css": {
+    "description": "Calming teal for pharmaceutical applications",
+    "tags": ["medical", "teal", "pharmaceutical", "healthcare"]
+  },
+  "helix-purple.css": {
+    "description": "DNA-inspired purple for genomics",
+    "tags": ["medical", "purple", "genomics", "biotech"]
   }
 }

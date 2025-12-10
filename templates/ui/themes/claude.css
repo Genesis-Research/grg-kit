@@ -1,7 +1,6 @@
 /* Theme: claude */
 
-:root,
-[data-theme="claude"] {
+:root[data-theme="claude"] {
   --background: oklch(0.9818 0.0054 95.0986);
   --foreground: oklch(0.3438 0.0269 95.7226);
   --card: oklch(0.9818 0.0054 95.0986);

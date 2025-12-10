@@ -78,12 +78,15 @@ Examples:
 - Updates `src/styles.css` with theme import
 
 **Available themes:**
-- `grg-theme` - Default theme with purple/orange accents
+- `grg-theme` - Default theme with blue accents
 - `claude` - Claude-inspired warm tones
 - `clean-slate` - Minimal grayscale palette
 - `modern-minimal` - Contemporary minimal design
 - `amber-minimal` - Warm amber accents
-- `mocks` - Theme for mockups and prototypes
+- `chroma-clinic` - Professional blue theme for healthcare
+- `bio-lab` - Fresh green theme for life sciences
+- `pharma-teal` - Calming teal for pharmaceutical apps
+- `helix-purple` - DNA-inspired purple for genomics
 
 ### `grg add theme`
 
@@ -153,17 +156,23 @@ Examples:
 List available blocks and themes.
 
 ```bash
-grg list [category]
+grg list [category] [options]
+
+Options:
+  --json             Output as JSON (for MCP server integration)
 
 Examples:
   grg list           # Show overview
   grg list blocks    # List all blocks
   grg list themes    # List all themes
+  grg list --json    # Output all resources as JSON
 ```
+
+The `--json` flag outputs structured data used by the MCP server to get resource information.
 
 ### `grg llm-setup`
 
-Generate LLM-specific prompts and rules for AI assistants (Windsurf, Cursor, etc.).
+Generate design system rules for AI assistants (Windsurf, Cursor, Claude Code).
 
 ```bash
 grg llm-setup [options]
@@ -172,60 +181,17 @@ Options:
   -o, --output <path>  Output directory for rules (default: ".windsurf/rules")
 
 Examples:
-  grg llm-setup                    # Windsurf (multiple .md files)
+  grg llm-setup                    # Windsurf/Cursor (design-system.md)
   grg llm-setup --output .claude   # Claude Code (single CLAUDE.md)
 ```
 
-## MCP Server Integration
-
-For AI assistants to automatically discover and use GRG Kit resources:
-
-### 1. Install the MCP Server
-
-```bash
-npm install -g grg-kit-mcp-server
-```
-
-### 2. Configure Your AI Assistant
-
-**Windsurf** (`~/.codeium/windsurf/mcp_config.json`):
-
-```json
-{
-  "mcpServers": {
-    "grg-kit": {
-      "command": "grg-mcp-server"
-    }
-  }
-}
-```
-
-**Claude Code** (`~/.claude/settings.json`):
-
-```json
-{
-  "mcpServers": {
-    "grg-kit": {
-      "command": "grg-mcp-server"
-    }
-  }
-}
-```
-
-### 3. Generate AI Rules
-
-```bash
-cd your-angular-project
-grg llm-setup
-```
-
-### 4. Restart Your IDE
+**What this creates:**
+- `design-system.md` - Component usage patterns, styling rules, import patterns
 
 **What this enables:**
-- ✅ AI automatically searches GRG Kit before writing custom code
-- ✅ AI knows about themes, components, blocks, and examples
 - ✅ AI follows GRG Kit design system patterns
-- ✅ AI can install blocks directly via MCP tools
+- ✅ AI uses Spartan-NG components correctly
+- ✅ AI uses semantic colors instead of raw Tailwind colors
 
 ## Quick Reference
 

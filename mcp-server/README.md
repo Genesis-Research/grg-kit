@@ -160,7 +160,7 @@ AI:
 ### After MCP Server:
 - ✅ AI **automatically** knows about GRG Kit
 - ✅ AI searches GRG Kit **first** for UI needs
-- ✅ AI can browse 6 themes, 2 components, 3 blocks
+- ✅ AI can browse 9 themes, 1 component, 3 blocks
 - ✅ AI installs blocks directly
 - ✅ AI uses actual GRG Kit code patterns
 
@@ -187,30 +187,15 @@ grg-kit-cli (executes commands)
 Templates (downloads resources)
 ```
 
-### CLI Metadata (Single Source of Truth)
+### CLI as Single Source of Truth
 
-The MCP server reads CLI command formats from `catalog.json`, which includes:
+The MCP server calls `grg list --json` to get resource data directly from the CLI. This ensures:
 
-```json
-{
-  "cli": {
-    "name": "grg",
-    "version": "0.6.2",
-    "commands": {
-      "init": {
-        "usage": "grg init [--theme <name>]",
-        "themeFlag": "--theme"
-      },
-      "addBlock": {
-        "usage": "grg add block <blockName> [fileIds...]",
-        "validBlocks": ["auth", "shell", "settings"]
-      }
-    }
-  }
-}
-```
+- No hardcoded resource lists that can get stale
+- CLI and MCP server always have the same data
+- No network fetching or caching complexity
 
-This ensures the MCP server always generates correct CLI commands without hardcoding.
+**Requirement:** The `grg` CLI must be installed globally (`npm install -g grg-kit-cli`) for the MCP server to work.
 
 ## Key Features
 

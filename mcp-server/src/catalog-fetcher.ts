@@ -1,20 +1,9 @@
 /**
- * Dynamic catalog fetcher with caching for MCP server
- * Fetches catalog.json from GitHub with fallback to inline resources
+ * Catalog fetcher for MCP server
+ * Calls `grg list --json` to get resources from CLI (single source of truth)
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
-import * as https from 'https';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const REPO = 'Genesis-Research/grg-kit';
-const CATALOG_URL = `https://raw.githubusercontent.com/${REPO}/main/templates/catalog.json`;
-const CACHE_FILE = path.join(__dirname, '.catalog-cache.json');
-const CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes
+import { execSync } from 'child_process';
 
 export interface ResourceItem {
   name: string;
@@ -29,7 +18,6 @@ export interface ResourceItem {
 
 export interface CLICommand {
   usage: string;
-  description: string;
   themeFlag?: string;
   validBlocks?: string[];
   validComponents?: string[];
@@ -42,6 +30,7 @@ export interface CLIMetadata {
     init: CLICommand;
     addBlock: CLICommand;
     addComponent?: CLICommand;
+    addTheme?: CLICommand;
     list: CLICommand;
   };
 }
@@ -53,201 +42,99 @@ export interface GRGResources {
   cli?: CLIMetadata;
 }
 
-// In-memory cache
+// In-memory cache (short TTL since CLI is fast)
 let memoryCache: GRGResources | null = null;
 let memoryCacheTime = 0;
-
-// Inline fallback CLI metadata
-const FALLBACK_CLI: CLIMetadata = {
-  name: 'grg',
-  version: '0.6.8',
-  commands: {
-    init: {
-      usage: 'grg init [--theme <name>]',
-      description: 'Initialize GRG Kit in current Angular project',
-      themeFlag: '--theme'
-    },
-    addBlock: {
-      usage: 'grg add block <blockName> [fileIds...]',
-      description: 'Add blocks to your project',
-      validBlocks: ['auth', 'shell', 'settings']
-    },
-    addComponent: {
-      usage: 'grg add component <componentName>',
-      description: 'Add GRG components to your project',
-      validComponents: ['file-upload']
-    },
-    list: {
-      usage: 'grg list [category]',
-      description: 'List available resources (blocks, components, themes)'
-    }
-  }
-};
-
-// Inline fallback resources
-const FALLBACK_RESOURCES: GRGResources = {
-  themes: [
-    { name: 'amber-minimal', title: 'Amber Minimal', description: 'Warm amber accents', tags: ['minimal', 'warm', 'amber', 'orange'] },
-    { name: 'claude', title: 'Claude', description: 'Claude-inspired warm tones', tags: ['warm', 'orange', 'brown', 'claude'] },
-    { name: 'clean-slate', title: 'Clean Slate', description: 'Minimal grayscale palette', tags: ['minimal', 'grayscale', 'neutral', 'clean'] },
-    { name: 'grg-theme', title: 'GRG Theme', description: 'Default theme with purple/orange accents', tags: ['default', 'purple', 'orange', 'colorful'] },
-    { name: 'mocks', title: 'Mocks', description: 'Theme for mockups and prototypes', tags: ['mockup', 'prototype', 'design'] },
-    { name: 'modern-minimal', title: 'Modern Minimal', description: 'Contemporary minimal design', tags: ['minimal', 'modern', 'contemporary', 'clean'] },
-  ],
-  components: [
-    { name: 'file-upload', title: 'File Upload', description: 'Drag and drop file upload component', tags: ['file', 'upload', 'form', 'drag-drop'] },
-  ],
-  blocks: [
-    { name: 'auth', title: 'Auth Block', description: 'Authentication pages (login, signup, forgot password)', tags: ['auth', 'login', 'signup', 'authentication'] },
-    { name: 'settings', title: 'Settings Block', description: 'Settings pages: profile, notifications, security, danger zone', tags: ['settings', 'preferences', 'account', 'profile', 'security'] },
-    { name: 'shell', title: 'App Shell Block', description: 'Application shell layouts: sidebar, topnav, collapsible - each with optional footer', tags: ['shell', 'layout', 'sidebar', 'header', 'footer', 'navigation'] },
-  ],
-  cli: FALLBACK_CLI,
-};
+const CACHE_TTL_MS = 60 * 1000; // 1 minute
 
 /**
- * Fetch JSON from URL
+ * Fetch catalog by calling `grg list --json`
  */
-function fetchJson(url: string): Promise<any> {
-  return new Promise((resolve, reject) => {
-    https.get(url, (res) => {
-      if (res.statusCode !== 200) {
-        reject(new Error(`HTTP ${res.statusCode}`));
-        return;
-      }
-
-      let data = '';
-      res.on('data', (chunk) => (data += chunk));
-      res.on('end', () => {
-        try {
-          resolve(JSON.parse(data));
-        } catch (e) {
-          reject(new Error('Invalid JSON'));
-        }
-      });
-    }).on('error', reject);
-  });
-}
-
-/**
- * Read file cache
- */
-function readFileCache(): GRGResources | null {
-  try {
-    if (fs.existsSync(CACHE_FILE)) {
-      const cached = JSON.parse(fs.readFileSync(CACHE_FILE, 'utf-8'));
-      if (Date.now() - cached.timestamp < CACHE_TTL_MS) {
-        return cached.data;
-      }
-    }
-  } catch (e) {
-    // Cache read failed
-  }
-  return null;
-}
-
-/**
- * Write file cache
- */
-function writeFileCache(data: GRGResources): void {
-  try {
-    fs.writeFileSync(
-      CACHE_FILE,
-      JSON.stringify({ timestamp: Date.now(), data }),
-      'utf-8'
-    );
-  } catch (e) {
-    // Cache write failed
-  }
-}
-
-/**
- * Transform catalog to resources format
- */
-function transformCatalog(catalog: any): GRGResources {
-  return {
-    themes: catalog.themes.map((t: any) => ({
-      ...t,
-      path: `templates/ui/themes/${t.file}`,
-      defaultOutput: `src/themes/${t.file}`,
-    })),
-    components: catalog.components.map((c: any) => ({
-      ...c,
-      path: `templates/ui/components/${c.name}`,
-      defaultOutput: `src/app/components/${c.name}`,
-    })),
-    blocks: catalog.blocks.map((b: any) => ({
-      ...b,
-      path: `templates/ui/blocks/${b.name}`,
-      defaultOutput: `src/app/blocks/${b.name}`,
-    })),
-    cli: catalog.cli || FALLBACK_CLI,
-  };
-}
-
-/**
- * Fetch catalog with caching
- * Priority: memory cache -> file cache -> network -> fallback
- */
-export async function fetchCatalog(forceRefresh = false): Promise<GRGResources> {
+export async function fetchCatalog(): Promise<GRGResources> {
   // Check memory cache first
-  if (!forceRefresh && memoryCache && Date.now() - memoryCacheTime < CACHE_TTL_MS) {
+  if (memoryCache && Date.now() - memoryCacheTime < CACHE_TTL_MS) {
     return memoryCache;
   }
 
-  // Check file cache
-  if (!forceRefresh) {
-    const fileCached = readFileCache();
-    if (fileCached) {
-      memoryCache = fileCached;
-      memoryCacheTime = Date.now();
-      return fileCached;
-    }
-  }
-
-  // Fetch from network
   try {
-    const catalog = await fetchJson(CATALOG_URL);
-    const resources = transformCatalog(catalog);
+    // Call CLI to get resources
+    const output = execSync('grg list --json', {
+      encoding: 'utf-8',
+      timeout: 10000,
+      stdio: ['pipe', 'pipe', 'pipe'],
+    });
 
-    // Update caches
+    const data = JSON.parse(output);
+    
+    const resources: GRGResources = {
+      themes: data.themes || [],
+      components: data.components || [],
+      blocks: data.blocks || [],
+      cli: data.cli,
+    };
+
+    // Update cache
     memoryCache = resources;
     memoryCacheTime = Date.now();
-    writeFileCache(resources);
 
     return resources;
-  } catch (error) {
-    // Try expired file cache
-    try {
-      if (fs.existsSync(CACHE_FILE)) {
-        const cached = JSON.parse(fs.readFileSync(CACHE_FILE, 'utf-8'));
-        return cached.data;
-      }
-    } catch (e) {
-      // Ignore
+  } catch (error: any) {
+    // If CLI fails, return cached data or empty
+    if (memoryCache) {
+      return memoryCache;
     }
-
-    // Final fallback
-    return FALLBACK_RESOURCES;
+    
+    console.error('Failed to fetch catalog from CLI:', error.message);
+    
+    // Return minimal fallback
+    return {
+      themes: [],
+      components: [],
+      blocks: [],
+      cli: {
+        name: 'grg',
+        version: 'unknown',
+        commands: {
+          init: { usage: 'grg init [--theme <name>]' },
+          addBlock: { usage: 'grg add block <blockName> [fileIds...]', validBlocks: ['auth', 'shell', 'settings'] },
+          addComponent: { usage: 'grg add component <componentName>', validComponents: ['file-upload'] },
+          list: { usage: 'grg list [--json]' },
+        },
+      },
+    };
   }
 }
 
 /**
- * Get resources synchronously (uses cache or fallback)
+ * Get resources synchronously
  */
 export function getResourcesSync(): GRGResources {
   if (memoryCache && Date.now() - memoryCacheTime < CACHE_TTL_MS) {
     return memoryCache;
   }
 
-  const fileCached = readFileCache();
-  if (fileCached) {
-    memoryCache = fileCached;
+  try {
+    const output = execSync('grg list --json', {
+      encoding: 'utf-8',
+      timeout: 10000,
+      stdio: ['pipe', 'pipe', 'pipe'],
+    });
+
+    const data = JSON.parse(output);
+    
+    memoryCache = {
+      themes: data.themes || [],
+      components: data.components || [],
+      blocks: data.blocks || [],
+      cli: data.cli,
+    };
     memoryCacheTime = Date.now();
-    return fileCached;
+
+    return memoryCache;
+  } catch (error) {
+    if (memoryCache) {
+      return memoryCache;
+    }
+    return { themes: [], components: [], blocks: [] };
   }
-
-  return FALLBACK_RESOURCES;
 }
-
-export { REPO };

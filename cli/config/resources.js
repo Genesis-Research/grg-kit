@@ -30,6 +30,46 @@ const RESOURCES = {
       ]
     },
     {
+      "name": "bio-lab",
+      "title": "Bio Lab",
+      "description": "Fresh green theme for life sciences",
+      "file": "bio-lab.css",
+      "path": "templates/ui/themes/bio-lab.css",
+      "defaultOutput": "src/themes/bio-lab.css",
+      "tags": [
+        "medical",
+        "green",
+        "life-sciences",
+        "biotech"
+      ],
+      "features": [
+        "dark-mode",
+        "tailwind-v4",
+        "spartan-ng",
+        "oklch"
+      ]
+    },
+    {
+      "name": "chroma-clinic",
+      "title": "Chroma Clinic",
+      "description": "Professional blue theme with Open Sans",
+      "file": "chroma-clinic.css",
+      "path": "templates/ui/themes/chroma-clinic.css",
+      "defaultOutput": "src/themes/chroma-clinic.css",
+      "tags": [
+        "medical",
+        "professional",
+        "blue",
+        "healthcare"
+      ],
+      "features": [
+        "dark-mode",
+        "tailwind-v4",
+        "spartan-ng",
+        "oklch"
+      ]
+    },
+    {
       "name": "claude",
       "title": "Claude",
       "description": "Claude-inspired warm tones",
@@ -72,15 +112,15 @@ const RESOURCES = {
     {
       "name": "grg-theme",
       "title": "Grg Theme",
-      "description": "Default theme with purple/orange accents",
+      "description": "Default theme with blue accents",
       "file": "grg-theme.css",
       "path": "templates/ui/themes/grg-theme.css",
       "defaultOutput": "src/themes/grg-theme.css",
       "tags": [
         "default",
-        "purple",
-        "orange",
-        "colorful"
+        "blue",
+        "minimal",
+        "professional"
       ],
       "features": [
         "dark-mode",
@@ -90,16 +130,17 @@ const RESOURCES = {
       ]
     },
     {
-      "name": "mocks",
-      "title": "Mocks",
-      "description": "Theme for mockups and prototypes",
-      "file": "mocks.css",
-      "path": "templates/ui/themes/mocks.css",
-      "defaultOutput": "src/themes/mocks.css",
+      "name": "helix-purple",
+      "title": "Helix Purple",
+      "description": "DNA-inspired purple for genomics",
+      "file": "helix-purple.css",
+      "path": "templates/ui/themes/helix-purple.css",
+      "defaultOutput": "src/themes/helix-purple.css",
       "tags": [
-        "mockup",
-        "prototype",
-        "design"
+        "medical",
+        "purple",
+        "genomics",
+        "biotech"
       ],
       "features": [
         "dark-mode",
@@ -120,6 +161,26 @@ const RESOURCES = {
         "modern",
         "contemporary",
         "clean"
+      ],
+      "features": [
+        "dark-mode",
+        "tailwind-v4",
+        "spartan-ng",
+        "oklch"
+      ]
+    },
+    {
+      "name": "pharma-teal",
+      "title": "Pharma Teal",
+      "description": "Calming teal for pharmaceutical applications",
+      "file": "pharma-teal.css",
+      "path": "templates/ui/themes/pharma-teal.css",
+      "defaultOutput": "src/themes/pharma-teal.css",
+      "tags": [
+        "medical",
+        "teal",
+        "pharmaceutical",
+        "healthcare"
       ],
       "features": [
         "dark-mode",

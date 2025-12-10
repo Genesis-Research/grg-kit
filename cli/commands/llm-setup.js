@@ -2,11 +2,10 @@ const fs = require('fs').promises;
 const path = require('path');
 const chalk = require('chalk');
 const ora = require('ora');
-const { RESOURCES } = require('../config/resources');
 
 /**
  * LLM Setup command - generates LLM-specific prompts and rules
- * Helps AI assistants understand GRG Kit design system and use MCP server
+ * Helps AI assistants understand GRG Kit design system
  */
 async function llmPrompts(options) {
   const outputDir = options.output || '.windsurf/rules';
@@ -78,8 +77,7 @@ async function llmPrompts(options) {
     
     console.log(chalk.yellow('\nNext steps:'));
     console.log(chalk.gray('  1. The CLAUDE.md file will be automatically picked up by Claude Code'));
-    console.log(chalk.gray('  2. Make sure the grg-kit MCP server is configured'));
-    console.log(chalk.gray('  3. Claude will now check GRG Kit resources before writing custom code'));
+    console.log(chalk.gray('  2. Claude will now follow GRG Kit design system patterns'));
     console.log();
     return;
   }
@@ -109,44 +107,15 @@ async function llmPrompts(options) {
     process.exit(1);
   }
 
-  // Step 3: Generate grg-kit-mcp.md
-  spinner.start('Generating grg-kit-mcp.md...');
-  try {
-    const mcpContent = generateMCPRules();
-    const mcpPath = path.join(outputDir, 'grg-kit-mcp.md');
-    await fs.writeFile(mcpPath, mcpContent);
-    spinner.succeed(chalk.green('✓ Generated grg-kit-mcp.md'));
-  } catch (error) {
-    spinner.fail(chalk.red('Failed to generate grg-kit-mcp.md'));
-    console.error(chalk.red(error.message));
-    process.exit(1);
-  }
-
-  // Step 4: Generate angular-components.md (glob-triggered)
-  spinner.start('Generating angular-components.md...');
-  try {
-    const angularContent = generateAngularComponentRules();
-    const angularPath = path.join(outputDir, 'angular-components.md');
-    await fs.writeFile(angularPath, angularContent);
-    spinner.succeed(chalk.green('✓ Generated angular-components.md'));
-  } catch (error) {
-    spinner.fail(chalk.red('Failed to generate angular-components.md'));
-    console.error(chalk.red(error.message));
-    process.exit(1);
-  }
-
   // Success message
   console.log(chalk.bold.green('\n✨ LLM rules generated successfully!\n'));
-  console.log(chalk.gray('Files created:'));
+  console.log(chalk.gray('File created:'));
   console.log(chalk.cyan(`  ${outputDir}/design-system.md`));
-  console.log(chalk.cyan(`  ${outputDir}/grg-kit-mcp.md`));
-  console.log(chalk.cyan(`  ${outputDir}/angular-components.md`));
   
   console.log(chalk.yellow('\nNext steps:'));
   console.log(chalk.gray('  1. These rules will be automatically picked up by your AI assistant'));
-  console.log(chalk.gray('  2. Make sure the grg-kit MCP server is configured in your IDE'));
-  console.log(chalk.gray('  3. AI will now check GRG Kit resources before writing custom code'));
-  console.log(chalk.gray('\nSupported IDEs: Windsurf, Claude Code, Claude Desktop'));
+  console.log(chalk.gray('  2. AI will now follow GRG Kit design system patterns'));
+  console.log(chalk.gray('\nSupported IDEs: Windsurf, Cursor, Claude Code'));
   console.log();
 }
 
@@ -169,8 +138,8 @@ This project uses **GRG Kit**, a comprehensive Angular UI toolkit built on top o
 
 ### 1. Always Check GRG Kit First
 **BEFORE writing any UI component, layout, or page:**
-1. Use the MCP server to search for existing resources: \`search_ui_resources\`
-2. Check if a component, layout, or example already exists
+1. Check if a Spartan-NG component exists (button, card, dialog, form-field, table, etc.)
+2. Check if a block exists for page layouts (auth, shell, settings)
 3. Only write custom code if no suitable resource exists
 
 ### 2. Component Organization
@@ -689,411 +658,17 @@ This design system provides a comprehensive foundation for building consistent, 
 `;
 }
 
-function generateMCPRules() {
-  // Dynamically build resource lists from resources.js
-  // Note: Spartan-NG components are pre-installed, so we only list GRG Kit resources
-  const themes = RESOURCES.themes || [];
-  const components = RESOURCES.components || [];
-  const blocks = RESOURCES.blocks || [];
-  
-  const themesList = themes.map(t => `- \`theme:${t.name}\` - ${t.description}`).join('\n');
-  const componentsList = components.map(c => `- \`component:${c.name}\` - ${c.description}`).join('\n');
-  const blocksList = blocks.map(b => `- \`block:${b.name}\` - ${b.description}`).join('\n');
-  
-  const totalResources = themes.length + components.length + blocks.length;
-
-  return `---
-trigger: always_on
----
-
-# GRG Kit MCP Server Integration
-
-## Setup
-
-Add the grg-kit MCP server to your AI assistant configuration:
-
-**Windsurf:** \`~/.codeium/windsurf/mcp_config.json\`
-**Claude Code:** \`~/.claude/settings.json\`
-**Claude Desktop (macOS):** \`~/Library/Application Support/Claude/claude_desktop_config.json\`
-
-\`\`\`json
-{
-  "mcpServers": {
-    "grg-kit": {
-      "command": "grg-mcp-server"
-    }
-  }
-}
-\`\`\`
-
-After adding, restart your IDE for the MCP server to be available.
-
-## Important: Spartan-NG is Pre-installed
-
-**Spartan-NG components are already installed** in this project. You do NOT need to use MCP to install them.
-
-- For Spartan-NG usage patterns → Refer to \`design-system.md\`
-- For themes, blocks, and GRG Kit components → Use MCP tools below
-
-## When to Use MCP
-
-Use the MCP server for:
-1. **Themes** - Install different color themes
-2. **Blocks** - Pre-built page layouts (auth, shell, settings)
-3. **GRG Kit Components** - Custom components like file-upload
-
-**Do NOT use MCP for:**
-- Spartan-NG components (button, card, dialog, etc.) - already installed
-- Basic UI patterns - see \`design-system.md\`
-
-## MCP Server Tools
-
-The \`grg-kit\` MCP server provides these tools:
-
-### 1. mcp2_search_ui_resources
-
-Search for GRG Kit resources (themes, blocks, components).
-
-\`\`\`typescript
-mcp2_search_ui_resources({
-  query: "auth",
-  category: "all" // or "themes", "components", "blocks"
-})
-\`\`\`
-
-**When to use:**
-- User needs a page layout or block
-- Looking for a theme
-- Need a GRG Kit component (file-upload)
-
-### 2. mcp2_suggest_resources
-
-Get suggestions based on user requirements.
-
-\`\`\`typescript
-mcp2_suggest_resources({
-  requirement: "I need a login page"
-})
-
-// Returns: block:auth, theme suggestions
-\`\`\`
-
-### 3. mcp2_get_resource_details
-
-Get detailed information about a resource.
-
-\`\`\`typescript
-mcp2_get_resource_details({
-  resource: "block:auth"
-})
-
-// Returns: dependencies, tags, install command
-\`\`\`
-
-### 4. mcp2_install_resource
-
-Get the install command for a block. Returns a command to run via run_command tool.
-
-\`\`\`typescript
-mcp2_install_resource({
-  resource: "auth",  // Just the block name, NOT "block:auth"
-  files: ["login"],  // Optional: specific files to install
-  output: "src/app/pages/auth" // Optional: custom output directory
-})
-// Returns: { command: "grg add block auth login", instruction: "Run this command..." }
-\`\`\`
-
-**Important:** The resource parameter should be just the block name (e.g., "auth", "shell", "settings"), NOT prefixed with "block:".
-
-### 5. mcp2_list_available_resources
-
-List all available resources.
-
-\`\`\`typescript
-mcp2_list_available_resources({
-  category: "all" // or "themes", "components", "blocks"
-})
-\`\`\`
-
-## Workflow Examples
-
-### Example 1: User Wants a Dashboard
-
-\`\`\`
-User: "Create a dashboard with a sidebar"
-
-AI Workflow:
-1. mcp2_search_ui_resources({ query: "shell sidebar" })
-   → Finds: block:shell
-   
-2. mcp2_install_resource({ resource: "shell", files: ["sidebar"] })
-   → Returns command: "grg add block shell sidebar"
-   
-3. Run the command via run_command tool in the Angular project root
-   
-4. Customize using Spartan-NG components (from design-system.md)
-   → Add cards, tables, etc.
-\`\`\`
-
-### Example 2: User Wants a Login Page
-
-\`\`\`
-User: "I need a login page"
-
-AI Workflow:
-1. mcp2_search_ui_resources({ query: "auth login" })
-   → Finds: block:auth
-   
-2. mcp2_install_resource({ resource: "auth", files: ["login"] })
-   → Returns command: "grg add block auth login"
-   
-3. Run the command via run_command tool in the Angular project root
-   
-4. Customize as needed
-\`\`\`
-
-### Example 3: User Wants a Theme
-
-\`\`\`
-User: "Change the theme to something warmer"
-
-AI Workflow:
-1. mcp2_list_available_resources({ category: "themes" })
-   → Show: claude, amber-minimal, etc.
-   
-2. mcp2_install_resource({ resource: "claude" })
-   → Returns command: "grg add theme claude"
-   
-3. Run the command via run_command tool
-   → Theme is downloaded and styles.css is updated automatically
-\`\`\`
-
-### Example 4: User Wants a Form Component
-
-\`\`\`
-User: "I need a file upload"
-
-AI Workflow:
-1. mcp2_search_ui_resources({ query: "file upload" })
-   → Finds: component:file-upload
-   
-2. Components are included automatically with grg init
-   → Just import and use: import { GrgFileUploadImports } from '@grg-kit/ui/file-upload';
-   
-3. Use with Spartan-NG form components (from design-system.md)
-\`\`\`
-
-## Available Resources (${totalResources} total)
-
-### Themes (${themes.length} available)
-${themesList}
-
-### GRG Kit Components (${components.length} available)
-${componentsList}
-
-### Blocks/Layouts (${blocks.length} available)
-${blocksList}
-
-## Decision Tree
-
-\`\`\`
-User request:
-│
-├─ Need a button, card, dialog, form field, table, etc.?
-│  └─ Use Spartan-NG (see design-system.md) - ALREADY INSTALLED
-│
-├─ Need a page layout (dashboard, auth, settings)?
-│  └─ Use MCP: mcp2_search_ui_resources({ query: "..." })
-│
-├─ Need a theme?
-│  └─ Use MCP: mcp2_list_available_resources({ category: "themes" })
-│
-└─ Need file-upload or other GRG Kit component?
-   └─ Use MCP: mcp2_search_ui_resources({ query: "..." })
-\`\`\`
-
-## Remember
-
-- **Spartan-NG is pre-installed** - Don't search for button, card, dialog, etc.
-- **Use design-system.md** for Spartan-NG patterns
-- **Use MCP** only for themes, blocks, and GRG Kit components
-- **Check blocks first** when building pages - don't start from scratch
-`;
-}
-
-function generateAngularComponentRules() {
-  // Spartan-NG components are pre-installed - list the common ones
-  const spartanComponents = [
-    'accordion', 'alert', 'alert-dialog', 'avatar', 'badge', 'breadcrumb',
-    'button', 'calendar', 'card', 'checkbox', 'collapsible', 'combobox',
-    'command', 'context-menu', 'data-table', 'date-picker', 'dialog',
-    'dropdown-menu', 'form-field', 'hover-card', 'input', 'label', 'menubar',
-    'navigation-menu', 'pagination', 'popover', 'progress', 'radio-group',
-    'scroll-area', 'select', 'separator', 'sheet', 'sidebar', 'skeleton',
-    'slider', 'sonner', 'spinner', 'switch', 'table', 'tabs', 'textarea',
-    'toggle', 'tooltip'
-  ];
-  const componentNames = spartanComponents.join(', ');
-
-  return `---
-trigger: glob
-globs: ["**/*.component.ts", "**/*.component.html"]
----
-
-# Angular Component Development with GRG Kit
-
-You are editing an Angular component. Before writing UI code:
-
-## Quick Reference
-
-### Spartan-NG Components (Pre-installed)
-These components are already available - just import and use them:
-${componentNames}
-
-### Import Patterns
-
-**Spartan-NG (hlm prefix):**
-\`\`\`typescript
-import { HlmButtonImports } from '@spartan-ng/helm/button';
-import { HlmCardImports } from '@spartan-ng/helm/card';
-import { BrnDialogImports } from '@spartan-ng/brain/dialog';
-import { HlmDialogImports } from '@spartan-ng/helm/dialog';
-\`\`\`
-
-**GRG Kit (grg- prefix):**
-\`\`\`typescript
-import { GrgFileUploadImports } from '@grg-kit/ui/file-upload';
-\`\`\`
-
-### Common Patterns
-
-**Button:**
-\`\`\`html
-<button hlmBtn>Default</button>
-<button hlmBtn variant="outline">Outline</button>
-<button hlmBtn variant="destructive">Destructive</button>
-\`\`\`
-
-**Card:**
-\`\`\`html
-<section hlmCard>
-  <div hlmCardHeader>
-    <h3 hlmCardTitle>Title</h3>
-    <p hlmCardDescription>Description</p>
-  </div>
-  <div hlmCardContent>Content</div>
-</section>
-\`\`\`
-
-**Form Field:**
-\`\`\`html
-<hlm-form-field>
-  <input hlmInput [formControl]="control" placeholder="Email" />
-  <hlm-error>Required</hlm-error>
-</hlm-form-field>
-\`\`\`
-
-**Dialog:**
-\`\`\`html
-<hlm-dialog>
-  <button brnDialogTrigger hlmBtn>Open</button>
-  <hlm-dialog-content *brnDialogContent="let ctx">
-    <hlm-dialog-header>
-      <h3 hlmDialogTitle>Title</h3>
-    </hlm-dialog-header>
-    <!-- content -->
-  </hlm-dialog-content>
-</hlm-dialog>
-\`\`\`
-
-### Icons
-\`\`\`typescript
-import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideCheck, lucideX } from '@ng-icons/lucide';
-
-@Component({
-  providers: [provideIcons({ lucideCheck, lucideX })],
-  template: \`<ng-icon hlm name="lucideCheck" />\`
-})
-\`\`\`
-
-## When to Use MCP
-
-Use MCP only for:
-- **Blocks** (auth, shell, settings) - \`mcp2_search_ui_resources({ query: "auth" })\`
-- **Themes** - \`mcp2_list_available_resources({ category: "themes" })\`
-- **GRG Kit components** (file-upload) - \`mcp2_search_ui_resources({ query: "file-upload" })\`
-
-**Do NOT use MCP for Spartan-NG components** - they are already installed!
-
-## TailwindCSS Rules (CRITICAL)
-
-### NEVER use raw Tailwind colors:
-\`\`\`html
-<!-- ❌ FORBIDDEN -->
-<div class="text-green-600 bg-green-100">Success</div>
-<div class="text-red-500">Error</div>
-<div class="bg-yellow-50 border-yellow-200">Warning</div>
-\`\`\`
-
-### ALWAYS use semantic color tokens:
-\`\`\`html
-<!-- ✅ CORRECT -->
-<div class="bg-primary text-primary-foreground">Primary</div>
-<div class="bg-destructive text-destructive-foreground">Error</div>
-<div class="text-muted-foreground">Secondary text</div>
-<div class="bg-muted">Subtle background</div>
-<div class="border-border">Standard border</div>
-\`\`\`
-
-### Available semantic colors:
-\`background\`, \`foreground\`, \`card\`, \`card-foreground\`, \`popover\`, \`popover-foreground\`,
-\`primary\`, \`primary-foreground\`, \`secondary\`, \`secondary-foreground\`, \`muted\`, \`muted-foreground\`,
-\`accent\`, \`accent-foreground\`, \`destructive\`, \`destructive-foreground\`, \`border\`, \`input\`, \`ring\`
-
-### Need a new color (e.g., success, warning)?
-1. Add CSS variable to \`src/styles.css\` with light AND dark mode values
-2. Register in \`@theme inline\` block
-3. Then use: \`bg-success text-success-foreground\`
-
-### Typography - use standard scale:
-\`\`\`html
-<!-- ✅ CORRECT -->
-<p class="text-sm">Small</p>
-<p class="text-base">Body</p>
-<h2 class="text-xl font-semibold">Heading</h2>
-
-<!-- ❌ WRONG - arbitrary sizes -->
-<p class="text-[13px]">Don't do this</p>
-\`\`\`
-
-## Remember
-- Spartan-NG components are pre-installed - just import and use
-- Follow existing patterns in the codebase
-- Use TailwindCSS v4 for styling with SEMANTIC colors only
-- NEVER use raw colors like text-green-600, bg-yellow-100, etc.
-`;
-}
-
 function generateClaudeMdRules() {
   // Generate a combined CLAUDE.md file for Claude Code
-  const themes = RESOURCES.themes || [];
-  const components = RESOURCES.components || [];
-  const blocks = RESOURCES.blocks || [];
-  
-  const themesList = themes.map(t => `- \`theme:${t.name}\` - ${t.description}`).join('\n');
-  const componentsList = components.map(c => `- \`component:${c.name}\` - ${c.description}`).join('\n');
-  const blocksList = blocks.map(b => `- \`block:${b.name}\` - ${b.description}`).join('\n');
-
   return `# GRG Kit Project Rules
 
 This project uses **GRG Kit**, an Angular UI toolkit built on **Spartan-NG UI**.
 
-## Critical: Check GRG Kit First
+## Critical: Check Design System First
 
 **BEFORE writing any UI component:**
-1. Use MCP tool \`mcp2_search_ui_resources\` to search for existing resources
-2. Check if a component, layout, or block already exists
+1. Check if a Spartan-NG component exists (button, card, dialog, form-field, table, etc.)
+2. Check if a block exists for page layouts (auth, shell, settings)
 3. Only write custom code if no suitable resource exists
 
 ## Architecture
@@ -1169,34 +744,29 @@ import { lucideCheck } from '@ng-icons/lucide';
 })
 \`\`\`
 
-## MCP Server Tools
+## Available Blocks
 
-Use the \`grg-kit\` MCP server for themes, blocks, and GRG Kit components:
+Pre-built page layouts available via \`grg add block <name>\`:
+- **auth** - Login, register, forgot-password pages
+- **shell** - Sidebar, topnav, collapsible layouts  
+- **settings** - Profile, security, notifications pages
 
-- \`mcp2_search_ui_resources({ query: "auth" })\` - Search resources
-- \`mcp2_suggest_resources({ requirement: "login page" })\` - Get suggestions
-- \`mcp2_install_resource({ resource: "auth", files: ["login"] })\` - Get install command (returns command to run)
-- \`mcp2_list_available_resources({ category: "blocks" })\` - List all
+## Available Themes
 
-**Note:** \`mcp2_install_resource\` returns a command string. Use \`run_command\` to execute it in the Angular project root.
+Switch themes via \`grg add theme <name>\`:
+- grg-theme, claude, amber-minimal, clean-slate, modern-minimal
+- Medical themes: chroma-clinic, bio-lab, pharma-teal, helix-purple
 
-## Available Resources
+## GRG Kit Components
 
-### Themes
-${themesList}
-
-### GRG Kit Components
-${componentsList}
-
-### Blocks
-${blocksList}
+- **file-upload** - Drag and drop file upload (\`@grg-kit/ui/file-upload\`)
 
 ## Decision Tree
 
 - Need button, card, dialog, form field, table? → Use Spartan-NG (already installed)
-- Need page layout (dashboard, auth, settings)? → Use MCP: \`mcp2_search_ui_resources\`
-- Need theme? → Use MCP: \`mcp2_list_available_resources({ category: "themes" })\`
-- Need file-upload? → Use MCP: \`mcp2_search_ui_resources\`
+- Need page layout (dashboard, auth, settings)? → Run: \`grg add block <name>\`
+- Need theme? → Run: \`grg add theme <name>\`
+- Need file-upload? → Import from \`@grg-kit/ui/file-upload\`
 
 ## Package Manager
 

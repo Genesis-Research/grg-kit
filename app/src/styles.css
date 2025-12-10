@@ -8,7 +8,10 @@
 @import './themes/amber-minimal.css';
 @import './themes/clean-slate.css';
 @import './themes/modern-minimal.css';
-@import './themes/mocks.css';
+@import './themes/chroma-clinic.css';
+@import './themes/bio-lab.css';
+@import './themes/pharma-teal.css';
+@import './themes/helix-purple.css';
 
 /* Default to claude theme on :root - ThemeService will override via data-theme attribute */
 :root {

@@ -6,12 +6,15 @@ A collection of CSS themes for the GRG Kit design system.
 
 | Theme | File | Description |
 |-------|------|-------------|
-| `grg` | `grg-theme.css` | Default GRG theme with purple/violet accents |
-| `amber-minimal` | `amber-minimal.css` | Warm amber tones with minimal styling |
+| `grg` | `grg-theme.css` | Default GRG theme with blue accents |
 | `claude` | `claude.css` | Inspired by Claude's interface |
+| `amber-minimal` | `amber-minimal.css` | Warm amber tones with minimal styling |
 | `clean-slate` | `clean-slate.css` | Clean blue/indigo palette |
-| `mocks` | `mocks.css` | Sketch-style theme for wireframes |
 | `modern-minimal` | `modern-minimal.css` | Modern purple with subtle accents |
+| `chroma-clinic` | `chroma-clinic.css` | Professional blue theme for healthcare |
+| `bio-lab` | `bio-lab.css` | Fresh green theme for life sciences |
+| `pharma-teal` | `pharma-teal.css` | Calming teal for pharmaceutical apps |
+| `helix-purple` | `helix-purple.css` | DNA-inspired purple for genomics |
 
 ## Usage
 

@@ -54,6 +54,7 @@ addCommand
 program
   .command('list [category]')
   .description('List available blocks and components')
+  .option('--json', 'Output as JSON (for MCP server integration)')
   .action(list);
 
 // LLM Setup command

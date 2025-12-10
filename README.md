@@ -84,13 +84,16 @@ grg list
 Pre-built theme files with Tailwind CSS v4, spartan-ng integration, and light/dark mode support.
 
 | Theme | Description |
-|-------|-------------|
-| `grg-theme` | Default theme with purple/orange accents |
+|-------|--------------|
+| `grg-theme` | Default theme with blue accents |
 | `claude` | Claude-inspired warm tones |
 | `clean-slate` | Minimal grayscale palette |
 | `modern-minimal` | Contemporary minimal design |
 | `amber-minimal` | Warm amber accents |
-| `mocks` | Theme for mockups and prototypes |
+| `chroma-clinic` | Professional blue theme for healthcare |
+| `bio-lab` | Fresh green theme for life sciences |
+| `pharma-teal` | Calming teal for pharmaceutical apps |
+| `helix-purple` | DNA-inspired purple for genomics |
 
 ### Blocks
 
@@ -121,35 +124,18 @@ grg add block --all
 ### Components & Examples
 
 Components and spartan-ng examples are installed automatically via `grg init`:
-- **2 GRG components** (file-upload)
+- **1 GRG component** (file-upload)
 - **56+ spartan-ng examples** (accordion, alert, button, card, dialog, form-field, table, etc.)
 
-## MCP Server Integration
+## AI Assistant Integration
 
-For AI assistants to automatically discover and use GRG Kit resources:
-
-```bash
-# Install CLI (includes MCP server)
-npm install -g grg-kit-cli grg-kit-mcp-server
-```
-
-Configure your AI assistant (Windsurf, Cursor, Claude Code):
-
-```json
-{
-  "mcpServers": {
-    "grg-kit": {
-      "command": "grg-mcp-server"
-    }
-  }
-}
-```
-
-Generate AI rules:
+Generate design system rules for AI assistants (Windsurf, Cursor, Claude Code):
 
 ```bash
 grg llm-setup
 ```
+
+This creates `design-system.md` and `angular-components.md` rules that help AI follow GRG Kit patterns.
 
 ## License
 

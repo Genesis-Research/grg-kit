@@ -5,7 +5,7 @@ import { takeUntil } from 'rxjs/operators';
 
 export type DarkMode = 'light' | 'dark';
 
-export type ColorTheme = 'claude' | 'grg' | 'amber-minimal' | 'clean-slate' | 'modern-minimal' | 'mocks';
+export type ColorTheme = 'claude' | 'grg' | 'amber-minimal' | 'clean-slate' | 'modern-minimal' | 'chroma-clinic' | 'bio-lab' | 'pharma-teal' | 'helix-purple';
 
 export interface ThemeConfig {
   id: ColorTheme;
@@ -19,7 +19,10 @@ export const AVAILABLE_THEMES: ThemeConfig[] = [
   { id: 'amber-minimal', name: 'Amber Minimal', description: 'Warm amber tones with minimal styling' },
   { id: 'clean-slate', name: 'Clean Slate', description: 'Clean blue/indigo palette' },
   { id: 'modern-minimal', name: 'Modern Minimal', description: 'Modern purple with subtle accents' },
-  { id: 'mocks', name: 'Mocks', description: 'Sketch-style theme for wireframes' },
+  { id: 'chroma-clinic', name: 'Chroma Clinic', description: 'Professional blue theme with Open Sans' },
+  { id: 'bio-lab', name: 'Bio Lab', description: 'Fresh green theme for life sciences' },
+  { id: 'pharma-teal', name: 'Pharma Teal', description: 'Calming teal for pharmaceutical applications' },
+  { id: 'helix-purple', name: 'Helix Purple', description: 'DNA-inspired purple for genomics' },
 ];
 
 @Injectable({

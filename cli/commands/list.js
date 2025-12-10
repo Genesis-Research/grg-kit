@@ -1,16 +1,39 @@
 const chalk = require('chalk');
 const ora = require('ora');
 const { fetchCatalog } = require('../config/catalog-fetcher');
+const { version } = require('../package.json');
 
 /**
  * List command - displays available blocks, components, and themes
- * Usage: grg list [category]
+ * Usage: grg list [category] [--json]
  */
-async function list(category) {
+async function list(category, options = {}) {
   // Fetch catalog dynamically
-  const spinner = ora('Fetching catalog...').start();
+  const spinner = options.json ? null : ora('Fetching catalog...').start();
   const RESOURCES = await fetchCatalog({ silent: true });
-  spinner.stop();
+  if (spinner) spinner.stop();
+
+  // JSON output for MCP server integration
+  if (options.json) {
+    const output = {
+      cli: {
+        name: 'grg',
+        version,
+        commands: {
+          init: { usage: 'grg init [--theme <name>]', themeFlag: '--theme' },
+          addBlock: { usage: 'grg add block <blockName> [fileIds...]', validBlocks: RESOURCES.blocks.map(b => b.name) },
+          addComponent: { usage: 'grg add component <componentName>', validComponents: RESOURCES.components.map(c => c.name) },
+          addTheme: { usage: 'grg add theme <themeName>' },
+          list: { usage: 'grg list [category] [--json]' }
+        }
+      },
+      themes: RESOURCES.themes,
+      components: RESOURCES.components,
+      blocks: RESOURCES.blocks
+    };
+    console.log(JSON.stringify(output, null, 2));
+    return;
+  }
 
   if (!category) {
     // Show overview
