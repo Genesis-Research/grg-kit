@@ -4,7 +4,7 @@
   "lastUpdated": "2025-12-10",
   "cli": {
     "name": "grg",
-    "version": "0.6.12",
+    "version": "0.6.13",
     "commands": {
       "init": {
         "usage": "grg init [--theme <name>]",
