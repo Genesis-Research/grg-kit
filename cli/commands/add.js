@@ -200,11 +200,6 @@ function showUsage(RESOURCES) {
  *   grg add component --all            # All components
  */
 async function addComponent(componentName, options) {
-  // Fetch catalog dynamically (with caching)
-  const spinner = ora('Fetching catalog...').start();
-  const RESOURCES = await fetchCatalog({ silent: true });
-  spinner.stop();
-
   // Handle --all flag (download all components)
   if (options.all) {
     console.log(chalk.bold.cyan(`\n📦 Adding all components\n`));
@@ -296,11 +291,6 @@ function showComponentUsage(RESOURCES) {
  *   grg add theme modern-minimal   # Download and set modern-minimal theme
  */
 async function addTheme(themeName, options) {
-  // Fetch catalog dynamically (with caching)
-  const spinner = ora('Fetching catalog...').start();
-  const RESOURCES = await fetchCatalog({ silent: true });
-  spinner.stop();
-
   // Validate theme name
   if (!themeName) {
     showThemeUsage(RESOURCES);
@@ -360,10 +350,12 @@ async function downloadTheme(theme, customOutput) {
       stylesContent = '';
     }
 
-    const themeImport = `@import './themes/${theme.file}';`;
+    // Use relative path from src/ to the theme file
+    const relativeThemePath = path.relative('src', outputPath).replace(/\\/g, '/');
+    const themeImport = `@import './${relativeThemePath}';`;
     
-    // Check if any theme is already imported
-    const themeImportRegex = /@import\s+['"]\.\/themes\/[^'"]+['"];?\n?/g;
+    // Check if any theme is already imported (match any .css file import from relative paths)
+    const themeImportRegex = /@import\s+['"]\.\/.+\.css['"];?\n?/g;
     const existingThemeImports = stylesContent.match(themeImportRegex);
     
     if (existingThemeImports && existingThemeImports.length > 0) {
@@ -400,7 +392,8 @@ async function downloadTheme(theme, customOutput) {
   } catch (error) {
     downloadSpinner.warn(chalk.yellow('Could not update src/styles.css automatically'));
     console.log(chalk.gray('\nPlease add the following to your src/styles.css:'));
-    console.log(chalk.cyan(`  @import './themes/${theme.file}';`));
+    const relativeThemePath = path.relative('src', outputPath).replace(/\\/g, '/');
+    console.log(chalk.cyan(`  @import './${relativeThemePath}';`));
   }
 
   console.log();
