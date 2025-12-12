@@ -2,13 +2,13 @@ import { Component } from '@angular/core';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmAlertImports } from '@spartan-ng/helm/alert';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideTerminal, lucidePackage, lucideDownload, lucideBrain, lucideZap, lucideBot } from '@ng-icons/lucide';
+import { lucideTerminal, lucideDownload, lucideBrain, lucideZap, lucideBot } from '@ng-icons/lucide';
 import { HlmIcon } from '@spartan-ng/helm/icon';
 
 @Component({
   selector: 'app-getting-started',
   imports: [HlmCardImports, HlmAlertImports, NgIcon, HlmIcon],
-  providers: [provideIcons({ lucideTerminal, lucidePackage, lucideDownload, lucideBrain, lucideZap, lucideBot })],
+  providers: [provideIcons({ lucideTerminal, lucideDownload, lucideBrain, lucideZap, lucideBot })],
   template: `
     <div class="max-w-4xl mx-auto space-y-8">
       <div class="space-y-2">
@@ -262,10 +262,6 @@ grg llm-setup --output .claude</code></pre>
             <li class="flex items-start gap-2">
               <span class="text-primary">→</span>
               <span>Explore <strong>GRG Components</strong> for custom components</span>
-            </li>
-            <li class="flex items-start gap-2">
-              <span class="text-primary">→</span>
-              <span>View <strong>Colors</strong> to see the theme color palette</span>
             </li>
           </ul>
         </div>

@@ -61,25 +61,11 @@ import { lucideSun, lucideMoon, lucidePalette } from '@ng-icons/lucide';
                   GRG Components
                 </a>
                 <a
-                  routerLink="/colors"
+                  routerLink="/design-tokens"
                   routerLinkActive="bg-accent text-accent-foreground"
                   class="px-3 py-1.5 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground"
                 >
-                  Colors
-                </a>
-                <a
-                  routerLink="/typography"
-                  routerLinkActive="bg-accent text-accent-foreground"
-                  class="px-3 py-1.5 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground"
-                >
-                  Typography
-                </a>
-                <a
-                  routerLink="/data-table"
-                  routerLinkActive="bg-accent text-accent-foreground"
-                  class="px-3 py-1.5 text-sm font-medium rounded-md transition-colors hover:bg-accent hover:text-accent-foreground"
-                >
-                  Data Table
+                  Design Tokens
                 </a>
                 <a
                   routerLink="/faq"

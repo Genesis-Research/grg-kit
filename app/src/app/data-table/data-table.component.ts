@@ -49,6 +49,9 @@ import {
     FlexRenderDirective,
   ],
   viewProviders: [provideIcons({ lucideArrowUpDown, lucideChevronDown, lucideChevronUp, lucideSearch, lucideSettings2, lucideTrash2, lucidePencil, lucideEye })],
+  host: {
+    class: 'block w-full max-w-4xl mx-auto',
+  },
   template: `
     <h2 class="text-2xl font-bold mb-6">Data Table Examples</h2>
 

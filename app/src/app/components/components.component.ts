@@ -125,6 +125,9 @@ import { IconResponsivePreview } from '../../../libs/spartan-examples/components
 // Tooltip variants
 import { TooltipSimple } from '../../../libs/spartan-examples/components/(tooltip)/tooltip--simple.example';
 
+// Data Table - custom implementation
+import { DataTableComponent } from '../data-table/data-table.component';
+
 // Command variants
 import { CommandDialog } from '../../../libs/spartan-examples/components/(command)/command--dialog.example';
 
@@ -483,6 +486,9 @@ export class ComponentsComponent {
     // Radio Group variants
     'radio-group--card': RadioGroupCard,
     'radio-group--form': RadioGroupFormPreview,
+
+    // Data Table
+    'data-table': DataTableComponent,
   };
 
   categories: ComponentCategory[] = [
@@ -554,6 +560,7 @@ export class ComponentsComponent {
         { id: 'skeleton', title: 'Skeleton', preview: SkeletonPreview },
         { id: 'spinner', title: 'Spinner', preview: SpinnerPreview },
         { id: 'table', title: 'Table', preview: TablePreview },
+        { id: 'data-table', title: 'Data Table', preview: DataTableComponent },
         { id: 'tabs', title: 'Tabs', preview: TabsPreview },
       ],
     },
