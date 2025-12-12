@@ -5,6 +5,7 @@ import { GrgComponentsComponent } from './grg-components/grg-components.componen
 import { GettingStartedComponent } from './getting-started/getting-started.component';
 import { DesignTokensComponent } from './design-tokens/design-tokens.component';
 import { FaqComponent } from './faq/faq.component';
+import { ShowcaseComponent } from './showcase/showcase.component';
 
 export const routes: Routes = [
   { path: '', component: GettingStartedComponent },
@@ -13,4 +14,5 @@ export const routes: Routes = [
   { path: 'grg-components', component: GrgComponentsComponent },
   { path: 'design-tokens', component: DesignTokensComponent },
   { path: 'faq', component: FaqComponent },
+  { path: 'showcase', component: ShowcaseComponent },
 ];

@@ -11,7 +11,9 @@ import {
   lucideLayers,
   lucideShield,
   lucideZap,
-  lucideCode
+  lucideCode,
+  lucideBot,
+  lucideTriangleAlert
 } from '@ng-icons/lucide';
 
 @Component({
@@ -24,7 +26,9 @@ import {
     lucideLayers,
     lucideShield,
     lucideZap,
-    lucideCode
+    lucideCode,
+    lucideBot,
+    lucideTriangleAlert
   })],
   template: `
     <div class="max-w-4xl mx-auto space-y-8">
@@ -39,7 +43,132 @@ import {
       </div>
 
       <hlm-accordion class="w-full">
-        <!-- Q1: Why Spartan-NG -->
+        <!-- Q1: The Problem We're Solving -->
+        <hlm-accordion-item id="problem-solving">
+          <h3 class="contents">
+            <button hlmAccordionTrigger>
+              <div class="flex items-center gap-2 flex-1">
+                <ng-icon hlm name="lucideTriangleAlert" size="sm" class="text-primary" />
+                <span>What problem does GRG Kit solve?</span>
+              </div>
+              <ng-icon name="lucideChevronDown" hlm hlmAccIcon />
+            </button>
+          </h3>
+          <hlm-accordion-content>
+            <div class="space-y-4 text-sm">
+              <p>
+                <strong>Traditional UI frameworks like Bootstrap create more problems than they solve</strong> when it comes to building consistent, maintainable applications:
+              </p>
+
+              <div class="space-y-4">
+                <div class="p-4 bg-muted rounded-md">
+                  <p class="font-semibold text-foreground mb-2">The Bootstrap Problem:</p>
+                  <ul class="space-y-2 ml-4">
+                    <li>• <strong>Too many styling options</strong> - Bootstrap offers countless ways to style the same element (btn-primary, btn-success, btn-info, btn-warning, btn-danger, btn-light, btn-dark...)</li>
+                    <li>• <strong>Decision fatigue</strong> - Developers are left to choose which style "works best" with no clear guidance</li>
+                    <li>• <strong>Inconsistent applications</strong> - Different developers make different choices, leading to visual chaos</li>
+                    <li>• <strong>Color confusion</strong> - When should you use "info" vs "primary"? "warning" vs "secondary"? There's no system.</li>
+                  </ul>
+                </div>
+
+                <div class="p-4 bg-muted rounded-md">
+                  <p class="font-semibold text-foreground mb-2">Design System vs Component Library:</p>
+                  <p class="mb-2">A <strong>component library</strong> (Bootstrap, Material) gives you building blocks. A <strong>design system</strong> gives you building blocks <em>plus rules for how to use them</em>.</p>
+                  <ul class="space-y-2 ml-4">
+                    <li>• <strong>Component Library</strong> - "Here are 10 button colors, pick one"</li>
+                    <li>• <strong>Design System</strong> - "Use <code class="text-xs bg-background px-1 py-0.5 rounded">primary</code> for main actions, <code class="text-xs bg-background px-1 py-0.5 rounded">destructive</code> for dangerous operations"</li>
+                  </ul>
+                  <p class="mt-2 text-muted-foreground">GRG Kit provides semantic color tokens with clear purposes, not arbitrary color names.</p>
+                </div>
+              </div>
+
+              <div class="p-4 bg-accent/50 rounded-md">
+                <p class="font-semibold text-foreground mb-2">🤖 The AI Code Generation Problem:</p>
+                <p class="mb-2">With AI assistants writing more code, consistency becomes even more critical:</p>
+                <ul class="space-y-2 ml-4">
+                  <li>• <strong>Unreliable output</strong> - Without clear rules, AI generates inconsistent styles across requests</li>
+                  <li>• <strong>Weird edge cases</strong> - AI might use <code class="text-xs bg-background px-1 py-0.5 rounded">btn-info</code> in one place and <code class="text-xs bg-background px-1 py-0.5 rounded">btn-primary</code> in another for the same purpose</li>
+                  <li>• <strong>Manual cleanup</strong> - Developers spend time fixing AI-generated styling inconsistencies</li>
+                </ul>
+                <p class="mt-3 text-primary font-medium">GRG Kit solves this by giving AI clear design system rules to follow, producing reliable, consistent code every time.</p>
+              </div>
+            </div>
+          </hlm-accordion-content>
+        </hlm-accordion-item>
+
+        <!-- Q2: Why Spartan-NG is Perfect for AI -->
+        <hlm-accordion-item id="spartan-for-ai">
+          <h3 class="contents">
+            <button hlmAccordionTrigger>
+              <div class="flex items-center gap-2 flex-1">
+                <ng-icon hlm name="lucideBot" size="sm" class="text-primary" />
+                <span>Why is Spartan-NG the best fit for AI code generation?</span>
+              </div>
+              <ng-icon name="lucideChevronDown" hlm hlmAccIcon />
+            </button>
+          </h3>
+          <hlm-accordion-content>
+            <div class="space-y-4 text-sm">
+              <p>
+                <strong>Spartan-NG's architecture is uniquely suited for AI-assisted development.</strong> Here's why:
+              </p>
+
+              <div class="space-y-4">
+                <div class="p-4 bg-muted rounded-md">
+                  <p class="font-semibold text-foreground mb-2">📍 Code is Co-located:</p>
+                  <p class="mb-2">Unlike traditional libraries where code lives in <code class="text-xs bg-background px-1 py-0.5 rounded">node_modules</code>, Spartan-NG components live in your project:</p>
+                  <ul class="space-y-2 ml-4">
+                    <li>• <strong>AI can see the code</strong> - Components are in <code class="text-xs bg-background px-1 py-0.5 rounded">libs/ui/</code>, fully visible to AI assistants</li>
+                    <li>• <strong>AI can edit the code</strong> - No need to fight against library abstractions</li>
+                    <li>• <strong>Context is available</strong> - AI understands your exact component implementations</li>
+                  </ul>
+                </div>
+
+                <div class="p-4 bg-muted rounded-md">
+                  <p class="font-semibold text-foreground mb-2">✏️ Easy to Edit:</p>
+                  <p class="mb-2">Spartan-NG uses simple, readable patterns that AI can reliably modify:</p>
+                  <ul class="space-y-2 ml-4">
+                    <li>• <strong>Tailwind classes</strong> - AI excels at utility-first CSS modifications</li>
+                    <li>• <strong>Single-file components</strong> - Everything in one place, no hunting across files</li>
+                    <li>• <strong>Predictable structure</strong> - Consistent patterns across all components</li>
+                  </ul>
+                </div>
+
+                <div class="p-4 bg-accent/50 rounded-md">
+                  <p class="font-semibold text-foreground mb-2">🎯 Contrast with Traditional Libraries:</p>
+                  <div class="space-y-3">
+                    <div>
+                      <div class="flex items-center gap-2 mb-1">
+                        <span hlmBadge variant="secondary">Material/PrimeNG</span>
+                      </div>
+                      <ul class="space-y-1 ml-4 text-muted-foreground">
+                        <li>• Code hidden in node_modules - AI can't see it</li>
+                        <li>• Complex theming systems - AI struggles with SCSS variables</li>
+                        <li>• Customization requires overrides - <code class="text-xs bg-background px-1 py-0.5 rounded">::ng-deep</code> and <code class="text-xs bg-background px-1 py-0.5 rounded">!important</code> hacks</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <div class="flex items-center gap-2 mb-1">
+                        <span hlmBadge variant="default">Spartan-NG</span>
+                      </div>
+                      <ul class="space-y-1 ml-4">
+                        <li>• Code in your project - AI has full visibility</li>
+                        <li>• Tailwind utilities - AI writes these fluently</li>
+                        <li>• Direct editing - Change the source, not overrides</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <p class="text-muted-foreground italic">
+                The result: AI can generate, modify, and maintain your UI code reliably without producing the weird inconsistencies common with other frameworks.
+              </p>
+            </div>
+          </hlm-accordion-content>
+        </hlm-accordion-item>
+
+        <!-- Q3: Why Spartan-NG -->
         <hlm-accordion-item id="spartan-vs-others">
           <h3 class="contents">
             <button hlmAccordionTrigger>
