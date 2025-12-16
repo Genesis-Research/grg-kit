@@ -49,7 +49,7 @@ import {
             <button hlmAccordionTrigger>
               <div class="flex items-center gap-2 flex-1">
                 <ng-icon hlm name="lucideTriangleAlert" size="sm" class="text-primary" />
-                <span>What problem does GRG Kit solve?</span>
+                <span>What problem does Spartan NG solve?</span>
               </div>
               <ng-icon name="lucideChevronDown" hlm hlmAccIcon />
             </button>

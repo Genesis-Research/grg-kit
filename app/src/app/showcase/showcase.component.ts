@@ -153,7 +153,7 @@ interface ListItem {
     <div class="min-h-screen bg-background p-6 md:p-10">
       <!-- Header -->
       <div class="mb-10 text-center">
-        <h1 class="text-4xl font-bold tracking-tight">GRG Kit Showcase</h1>
+        <h1 class="text-4xl font-bold tracking-tight">Showcase</h1>
         <p class="mt-2 text-lg text-muted-foreground">A comprehensive demo of components working together</p>
       </div>
 
